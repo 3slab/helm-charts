@@ -1,0 +1,133 @@
+{{- $fullName := include "sftp.fullname" . -}}
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "sftp.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "sftp.name" . }}
+    helm.sh/chart: {{ include "sftp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  {{- if .Values.strategy.type }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "sftp.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "sftp.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Always
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.env }}
+          env:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          ports:
+            - name: ssh
+              containerPort: 22
+              protocol: TCP
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["SYS_ADMIN"]
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            {{- range .Values.persistence.disks }}
+            - mountPath: {{ .mountPath }}
+              name: {{ $fullName }}-{{ .name }}
+            {{- end }}
+            {{- end }}
+            - mountPath: /etc/sftp.d/bindmount.sh
+              name: sftp-bindmount-vol
+              subPath: bindmount.sh
+            {{- range .Values.customScripts }}
+            - mountPath: /etc/sftp.d/{{ .scriptName }}
+              name: sftp-bindmount-vol
+              subPath: {{ .scriptName }}
+            {{- end}}
+            {{- if or .Values.sshHostKeys.ed25519 }}
+            - mountPath: /etc/ssh/ssh_host_ed25519_key
+              name: sftp-hostkey-vol
+              subPath: ssh_host_ed25519_key
+            {{- end }}
+            {{- if or .Values.sshHostKeys.rsa }}
+            - mountPath: /etc/ssh/ssh_host_rsa_key
+              name: sftp-hostkey-vol
+              subPath: ssh_host_rsa_key
+            {{- end }}
+            {{- if .Values.publicKeys }}
+            {{- range .Values.publicKeys }}
+            - mountPath: /home/{{ .username }}/.ssh/keys/id_rsa.pub
+              name: sftp-pubkey-vol
+              subPath: {{ .username }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.users }}
+            - mountPath: /etc/sftp/users.conf
+              name: sftp-users-vol
+              subPath: users.conf
+            {{- end }}
+            {{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+            {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        {{- range .Values.persistence.disks }}
+        - name: {{ $fullName }}-{{ .name }}
+          persistentVolumeClaim:
+            claimName: {{ $fullName }}-{{ .name }}
+        {{- end }}
+        {{- end }}
+        - name: sftp-bindmount-vol
+          configMap:
+            name: {{ include "sftp.fullname" . }}-bindmount
+            defaultMode: 0777
+        {{- if or .Values.sshHostKeys.ed25519 .Values.sshHostKeys.rsa }}
+        - name: sftp-hostkey-vol
+          configMap:
+            name: {{ include "sftp.fullname" . }}-hostkey
+            defaultMode: 0600
+        {{- end }}
+        {{- if .Values.publicKeys }}
+        - name: sftp-pubkey-vol
+          configMap:
+            name: {{ include "sftp.fullname" . }}-pubkey
+        {{- end }}
+        {{- if .Values.users }}
+        - name: sftp-users-vol
+          configMap:
+            name: {{ include "sftp.fullname" . }}-users
+            defaultMode: 0400
+        {{- end }}
+        {{- with .Values.volumes }}
+{{ toYaml . | indent 8 }}
+        {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

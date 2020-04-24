@@ -1,0 +1,49 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "cronjob.fullname" . }}
+  labels:
+    app: {{ template "cronjob.name" . }}
+{{ include "cronjob.labels" . | indent 4 }}
+spec:
+  schedule: "{{ .Values.schedule }}"
+  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit }}
+  concurrencyPolicy: {{ .Values.concurrencyPolicy }}
+  jobTemplate:
+    metadata:
+      labels:
+        app: {{ template "cronjob.name" . }}
+        chart: {{ template "cronjob.chart" . }}
+        cronjob-name: {{ template "cronjob.fullname" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      backoffLimit: {{ .Values.backoffLimit }}
+      template:
+        spec:
+          restartPolicy: {{ .Values.restartPolicy }}
+          containers:
+            - name: {{ template "cronjob.fullname" . }}
+              image: {{ template "cronjob.image" . }}
+              imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+              {{- with .Values.env }}
+              env:
+{{ toYaml . | indent 16 }}
+              {{- end }}
+              {{- with .Values.command }}
+              command:
+{{ toYaml . | indent 16 }}
+              {{- end }}
+              {{- with .Values.args }}
+              args:
+{{ toYaml . | indent 16 }}
+              {{- end }}
+              {{- with .Values.volumeMounts }}
+              volumeMounts:
+{{ toYaml . | indent 16 }}
+              {{- end }}
+          {{- with .Values.volumes }}
+          volumes:
+{{ toYaml . | indent 12 }}
+          {{- end }}

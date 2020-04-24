@@ -1,0 +1,95 @@
+# Default values for sftp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+strategy: {}
+  # type: Recreate
+
+image:
+  repository: linuxserver/openssh-server
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+  # - name: regcred
+
+service:
+  type: ClusterIP
+  port: 22
+  loadBalancerIp: ~
+
+env: []
+#  - name: ENV_NAME
+#    value: "envvalue"
+
+
+volumeMounts: []
+#  - mountPath: /data/
+#    name: openssh-server-data-vol
+
+
+volumes: []
+#  - name: openssh-server-data-vol
+#    configMap:
+#      name: openssh-server-data
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+ssh:
+  # Overwrite the container/prod hostname
+  hostname: ~
+
+  # user id
+  uid: 1000
+
+  # group id
+  gid: 1000
+
+  # Specify a timezone
+  timezone: Europe/Paris
+
+  # Specify the user name
+  userName: adminssh
+
+  # Set to true to allow, the ssh user, sudo access. Without userPassword set, this will allow passwordless sudo access.
+  sudoAccess: false
+
+  # Optionally set a sudo password for the ssh user. If this is not set but sudoAccess is set to true, the user will have passwordless sudo access.
+  userPassword: ~
+
+# Public keys to add to authorized_keys
+publicKeys: ~
+
+sshHostKeys:
+  # generate with `ssh-keygen -t ed25519 -f ssh_host_ed25519_key -N '' < /dev/null` and mount ssh_host_ed25519_key
+  ed25519: ~
+
+  # generate with `ssh-keygen -t rsa -b 4096 -f ssh_host_rsa_key -N '' < /dev/null` and mount ssh_host_rsa_key
+  rsa: ~
+
+  # generate with `ssh-keygen -t ecdsa -b 521 -f ssh_host_ecdsa_key -N '' < /dev/null` and mount ssh_host_ecdsa_key
+  ecdsa: ~
+
+  # generate with `ssh-keygen -t dsa -b 1024 -f ssh_host_dsa_key -N '' < /dev/null` and mount ssh_host_dsa_key
+  dsa: ~

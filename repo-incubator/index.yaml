@@ -1,0 +1,64 @@
+apiVersion: v1
+entries:
+  node:
+  - apiVersion: v1
+    appVersion: 11.2.0
+    created: "2020-04-24T21:34:22.638292735+02:00"
+    description: Event-driven I/O server-side JavaScript environment based on V8
+    digest: a80f6a0f89ae55e7420405fddacd766cf90f8fd5cd2e9711b72687713095e9e1
+    home: http://nodejs.org/
+    icon: https://bitnami.com/assets/stacks/nodejs/img/nodejs-stack-110x117.png
+    keywords:
+    - node
+    - javascript
+    - nodejs
+    name: node
+    urls:
+    - node-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v1
+    appVersion: 11.2.0
+    created: "2020-04-24T21:34:22.63782532+02:00"
+    description: Event-driven I/O server-side JavaScript environment based on V8
+    digest: eeee7aa580dd99f1d35b5165c2e0625aef1f019c9a80f5e1479ea9f4970fc49c
+    home: http://nodejs.org/
+    icon: https://bitnami.com/assets/stacks/nodejs/img/nodejs-stack-110x117.png
+    keywords:
+    - node
+    - javascript
+    - nodejs
+    name: node
+    urls:
+    - node-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
+    appVersion: 11.2.0
+    created: "2020-04-24T21:34:22.637092505+02:00"
+    description: Event-driven I/O server-side JavaScript environment based on V8
+    digest: 9411b7895184020fd7f55aecb16a9f5c8324b97e21aee3c59c604f9d7a345b60
+    home: http://nodejs.org/
+    icon: https://bitnami.com/assets/stacks/nodejs/img/nodejs-stack-110x117.png
+    keywords:
+    - node
+    - javascript
+    - nodejs
+    name: node
+    urls:
+    - node-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v1
+    appVersion: 11.2.0
+    created: "2020-04-24T21:34:22.636623082+02:00"
+    description: Event-driven I/O server-side JavaScript environment based on V8
+    digest: 9db317fad170d6dca5d23df687f2e23fac54ff5ecb4a62e19eac7a371e5515f7
+    home: http://nodejs.org/
+    icon: https://bitnami.com/assets/stacks/nodejs/img/nodejs-stack-110x117.png
+    keywords:
+    - node
+    - javascript
+    - nodejs
+    name: node
+    urls:
+    - node-0.0.1.tgz
+    version: 0.0.1
+generated: "2020-04-24T21:34:22.636025206+02:00"

@@ -1,0 +1,60 @@
+# Default values for kafka-rest.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: confluentinc/cp-kafka-rest
+  tag: latest
+  pullPolicy: IfNotPresent
+  restartPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8082
+  targetPort: 8082
+
+# Zookeeper connection
+# kafkaRestZookeeperConnect: zookeeper-service:2181
+
+# Zookeeper servers
+# kafkaRestBootstrapServers: kafka-int-0.kafka-int-headless:9092,kafka-int-1.kafka-int-headless:9092,kafka-int-2.kafka-int-headless:9092
+
+# Schema registry url
+# kafkaRestSchemaRegistryUrl: http://kafka-schema-registry-service:8081
+
+kong:
+  enable: false
+  policy:
+    enable: false
+  url: http://kong-admin-client:8001
+  apiKey: generateThisApiKey
+  # username:
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Define custom environment variables to pass to the image here
+extraEnv: {}
+
+# Define initContainers if necessary
+initContainers: []

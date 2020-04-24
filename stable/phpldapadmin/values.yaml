@@ -1,0 +1,86 @@
+# Default values for phpldapadmin.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+strategy: {}
+# type: Recreate
+
+image:
+  repository: suezenv/phpldapadmin-docker
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+# - name: regcred
+
+service:
+  type: ClusterIP
+  port: 80
+  secureport: 443
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+env: []
+#  - name: LDAP_URL
+#    value: "ldap://ldap-openldap"
+#  - name: LDAP_BASE
+#    value: "dc=test,dc=fr"
+#  - name: LDAP_ADMIN
+#    value: "cn=admin,dc=test,dc=fr"
+
+volumeMounts: []
+#  - mountPath: /etc/phpldapadmin/templates/creation
+#    name: phpldapadmin-template-vol
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+volumes: []
+#  - name: phpldapadmin-template-vol
+#    configMap:
+#      name: phpldapadmin-template
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+configMap:
+  template:
+    enable: false
+    name: phpldapadmin-template
+    data: []
+    #      - name: "test.xml"
+    #        value: |-
+    #          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    #          <!DOCTYPE template SYSTEM "template.dtd">
+    #          <template>
+    #          <test>1</askcontainer>
+    #          <description>This is a test</description>
+    #          </template>

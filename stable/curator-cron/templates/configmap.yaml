@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+
+data:
+  curator: |-
+    */5 * * * *  root . /root/env.sh; /config/curator.sh > /proc/1/fd/1 2>/proc/1/fd/2
+    # Every minute
+
+

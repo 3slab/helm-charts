@@ -1,0 +1,156 @@
+# Default values for nodered.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+appName: 'example'
+flowType: 'flowExample'
+image:
+  repository: quay.io/suezenv/node-red
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  name: nodered
+  type: ClusterIP
+  externalPort: 1880
+  internalPort: 1880
+livenessProbe:
+  periodSeconds: 10
+  timeoutSeconds: 1
+  initialDelaySeconds: 0
+readinessProbe:
+  periodSeconds: 10
+  timeoutSeconds: 1
+  initialDelaySeconds: 0
+env: {}
+ingress:
+  enabled: false
+  # Used to create an Ingress record.
+  hosts:
+    - test.saint-etienne-smartcity.3slab.fr
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    # nginx.ingress.kubernetes.io/auth-type: basic
+    # # name of the secret that contains the user/password definitions
+    # nginx.ingress.kubernetes.io/auth-secret: kibana-basic-auth
+    # # message to display with an appropiate context why the authentication is required
+    # nginx.ingress.kubernetes.io/auth-realm: "Wow Wow!  Authentication Required"
+  tls:
+    # Secrets must be manually created in the namespace.
+    - secretName: test-nodered-tls
+      hosts:
+        - test.saint-etienne-smartcity.3slab.fr
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+persistentVolume:
+  enabled: false
+  annotations:
+  existingClaim:
+  accessModes: [ReadWriteOnce]
+  storageClass: default
+  size: 2Gi
+  mountPath: /data
+
+nodered:
+    tmpFilesPath: /tmp/node-red
+    flows: ~
+    # Uncomment if you want a flows_cred.json file
+    # flowsCred: |-
+    #   '{"$":"6662512f4f70b..."}'
+
+monitoring:
+  enabled: false
+  name: grok-sidecar
+  repository: palobo/grok_exporter
+  tag: latest
+  pullPolicy: IfNotPresent
+  internalPort: 9144
+  externalPort: 9144
+  resources: {}
+  grokPath: /grok/config.yml
+  logsMountPath: '/logs'
+  settingsConfigMap: |-
+    var winston = require("winston");
+
+    module.exports = {
+        uiPort: process.env.PORT || 1880,
+        httpRequestTimeout: 120000,
+        mqttReconnectTime: 15000,
+        serialReconnectTime: 15000,
+        debugMaxLength: 1000,
+        functionGlobalContext: {
+        },
+        logging: {
+            console: {
+                level: "info",
+                metrics: false,
+                audit: false
+            },
+            metrics: {
+                level: 'error',
+                metrics: true,
+                audit: false,
+                handler: function(settings) {
+                    const logger = new (winston.Logger)({
+                        transports: [
+                            new (winston.transports.File)({
+                                timestamp: false,
+                                filename: process.env.LOG_PATH + '/metrics.log',
+                                maxsize: 5 * 1024 * 1024,
+                                maxFiles: 10,
+                                tailable: true,
+                                json: false,
+                                formatter: function(opts) { return opts.message }
+                            })
+                        ]
+                    });
+
+                    return function(msg) {
+                        // Don't log what is not metrics
+                        let pattern = ['timestamp', 'type.error', 'nodeid:id', 'msg'];
+                        if (msg.level === 99) {
+                            pattern = ['timestamp', 'event', 'nodeid:nodeid', 'msgid:msgid', 'value']
+                        }
+
+                        let formatedMsg = pattern
+                            .map(value => {
+                                // Based on pattern, reformat the value
+                                if (value.indexOf('.') !== -1) {
+                                    // If "." in pattern, first part is the key in msg, second part needs to be appended
+                                    const splitedValue = value.split('.');
+                                    value = `${msg[splitedValue[0]]}.${splitedValue[1]}`
+                                } else if (value.indexOf(':') !== -1) {
+                                    // if ":" in pattern, first part is the suffix, second part is the key
+                                    const splitedValue = value.split(':');
+                                    value = `${splitedValue[0]}:${msg[splitedValue[1]]}`
+                                } else {
+                                    value = `${msg[value]}`;
+                                }
+                                return value;
+                            })
+                            .filter(value => {
+                                return typeof value !== 'undefined' && value.indexOf('undefined') === -1
+                            })
+                            .join(' - ');
+
+                        logger.info(formatedMsg);
+                    }
+                }
+            }
+        },
+        editorTheme: {
+            projects: {
+                enabled: false
+            }
+        }
+    }

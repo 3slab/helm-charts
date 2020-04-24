@@ -1,0 +1,88 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "phpldapadmin.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "phpldapadmin.name" . }}
+    helm.sh/chart: {{ include "phpldapadmin.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "phpldapadmin.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- if .Values.strategy.type }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "phpldapadmin.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Always
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.env }}
+          env:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          {{- if or .Values.volumeMounts .Values.configMap.template.enable }}
+          volumeMounts:
+          {{- end }}
+          {{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          {{- if .Values.configMap.template.enable }}
+            - mountPath: /etc/phpldapadmin/templates/creation
+              name: phpldapadmin-template-vol
+          {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if or .Values.volumes .Values.configMap.template.enable }}
+      volumes:
+    {{- end }}
+    {{- with .Values.volumes }}
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.configMap.template.enable }}
+        - name: phpldapadmin-template-vol
+          configMap:
+            name: phpldapadmin-template
+    {{ end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

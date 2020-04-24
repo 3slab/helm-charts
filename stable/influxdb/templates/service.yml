@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "influxdb.fullname" . }}
+  labels:
+    app: {{ template "influxdb.name" . }}
+    chart: {{ template "influxdb.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+{{- with .Values.service.annotations }}
+annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  clusterIP: {{ .Values.service.clusterIP }}
+  type: {{ .Values.service.type }}
+  ports:
+  - name: http-api
+    port: {{ .Values.service.port }}
+    protocol: TCP
+  - name: exporter
+    port: {{ .Values.metrics.service.port }}
+    protocol: TCP
+  {{- if .Values.backup.enable }}
+  - name: http-api-backup
+    port: {{ .Values.backup.port }}
+    protocol: TCP
+  {{- end }}
+  selector:
+    app: {{ template "influxdb.name" . }}
+    release: {{ .Release.Name | quote }}

@@ -1,0 +1,191 @@
+# Default values for influxdb.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 3
+
+image:
+  registry: docker.io
+  repository: influxdb
+  tag: influxdb:1.7.6-alpine
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+
+serviceName: influxdb
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  # clusterIP: None
+  port: 8086
+
+  ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+  ##
+  # nodePort:
+
+  ## Provide any additional annotations which may be required. This can be used to
+  annotations: {}
+#    prometheus.io/scrape: "true"
+#    prometheus.io/port: "9273"
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  ## If true, use a Persistent Volume Claim, If false, use emptyDir
+  ##
+  enabled: true
+  # Enable persistence using an existing PVC
+  # existingClaim:
+  # Subdirectory of the volume to mount
+  # subPath:
+  mountPath: /var/lib/influxdb
+  ## Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: "default"
+  ## Persistent Volume Claim annotations
+  ##
+  annotations: {}
+  ## Persistent Volume Access Mode
+  ##
+  accessModes:
+    - ReadWriteOnce
+  ## Persistent Volume size
+  ##
+  size: 200Gi
+  ##
+
+config: {}
+#  name: telegraf-config
+#  configMap:
+#    name: telegraf-config
+
+configmap:
+#configmap: |-
+#    [[inputs.influxdb]]
+#      urls = [
+#        "http://localhost:8086/debug/vars"
+#      ]
+#
+#      ## Optional SSL Config
+#      # ssl_ca = "/etc/telegraf/ca.pem"
+#      # ssl_cert = "/etc/telegraf/cert.pem"
+#      # ssl_key = "/etc/telegraf/key.pem"
+#      ## Use SSL but skip chain & host verification
+#      # insecure_skip_verify = false
+#
+#      ## http request & header timeout
+#      timeout = "5s"
+#
+#    [[outputs.prometheus_client]]
+#      # Address to listen on
+#      listen = ":9273"
+#
+#      # Interval to expire metrics and not deliver to prometheus, 0 == no expiration
+#      expiration_interval = "60s"
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+## Pod anti-affinity can prevent the scheduler from placing RocketChat replicas on the same node.
+## The default value "soft" means that the scheduler should *prefer* to not schedule two replica pods onto the same node but no guarantee is provided.
+## The value "hard" means that the scheduler is *required* to not schedule two replica pods onto the same node.
+## The value "" will disable pod anti-affinity so that no anti-affinity rules will be configured.
+##
+podAntiAffinity: ""
+
+## If anti-affinity is enabled sets the topologyKey to use for anti-affinity.
+## This can be changed to, for example, failure-domain.beta.kubernetes.io/zone
+##
+podAntiAffinityTopologyKey: kubernetes.io/hostname
+
+affinity: {}
+#  podAntiAffinity:
+#    requiredDuringSchedulingIgnoredDuringExecution:
+#      - topologyKey: "kubernetes.io/hostname"
+#        labelSelector:
+#          matchExpressions:
+#            - key: "app"
+#              operator: In
+#              values:
+#                - influxdb
+
+terminationGracePeriodSeconds: 10
+
+metrics:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: telegraf
+    tag: 1.11.1-alpine
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ##
+    # pullSecrets:
+    #   - myRegistryKeySecretName
+  resources: {}
+#  annotations:
+#    prometheus.io/scrape: "true"
+#    prometheus.io/port: "9104"
+
+  service:
+    port: 9273
+
+  # Enable this if you're using https://github.com/coreos/prometheus-operator
+  serviceMonitor:
+    enabled: false
+    ## Specify a namespace if needed
+    # namespace: monitoring
+    # fallback to the prometheus default unless specified
+    # interval: 10s
+    # scrapeTimeout: 10s
+    ## Defaults to what's used if you follow CoreOS [Prometheus Install Instructions](https://github.com/helm/charts/tree/master/stable/prometheus-operator#tldr)
+    ## [Prometheus Selector Label](https://github.com/helm/charts/tree/master/stable/prometheus-operator#prometheus-operator-1)
+    ## [Kube Prometheus Selector Label](https://github.com/helm/charts/tree/master/stable/prometheus-operator#exporters)
+    selector:
+      prometheus: kube-prometheus
+
+extraEnv: {}
+
+backup:
+  enable: true
+  port: 8088

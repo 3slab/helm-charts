@@ -1,0 +1,124 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}-config-map
+  labels:
+    app: {{ template "fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  flows.json: {{ .Values.nodered.flows }}
+
+{{ if .Values.nodered.flowsCred }}
+  flows_cred.json: {{ .Values.nodered.flowsCred }}
+{{ end }}
+
+  settings.js: |-
+{{ .Values.monitoring.settingsConfigMap | indent 4 }}
+  {{- if .Values.monitoring.enabled }}
+  grok-config.yml: |2
+    global:
+        config_version: 2
+
+    input:
+        type: file
+        path: {{ .Values.monitoring.logsMountPath }}/metrics.log
+        readall: true
+        fail_on_missing_logfile: false
+
+    grok:
+        patterns_dir: /grok/patterns
+
+    metrics:
+        - type: gauge
+          name: nodered_memory_rss
+          help: RSS Memory
+          value: '{{"{{"}}.val{{"}}"}}'
+          cumulative: false
+          match: '%{POSINT} - runtime.memory.rss - %{INT:val}'
+          labels:
+              flowtype: '{{ .Values.flowType }}'
+              app: '{{ .Values.appName }}'
+        - type: gauge
+          name: nodered_memory_heap_total
+          help: Heap Total Memory
+          value: '{{"{{"}}.val{{"}}"}}'
+          cumulative: false
+          match: '%{POSINT} - runtime.memory.heapTotal - %{INT:val}'
+          labels:
+              flowtype: '{{ .Values.flowType }}'
+              app: '{{ .Values.appName }}'
+        - type: gauge
+          name: nodered_memory_heap_used
+          help: Heap Used Memory
+          value: '{{"{{"}}.val{{"}}"}}'
+          cumulative: false
+          match: '%{POSINT} - runtime.memory.heapUsed - %{INT:val}'
+          labels:
+              flowtype: '{{ .Values.flowType }}'
+              app: '{{ .Values.appName }}'
+        - type: counter
+          name: nodered_node_receive
+          help: Entry of a node
+          match: '%{POSINT} - node.%{DATA:nodetype}.receive - nodeid:%{DATA:nodeid} - msgid:%{DATA}'
+          labels:
+              nodeid: '{{"{{"}}.nodeid{{"}}"}}'
+              nodetype: '{{"{{"}}.nodetype{{"}}"}}'
+              flowtype: '{{ .Values.flowType }}'
+              app: '{{ .Values.appName }}'
+        - type: counter
+          name: nodered_node_send
+          help: Number of exit of a node
+          match: '%{POSINT} - node.%{DATA:nodetype}.send - nodeid:%{DATA:nodeid} - msgid:%{DATA}'
+          labels:
+              nodeid: '{{"{{"}}.nodeid{{"}}"}}'
+              nodetype: '{{"{{"}}.nodetype{{"}}"}}'
+              flowtype: '{{ .Values.flowType }}'
+              app: '{{ .Values.appName }}'
+        - type: gauge
+          name: nodered_node_duration
+          help: Duration in milliseconds of a node
+          match: '%{POSINT} - node.%{DATA:nodetype}.duration(?:%{DATA}) - nodeid:%{DATA:nodeid} - msgid:%{DATA} - %{BASE10NUM:val}'
+          value: '{{"{{"}}.val{{"}}"}}'
+          cumulative: false
+          labels:
+              nodeid: '{{"{{"}}.nodeid{{"}}"}}'
+              nodetype: '{{"{{"}}.nodetype{{"}}"}}'
+              flowtype: '{{ .Values.flowType }}'
+              app: '{{ .Values.appName }}'
+        - type: gauge
+          name: nodered_node_size
+          help: Size in bytes of an action done in the node (depends on the type of the node)
+          match: '%{POSINT} - node.%{DATA:nodetype}.size(?:%{DATA}) - nodeid:%{DATA:nodeid} - msgid:%{DATA} - %{INT:val}'
+          value: '{{"{{"}}.val{{"}}"}}'
+          cumulative: false
+          labels:
+              nodeid: '{{"{{"}}.nodeid{{"}}"}}'
+              nodetype: '{{"{{"}}.nodetype{{"}}"}}'
+              flowtype: '{{ .Values.flowType }}'
+              app: '{{ .Values.appName }}'
+        - type: counter
+          name: nodered_node_error
+          help: Error in node
+          match: '%{POSINT} - %{DATA:nodetype}.error - nodeid:%{DATA:nodeid} - %{DATA}'
+          labels:
+              nodeid: '{{"{{"}}.nodeid{{"}}"}}'
+              nodetype: '{{"{{"}}.nodetype{{"}}"}}'
+              flowtype: '{{ .Values.flowType }}'
+              app: '{{ .Values.appName }}'
+        - type: gauge
+          name: nodered_node_error_last_timestamp
+          help: Last timestamp when an error occured in a node
+          match: '%{POSINT:val} - %{DATA:nodetype}.error - nodeid:%{DATA:nodeid} - %{DATA}'
+          value: '{{"{{"}}.val{{"}}"}}'
+          cumulative: false
+          labels:
+              nodeid: '{{"{{"}}.nodeid{{"}}"}}'
+              nodetype: '{{"{{"}}.nodetype{{"}}"}}'
+              flowtype: '{{ .Values.flowType }}'
+              app: '{{ .Values.appName }}'
+
+    server:
+        port: {{ .Values.monitoring.internalPort }}
+  {{- end -}}

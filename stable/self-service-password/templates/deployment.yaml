@@ -1,0 +1,163 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "self-service-password.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "self-service-password.name" . }}
+    helm.sh/chart: {{ include "self-service-password.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "self-service-password.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "self-service-password.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.env }}
+          env:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          {{- if or .Values.volumeMounts .Values.configMap.conf.enable .Values.configMap.image.enable .Values.configMap.css.enable .Values.configMap.js.enable .Values.configMap.lang.enable .Values.configMap.lib.enable .Values.configMap.pages.enable .Values.configMap.fonts.enable }}
+          volumeMounts:
+          {{- end }}
+          {{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          {{- if .Values.configMap.conf.enable }}
+          {{- range .Values.configMap.conf.data }}
+            - mountPath: /usr/share/self-service-password/conf/{{ .name }}
+              name: self-service-password-config-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.configMap.image.enable }}
+          {{- range .Values.configMap.image.data }}
+            - mountPath: /usr/share/self-service-password/images/{{ .name }}
+              name: self-service-password-image-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{ end }}
+          {{- if .Values.configMap.css.enable }}
+          {{- range .Values.configMap.css.data }}
+            - mountPath: /usr/share/self-service-password/css/{{ .name }}
+              name: self-service-password-css-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{ end }}
+          {{- if .Values.configMap.js.enable }}
+          {{- range .Values.configMap.js.data }}
+            - mountPath: /usr/share/self-service-password/js/{{ .name }}
+              name: self-service-password-js-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{ end }}
+          {{- if .Values.configMap.lang.enable }}
+          {{- range .Values.configMap.lang.data }}
+            - mountPath: /usr/share/self-service-password/lang/{{ .name }}
+              name: self-service-password-lang-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{ end }}
+          {{- if .Values.configMap.lib.enable }}
+          {{- range .Values.configMap.lib.data }}
+            - mountPath: /usr/share/self-service-password/lib/{{ .name }}
+              name: self-service-password-lib-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{ end }}
+          {{- if .Values.configMap.pages.enable }}
+          {{- range .Values.configMap.pages.data }}
+            - mountPath: /usr/share/self-service-password/pages/{{ .name }}
+              name: self-service-password-pages-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{ end }}
+          {{- if .Values.configMap.fonts.enable }}
+          {{- range .Values.configMap.fonts.data }}
+            - mountPath: /usr/share/self-service-password/fonts/{{ .name }}
+              name: self-service-password-fonts-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{ end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if or .Values.volumes .Values.configMap.conf.enable .Values.configMap.image.enable .Values.configMap.css.enable .Values.configMap.js.enable .Values.configMap.lang.enable .Values.configMap.lib.enable .Values.configMap.pages.enable .Values.configMap.fonts.enable }}
+      volumes:
+    {{- end }}
+    {{- with .Values.volumes }}
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.configMap.conf.enable }}
+        - name: self-service-password-config-vol
+          configMap:
+            name: self-service-password-config
+    {{ end }}
+    {{- if .Values.configMap.image.enable }}
+        - name: self-service-password-image-vol
+          configMap:
+            name: self-service-password-image
+    {{ end }}
+    {{- if .Values.configMap.css.enable }}
+        - name: self-service-password-css-vol
+          configMap:
+            name: self-service-password-css
+    {{ end }}
+    {{- if .Values.configMap.js.enable }}
+        - name: self-service-password-js-vol
+          configMap:
+            name: self-service-password-js
+    {{ end }}
+    {{- if .Values.configMap.lang.enable }}
+        - name: self-service-password-lang-vol
+          configMap:
+            name: self-service-password-lang
+    {{ end }}
+    {{- if .Values.configMap.lib.enable }}
+        - name: self-service-password-lib-vol
+          configMap:
+            name: self-service-password-lib
+    {{ end }}
+    {{- if .Values.configMap.pages.enable }}
+        - name: self-service-password-pages-vol
+          configMap:
+            name: self-service-password-pages
+    {{ end }}
+    {{- if .Values.configMap.fonts.enable }}
+        - name: self-service-password-fonts-vol
+          configMap:
+            name: self-service-password-fonts
+    {{ end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

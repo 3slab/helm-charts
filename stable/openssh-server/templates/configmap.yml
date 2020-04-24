@@ -1,0 +1,45 @@
+{{- if or .Values.sshHostKeys.ed25519 .Values.sshHostKeys.rsa .Values.sshHostKeys.ecdsa .Values.sshHostKeys.dsa }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "openssh-server.fullname" . }}-hostkey
+  labels:
+    app.kubernetes.io/name: {{ include "openssh-server.name" . }}
+    helm.sh/chart: {{ include "openssh-server.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+{{- if .Values.sshHostKeys.ed25519 }}
+  ssh_host_ed25519_key: |+
+{{ .Values.sshHostKeys.ed25519 | indent 4 }}
+{{- end }}
+{{- if .Values.sshHostKeys.rsa }}
+  ssh_host_rsa_key: |+
+{{ .Values.sshHostKeys.rsa | indent 4 }}
+{{- end }}
+{{- if .Values.sshHostKeys.ecdsa }}
+  ssh_host_ecdsa_key: |+
+{{ .Values.sshHostKeys.ecdsa | indent 4 }}
+{{- end }}
+{{- if .Values.sshHostKeys.dsa }}
+  ssh_host_dsa_key: |+
+{{ .Values.sshHostKeys.dsa | indent 4 }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.publicKeys }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "openssh-server.fullname" . }}-pubkey
+  labels:
+    app.kubernetes.io/name: {{ include "openssh-server.name" . }}
+    helm.sh/chart: {{ include "openssh-server.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  authorized_keys: |+
+{{ .Values.publicKeys | indent 4 }}
+{{- end }}

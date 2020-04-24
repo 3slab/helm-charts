@@ -1,0 +1,184 @@
+# Default values for self-service-password.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: suezenv/self-service-password
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+env: []
+#  - name: LDAP_SECURITY_CREDENTIALS
+#    valueFrom:
+#      secretKeyRef:
+#        name: ldap-openldap
+#        key: LDAP_ADMIN_PASSWORD
+#  - name: LDAP_URL
+#    value: "ldap://ldap-openldap"
+#  - name: LDAP_START_TLS  #  if not equal to "true" it's false
+#    value: "false"
+#    #  LDAP_SECURITY_PRINCIPAL must have write permission on ldap
+#  - name: LDAP_SECURITY_PRINCIPAL
+#    value: "cn=admin,dc=gaia92,dc=fr"
+#  - name: LDAP_BASE
+#    value: "ou=Users,dc=gaia92,dc=fr"
+#  - name: LDAP_LOGIN_ATTRIBUTE
+#    value: "uid"
+#  - name: LDAP_FULLNAME_ATTRIBUTE
+#    value: "cn"
+#  - name: MAIL_SMTP_HOST
+#    value: "smtp-service"
+#  - name: MAIL_SMTP_PORT
+#    value: "1025"
+#  - name: MAIL_SMTP_AUTH_ENABLED
+#    value: "false"
+#  - name: MAIL_PROTOCOL
+#    value: "smtp"
+
+volumeMounts: []
+#  - name: self-service-password-vol
+#    mountPath: /usr/share/self-service-password/conf/config.inc.php
+#    subPath: config.inc.php
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+volumes: []
+#  - name: self-service-password-vol
+#    configMap:
+#      name: self-service-password-config
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+configMap:
+  conf:
+    enable: false
+    name: self-service-password-config
+    data: []
+    #      - name: "test.xml"
+    #        value: |-
+    #          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    #          <!DOCTYPE template SYSTEM "template.dtd">
+    #          <template>
+    #          <test>1</askcontainer>
+    #          <description>This is a test</description>
+    #          </template>
+  image:
+    enable: false
+    name: self-service-password-image
+    data: []
+    #      - name: "test.xml"
+    #        value: |-
+    #          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    #          <!DOCTYPE template SYSTEM "template.dtd">
+    #          <template>
+    #          <test>1</askcontainer>
+    #          <description>This is a test</description>
+    #          </template>
+  css:
+    enable: true
+    name: self-service-password-css
+    data:
+      - name: "test.xml"
+        value: |-
+          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+          <!DOCTYPE template SYSTEM "template.dtd">
+          <template>
+          <test>1</askcontainer>
+          <description>This is a test</description>
+          </template>
+  js:
+    enable: false
+    name: self-service-password-js
+    data: []
+    #      - name: "test.xml"
+    #        value: |-
+    #          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    #          <!DOCTYPE template SYSTEM "template.dtd">
+    #          <template>
+    #          <test>1</askcontainer>
+    #          <description>This is a test</description>
+    #          </template>
+  lang:
+    enable: false
+    name: self-service-password-lang
+    data: []
+    #      - name: "test.xml"
+    #        value: |-
+    #          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    #          <!DOCTYPE template SYSTEM "template.dtd">
+    #          <template>
+    #          <test>1</askcontainer>
+    #          <description>This is a test</description>
+    #          </template>
+  lib:
+    enable: false
+    name: self-service-password-lib
+    data: []
+    #      - name: "test.xml"
+    #        value: |-
+    #          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    #          <!DOCTYPE template SYSTEM "template.dtd">
+    #          <template>
+    #          <test>1</askcontainer>
+    #          <description>This is a test</description>
+    #          </template>
+  pages:
+    enable: false
+    name: self-service-password-pages
+    data: []
+    #      - name: "test.xml"
+    #        value: |-
+    #          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    #          <!DOCTYPE template SYSTEM "template.dtd">
+    #          <template>
+    #          <test>1</askcontainer>
+    #          <description>This is a test</description>
+    #          </template>
+  fonts:
+    enable: false
+    name: self-service-password-fonts
+    data: []
+    #      - name: "test.xml"
+    #        value: |-
+    #          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    #          <!DOCTYPE template SYSTEM "template.dtd">
+    #          <template>
+    #          <test>1</askcontainer>
+    #          <description>This is a test</description>
+    #          </template>

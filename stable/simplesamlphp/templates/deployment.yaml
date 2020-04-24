@@ -1,0 +1,107 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "simplesamlphp.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "simplesamlphp.name" . }}
+    helm.sh/chart: {{ include "simplesamlphp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "simplesamlphp.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- if .Values.strategy.type }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "simplesamlphp.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Always
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.env }}
+          env:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
+          {{- if or .Values.volumeMounts .Values.configMap.cert.enable .Values.configMap.config.enable .Values.configMap.metadata.enable }}
+          volumeMounts:
+          {{- end }}
+          {{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          {{- if .Values.configMap.cert.enable }}
+          {{- range .Values.configMap.cert.data }}
+            - mountPath: /var/simplesamlphp/cert/{{ .name }}
+              name: simplesamlphp-cert-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{ end }}
+          {{- if .Values.configMap.config.enable }}
+          {{- range .Values.configMap.config.data }}
+            - mountPath: /var/simplesamlphp/config/{{ .name }}
+              name: simplesamlphp-config-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{ end }}
+          {{- if .Values.configMap.metadata.enable }}
+          {{- range .Values.configMap.metadata.data }}
+            - mountPath: /var/simplesamlphp/metadata/{{ .name }}
+              name: simplesamlphp-metadata-vol
+              subPath: {{ .name }}
+          {{- end }}
+          {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if or .Values.volumes .Values.configMap.cert.enable .Values.configMap.config.enable .Values.configMap.metadata.enable }}
+      volumes:
+    {{- end }}
+    {{- with .Values.volumes }}
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.configMap.cert.enable }}
+        - name: simplesamlphp-cert-vol
+          configMap:
+            name: simplesamlphp-cert
+    {{ end }}
+    {{- if .Values.configMap.config.enable }}
+        - name: simplesamlphp-config-vol
+          configMap:
+            name: simplesamlphp-config
+    {{ end }}
+    {{- if .Values.configMap.metadata.enable }}
+        - name: simplesamlphp-metadata-vol
+          configMap:
+            name: simplesamlphp-metadata
+    {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

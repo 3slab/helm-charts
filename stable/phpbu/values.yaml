@@ -1,0 +1,134 @@
+# Default values for phpbu.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  registry: docker.io
+  repository: suezenv/phpbu
+  tag: 5.2.7
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+## set to `now` to get a one time job, or a cronjob schedule like `0 0 * * *`
+## to get a cronjob.
+schedule: "0 0 * * *"
+
+# cronjob history
+successfulJobsHistoryLimit: 3
+failedJobsHistoryLimit: 3
+
+# Image options
+concurrencyPolicy: Forbid
+backoffLimit: 0
+restartPolicy: Never
+command: []
+# command:
+#  - phpbu
+#  - --configuration=/etc/phpbu/phpbu.xml
+
+configMap:
+  enable: false
+  name: backup-config
+  data: []
+  # data: 
+  #   - name: backup-config-mysql.xml
+  #     value: |-
+  #       <?xml version="1.0" encoding="UTF-8"?>
+  #       <phpbu xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  #       xsi:noNamespaceSchemaLocation="http://schema.phpbu.de/5.2/phpbu.xsd">
+  #         <backups>
+  #           <backup name="mysql">
+  #             <source type="mysqldump">
+  #               <option name="host" value="mysql"/>
+  #               <option name="port" value="3306"/>
+  #               <option name="databases" value="test"/>
+  #               <option name="user" value="user"/>
+  #               <option name="password" value="password"/>
+  #             </source>
+
+  #             <target dirname="/tmp/backup" filename="mysqldump-%Y%m%d-%H%i"/>
+
+  #             <sync type="azureblob">
+  #                 <option name="connection_string" value="" />
+  #                 <option name="container_name" value="backup" />
+  #                 <option name="path" value="mysql" />
+  #                 <option name="cleanup.type" value="quantity" />
+  #                 <option name="cleanup.amount" value="2" />
+  #             </sync>
+
+  #             <cleanup type="quantity">
+  #               <option name="amount" value="2"/>
+  #             </cleanup>
+  #           </backup>
+  #         </backups>
+  #       </phpbu>
+
+env: []
+# env:
+# - name: DATABASE_HOST
+#   value: "percona-percona"
+# - name: DATABASE_PORT
+#   value: "3306"
+# - name: DATABASE_NAMES
+#   value: "all"
+# - name: DATABASE_USER
+#   value: "root"
+# - name: BLOB_CONTAINER_NAME
+#   valueFrom:
+#     secretKeyRef:
+#       name: backup-blob-secret
+#       key: container-name                
+# - name: DATABASE_PASSWORD
+#   valueFrom:
+#     secretKeyRef:
+#       name: percona-percona
+#       key: mysql-root-password
+# - name: BLOB_CONECTION_STRING
+#   valueFrom:
+#     secretKeyRef:
+#       name: backup-blob-secret
+#       key: connection-string
+
+volumeMounts: []
+# volumeMounts:
+# - name: backup-config-vol
+#   mountPath: /etc/phpbu/phpbu.xml
+#   subPath: backup-config-mysql.xml
+# - name: backup-dir-vol
+#   mountPath: /data
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+volumes: []
+# volumes:
+# - name: backup-config-vol
+#   configMap:
+#     name: backup-config
+# - name: backup-dir-vol
+#   persistentVolumeClaim:
+#     claimName: backup-share-pvc
+
+persistence:
+  enabled: false
+  name: backup-share-pvc
+  annotations: {}
+  accessMode: ReadWriteMany
+  size: 1000Gi
+  storageClass: azurefile
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

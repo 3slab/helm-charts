@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}-nginx
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+
+data:
+  api.conf: |-
+    {{- if .Values.configMap.dollar.enabled }}
+    geo $dollar {                                                                                                                                                                             
+      default "$";                                                                                                                                                                             
+    }
+    {{- end }}
+
+    server {
+      server_name _;
+      root {{ .Values.nginx.sourcesPath }}/{{ .Values.nginx.sourcesDir }};
+
+      location / {
+        try_files $uri /{{ .Values.nginx.mainControllerName }}.php$is_args$args;
+      }
+
+      location ~ ^/{{ .Values.nginx.mainControllerName }}\.php(/|$) {
+        fastcgi_pass unix:/var/run/php-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+
+        {{- if .Values.env }}
+        {{- range $env := .Values.env.container }}
+        fastcgi_param {{ $env.name }} {{ $env.value | quote }};
+        {{- end }}
+        {{- end }}
+        {{- if .Values.extraEnv }}
+        {{- range $env := .Values.extraEnv }}
+        fastcgi_param {{ $env.name }} {{ $env.value | quote }};
+        {{- end }}
+        {{- end }}
+
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+
+        internal;
+      }
+
+      location ~ \.php$ {
+        return 404;
+      }
+
+      access_log {{ .Values.nginx.accessLogPath }};
+      error_log {{ .Values.nginx.errorLogPath }};
+    }

@@ -1,0 +1,15 @@
+{{- if .Values.configMap.pages.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.pages.name }}
+  labels:
+    name: {{ .Values.configMap.pages.name }}
+    chart: {{ include "self-service-password.chart" . }}
+    release: {{ .Release.Name }}
+data:
+  {{- range .Values.configMap.pages.data }}
+  {{ .name }}: |-
+{{ .value | indent 4 }}
+  {{- end }}
+{{- end }}

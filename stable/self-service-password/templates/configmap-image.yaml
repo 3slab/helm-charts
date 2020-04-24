@@ -1,0 +1,15 @@
+{{- if .Values.configMap.image.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.image.name }}
+  labels:
+    name: {{ .Values.configMap.image.name }}
+    chart: {{ include "self-service-password.chart" . }}
+    release: {{ .Release.Name }}
+data:
+  {{- range .Values.configMap.image.data }}
+  {{ .name }}: |-
+{{ .value | indent 4 }}
+  {{- end }}
+{{- end }}

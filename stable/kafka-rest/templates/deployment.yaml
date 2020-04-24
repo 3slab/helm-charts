@@ -1,0 +1,176 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "kafka-rest.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "kafka-rest.name" . }}
+    helm.sh/chart: {{ include "kafka-rest.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "kafka-rest.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "kafka-rest.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- if or .Values.initContainers .Values.kong.enable }}
+      initContainers:
+      {{- end }}
+{{- with .Values.initContainers }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+        {{- if .Values.kong.enable }}
+        - name: kong-subscriber
+          image: appropriate/curl
+          imagePullPolicy: IfNotPresent
+          command: ["/usr/bin/curl"]
+          args:
+            - "-k"
+            - "-X"
+            - "POST"
+            - "$(KONG_ADMIN_URL)/services/"
+            - "-d"
+            - "name=$(API_NAME)"
+            - "-d"
+            - "url=http://$(SERVICE_NAME):$(API_PORT)"
+          env:
+            - name: SERVICE_NAME
+              value: {{ include "kafka-rest.fullname" . }}
+            - name: API_NAME
+              value: {{ include "kafka-rest.fullname" . }}
+            - name: API_PORT
+              value: {{ .Values.service.port | quote }}
+            - name: KONG_ADMIN_URL
+              value: {{ required "A valid .Values.kong.url entry required!" .Values.kong.url | quote }}
+        - name: kong-subscriber-route
+          image: appropriate/curl
+          imagePullPolicy: IfNotPresent
+          command: ["/usr/bin/curl"]
+          args:
+            - "-k"
+            - "-X"
+            - "POST"
+            - "$(KONG_ADMIN_URL)/services/$(API_NAME)/routes/"
+            - "-d"
+            - "name=$(API_NAME)-route"
+            - "-d"
+            - "paths[]=$(API_PATH)"
+          env:
+            - name: API_NAME
+              value: {{ include "kafka-rest.fullname" . }}
+            - name: API_PATH
+              value: "/v1/kafka"
+            - name: KONG_ADMIN_URL
+              value: {{ required "A valid .Values.kong.url entry required!" .Values.kong.url | quote }}
+        - name: kong-consumer
+          image: appropriate/curl
+          imagePullPolicy: IfNotPresent
+          command: ["/usr/bin/curl"]
+          args:
+            - "-k"
+            - "-X"
+            - "POST"
+            - "$(KONG_ADMIN_URL)/consumers/"
+            - "-d"
+            - "username=$(USER_NAME)"
+          env:
+            - name: USER_NAME
+              value: {{ default "kafka" .Values.kong.username | quote }}
+            - name: KONG_ADMIN_URL
+              value: {{ required "A valid .Values.kong.url entry required!" .Values.kong.url | quote }}
+        - name: kong-consumer-key
+          image: appropriate/curl
+          imagePullPolicy: IfNotPresent
+          command: ["/usr/bin/curl"]
+          args:
+            - "-k"
+            - "-X"
+            - "POST"
+            - "$(KONG_ADMIN_URL)/consumers/$(USER_NAME)/key-auth/"
+            - "-d"
+            - "key=$(USER_KEY)"
+          env:
+            - name: USER_NAME
+              value: {{ default "kafka" .Values.kong.username | quote }}
+            - name: USER_KEY
+              value: {{ required "A valid .Values.kong.apiKey entry required!" .Values.kong.apiKey | quote }}
+            - name: KONG_ADMIN_URL
+              value: {{ required "A valid .Values.kong.url entry required!" .Values.kong.url | quote }}
+        {{- end }}
+        {{- if and .Values.kong.enable .Values.kong.policy.enable }}
+        - name: kong-policy-plugin
+          image: appropriate/curl
+          imagePullPolicy: IfNotPresent
+          command: ["/usr/bin/curl"]
+          args:
+            - "-k"
+            - "-X"
+            - "POST"
+            - "$(KONG_ADMIN_URL)/services/$(API_NAME)/plugins"
+            - "-d"
+            - "name=key-auth"
+            - "-d"
+            - "config.hide_credentials=true"
+          env:
+            - name: API_NAME
+              value: {{ include "kafka-rest.fullname" . }}
+            - name: KONG_ADMIN_URL
+              value: {{ required "A valid .Values.kong.url entry required!" .Values.kong.url | quote }}
+        {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          restartPolicy: {{ .Values.image.restartPolicy }}
+          env:
+            {{- if .Values.kafkaRestZookeeperConnect }}
+            - name: KAFKA_REST_ZOOKEEPER_CONNECT
+              value: {{ .Values.kafkaRestZookeeperConnect | quote }}
+            {{- end }}
+            {{- if .Values.kafkaRestBootstrapServers }}
+            - name: KAFKA_REST_BOOTSTRAP_SERVERS
+              value: {{ .Values.kafkaRestBootstrapServers | quote }}
+            {{- end }}
+            {{- if .Values.kafkaRestSchemaRegistryUrl }}
+            - name: KAFKA_REST_SCHEMA_REGISTRY_URL
+              value: {{ .Values.kafkaRestSchemaRegistryUrl | quote }}
+            {{- end }}
+            - name: KAFKA_REST_HOST_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+{{- if .Values.extraEnv }}
+{{ tpl (toYaml .Values.extraEnv) $ | indent 12 }}
+{{- end }}
+          ports:
+            - name: kafka-rest-web
+              containerPort: 8082
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: kafka-rest-web
+          readinessProbe:
+            httpGet:
+              path: /
+              port: kafka-rest-web
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

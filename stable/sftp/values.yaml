@@ -1,0 +1,115 @@
+# Default values for sftp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+strategy: {}
+  # type: Recreate
+
+image:
+  repository: atmoz/sftp
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+  # - name: regcred
+
+service:
+  type: ClusterIP
+  port: 22
+  loadBalancerIp: ~
+
+env: []
+#  - name: SFTP_USERS
+#    value: "user:pass"
+#
+#    You can use atmoz/makepasswd to generate encrypted passwords:
+#    echo -n "your-password" | docker run -i --rm atmoz/makepasswd --crypt-md5 --clearfrom=-
+#    foo:$1$0G2g0GSt$ewU0t6GXG15.0hWoOX8X9.:e:1001
+
+
+volumeMounts: []
+#  - mountPath: /var/sftp/cert/
+#    name: sftp-certs-vol
+
+
+volumes: []
+#  - name: sftp-certs-vol
+#    configMap:
+#      name: sftp-certs
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+persistence:
+  enabled: false
+  annotations: {}
+  accessMode: ReadWriteOnce
+  disks:
+    - name: home
+      size: 50Gi
+      storageClass: default
+      mountPath: /home
+
+bindMountFile: |-
+  #!/bin/bash
+  # File mounted as: /etc/sftp.d/bindmount.sh
+  # Just an example (make your own)
+
+  function bindmount() {
+      if [ -d "$1" ]; then
+          mkdir -p "$2"
+      fi
+      mount --bind $3 "$1" "$2"
+  }
+
+  # Remember permissions, you may have to fix them:
+  # chown -R :users /data/common
+
+  # bindmount /data/admin-tools /home/admin/tools
+  # bindmount /data/common /home/dave/common
+  # bindmount /data/common /home/peter/common
+  # bindmount /data/docs /home/peter/docs --read-only
+
+customScripts: ~
+  # - scriptName: myscript.sh
+  #   scriptContent: |-
+  #     #!/bin/bash
+  #     mkdir /home/foo/upload
+  #     chown -R :users /home/foo/upload
+
+
+sshHostKeys:
+  # generate with `ssh-keygen -t ed25519 -f ssh_host_ed25519_key -N '' < /dev/null` and mount ssh_host_ed25519_key
+  ed25519: ~
+
+  # generate with `ssh-keygen -t rsa -b 4096 -f ssh_host_rsa_key -N '' < /dev/null` and mount ssh_host_rsa_key
+  rsa: ~
+
+publicKeys: ~
+  # - username: foo
+  #   key: 'ssh-rsa AAAA...'
+
+users: ~
+  # foo:123:1001:100
+  # bar:abc:1002:100
+  # baz:xyz:1003:100

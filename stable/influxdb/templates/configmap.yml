@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.name }}
+  labels:
+    name: {{ .Values.config.name }}
+    chart: {{ template "influxdb.chart" . }}
+    release: {{ .Release.Name }}
+data:
+  telegraf.conf: |-
+{{- if .Values.configmap }}
+    # User-supplied configuration:
+{{ .Values.configmap | indent 4 }}
+{{- end }}

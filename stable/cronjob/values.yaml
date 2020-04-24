@@ -1,0 +1,78 @@
+# Default values for cronjob.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  registry: docker.io
+  repository: suezenv/cronjob
+  tag: 1.0.0
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+## set to `now` to get a one time job, or a cronjob schedule like `0 0 * * *`
+## to get a cronjob.
+schedule: "0 0 * * *"
+
+# cronjob history
+successfulJobsHistoryLimit: 3
+failedJobsHistoryLimit: 3
+backoffLimit: 0
+concurrencyPolicy: Forbid
+restartPolicy: Never
+
+env: []
+#env:
+#  - name: LDAP_URL
+#    value: "ldap://ldap-openldap"
+
+command: []
+#command:
+#  - /bin/sh
+#  - -c
+
+args: []
+#args:
+#  - kubectl get pod -n smartcoach-int -l app=symfony,release=users-api-int -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -i kubectl -n smartcoach-int exec {}  bin/console app:subscription:import -- -v
+
+volumeMounts: []
+#volumeMounts:
+#  - name: cronjob-vol
+#    mountPath: /my/config/path/config.php
+#    subPath: config.php
+
+configMap:
+  enable: false
+  name: cronjob-config
+  data: []
+  #      - name: "test.xml"
+  #        value: |-
+  #          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+  #          <!DOCTYPE template SYSTEM "template.dtd">
+  #          <template>
+  #          <test>1</askcontainer>
+  #          <description>This is a test</description>
+  #          </template>
+
+volumes: []
+#  - name: cronjob-vol
+#    configMap:
+#      name: cronjob-config
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

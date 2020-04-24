@@ -1,0 +1,45 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "phpbu.fullname" . }}
+  labels:
+    app: {{ template "phpbu.name" . }}
+{{ include "phpbu.labels" . | indent 4 }}
+spec:
+  schedule: "{{ .Values.schedule }}"
+  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit }}
+  concurrencyPolicy: {{ .Values.concurrencyPolicy }}
+  jobTemplate:
+    metadata:
+      labels:
+        app: {{ template "phpbu.name" . }}
+        chart: {{ template "phpbu.chart" . }}
+        cronjob-name: {{ template "phpbu.fullname" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      backoffLimit: {{ .Values.backoffLimit }}
+      template:
+        spec:
+          restartPolicy: {{ .Values.restartPolicy }}
+          containers:
+          - name: {{ template "phpbu.fullname" . }}
+            image: {{ template "phpbu.image" . }}
+            {{- with .Values.command }}
+            command:
+{{ toYaml . | indent 14 }}
+            {{- end }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- with .Values.env }}
+            env:
+{{ toYaml . | indent 14 }}
+            {{- end }}
+            {{- with .Values.volumeMounts }}
+            volumeMounts:
+{{ toYaml . | indent 14 }}
+            {{- end }}
+          {{- with .Values.volumes }}
+          volumes:
+{{ toYaml . | indent 12 }}
+          {{- end }}

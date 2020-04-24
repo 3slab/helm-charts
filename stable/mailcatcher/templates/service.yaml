@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailcatcher.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "mailcatcher.name" . }}
+    helm.sh/chart: {{ include "mailcatcher.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+    - name: smtp
+      port: {{ .Values.service.smtpPort }}
+      protocol: TCP
+      targetPort: smtp
+  selector:
+    app.kubernetes.io/name: {{ include "mailcatcher.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

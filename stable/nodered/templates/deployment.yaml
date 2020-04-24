@@ -1,0 +1,139 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+    spec:
+      initContainers:
+        - name: copy-nodered-files
+          image: busybox
+          command: ['sh', '-c', 'cp -R {{ .Values.nodered.tmpFilesPath }}/* {{ .Values.persistentVolume.mountPath }}']
+          volumeMounts:
+            - name: {{ template "fullname" . }}-volume
+              mountPath: "{{ .Values.persistentVolume.mountPath }}"
+            - name: {{ template "fullname" . }}-flows-volume
+              mountPath: "{{ .Values.nodered.tmpFilesPath }}/flows.json"
+              subPath: 'flows.json'
+            - name: {{ template "fullname" . }}-flows-volume
+              mountPath: "{{ .Values.nodered.tmpFilesPath }}/settings.js"
+              subPath: 'settings.js'
+{{- if .Values.nodered.flowsCred }}
+            - name: {{ template "fullname" . }}-flows-volume
+              mountPath: "{{ .Values.nodered.tmpFilesPath }}/flows_cred.json"
+              subPath: 'flows_cred.json'
+{{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: LOG_PATH
+              value: {{ .Values.monitoring.logsMountPath }}
+            - name: PORT
+              value: {{ .Values.internalPort }}
+            {{- range $key, $value :=  .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.internalPort }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.internalPort }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+            - name: {{ template "fullname" . }}-volume
+              mountPath: "{{ .Values.persistentVolume.mountPath }}"
+            - name: {{ template "fullname" . }}-logs-volume
+              mountPath: "{{ .Values.monitoring.logsMountPath }}"
+            - name: {{ template "fullname" . }}-flows-volume
+              mountPath: "{{ .Values.nodered.tmpFilesPath }}/flows.json"
+              subPath: 'flows.json'
+{{- if .Values.nodered.flowsCred }}
+            - name: {{ template "fullname" . }}-flows-volume
+              mountPath: "{{ .Values.nodered.tmpFilesPath }}/flows_cred.json"
+              subPath: 'flows_cred.json'
+{{- end }}
+            - name: {{ template "fullname" . }}-flows-volume
+              mountPath: "{{ .Values.nodered.tmpFilesPath }}/settings.js"
+              subPath: 'settings.js'
+
+        {{- if .Values.monitoring.enabled }}
+        - name: {{ .Values.monitoring.name }}
+          image: "{{ .Values.monitoring.repository }}:{{ .Values.monitoring.tag }}"
+
+          imagePullPolicy: {{ .Values.monitoring.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.monitoring.internalPort }}
+          resources:
+{{ toYaml .Values.monitoring.resources | indent 12 }}
+          volumeMounts:
+            - name: {{ template "fullname" . }}-logs-volume
+              mountPath: "{{ .Values.monitoring.logsMountPath }}"
+            - name: {{ template "fullname" . }}-grok-sidecar-volume
+              mountPath: "{{ .Values.monitoring.grokPath }}"
+              subPath: 'config.yml'
+        {{- end }}
+
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: {{ template "fullname" . }}-logs-volume
+          emptyDir: {}
+        - name: {{ template "fullname" . }}-flows-volume
+          configMap:
+            name: {{ template "fullname" . }}-config-map
+            items:
+              - key: flows.json
+                path: flows.json
+              - key: settings.js
+                path: settings.js
+{{- if .Values.nodered.flowsCred }}
+              - key: flows_cred.json
+                path: flows_cred.json
+{{- end }}
+        - name: {{ template "fullname" . }}-volume
+        {{- if .Values.persistentVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ if .Values.persistentVolume.existingClaim }}{{ .Values.persistentVolume.existingClaim }}{{- else }}{{ template "fullname" . }}{{- end }}-pvc
+        {{- else }}
+          emptyDir: {}
+        {{- end -}}
+        {{- if .Values.monitoring.enabled }}
+        - name: {{ template "fullname" . }}-grok-sidecar-volume
+          configMap:
+            name: {{ template "fullname" . }}-config-map
+            items:
+              - key: grok-config.yml
+                path: config.yml
+        {{- end -}}

@@ -1,0 +1,60 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: {{ template "influxdb-relay.fullname" . }}
+  labels:
+    app: {{ template "influxdb-relay.name" . }}
+{{ include "influxdb-relay.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ .Values.serviceName }}
+  template:
+    metadata:
+      {{- if .Values.annotations }}
+      annotations:
+        {{- range .Values.annotations }}
+          {{ .key }}: '{{ .value }}'
+          {{- end }}
+      {{- end }}
+      labels:
+        app: {{ template "influxdb-relay.name" . }}
+{{ include "influxdb-relay.labels" . | indent 8 }}
+    spec:
+{{- if or .Values.podAntiAffinity .Values.affinity }}
+      affinity:
+{{- if .Values.affinity }}
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
+{{- if eq .Values.podAntiAffinity "hard" }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: {{ .Values.podAntiAffinityTopologyKey }}
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: {{ include "influxdb-relay.name" . }}
+{{- else if eq .Values.podAntiAffinity "soft" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: {{ .Values.podAntiAffinityTopologyKey }}
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: {{ include "influxdb-relay.name" . }}
+                    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+{{- end }}
+
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+
+      containers:
+      - name: influxdb-relay
+        image: {{ template "influxdb-relay.image" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+{{- if .Values.extraEnv }}
+{{ toYaml .Values.extraEnv | indent 8 }}
+{{- end }}
+        ports:
+        - containerPort: 9096
+          name: http-api

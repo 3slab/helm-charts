@@ -1,0 +1,36 @@
+{{- $fullName := include "sftp.fullname" . -}}
+{{- $name := include "sftp.name" . -}}
+{{- $chart  := include "sftp.chart" . -}}
+{{- $releaseName  := .Release.Name -}}
+{{- $releaseService  := .Release.Service -}}
+{{- if and .Values.persistence.enabled -}}
+{{- range .Values.persistence.disks }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+{{- if .annotations }}
+  annotations:
+{{ toYaml .annotations | indent 4 }}
+{{- end }}
+  name: {{ $fullName }}-{{ .name }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chart }}
+    app.kubernetes.io/instance: {{ $releaseName }}
+    app.kubernetes.io/managed-by: {{ $releaseService }}
+spec:
+  accessModes:
+    - {{ .accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .size | quote }}
+{{- if .storageClass }}
+{{- if (eq "-" .storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

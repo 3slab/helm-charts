@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "influxdb.fullname" . }}-headless
+  labels:
+    app: {{ template "influxdb.name" . }}
+    chart: {{ template "influxdb.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: http-api
+      port: {{ .Values.service.port }}
+    - name: exporter
+      port: {{ .Values.metrics.service.port }}
+  selector:
+    app: {{ template "influxdb.name" . }}
+    release: {{ .Release.Name | quote }}

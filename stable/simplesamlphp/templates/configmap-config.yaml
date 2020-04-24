@@ -1,0 +1,15 @@
+{{- if .Values.configMap.config.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.config.name }}
+  labels:
+    name: {{ .Values.configMap.config.name }}
+    chart: {{ include "simplesamlphp.chart" . }}
+    release: {{ .Release.Name }}
+data:
+  {{- range .Values.configMap.config.data }}
+  {{ .name }}: |-
+{{ .value | indent 4 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,15 @@
+{{- if .Values.configMap.template.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.template.name }}
+  labels:
+    name: {{ .Values.configMap.template.name }}
+    chart: {{ include "phpldapadmin.chart" . }}
+    release: {{ .Release.Name }}
+data:
+  {{- range .Values.configMap.template.data }}
+  {{ .name }}: |-
+{{ .value | indent 4 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,170 @@
+{{- $fullName := include "openssh-server.fullname" . -}}
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "openssh-server.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "openssh-server.name" . }}
+    helm.sh/chart: {{ include "openssh-server.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  {{- if .Values.strategy.type }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "openssh-server.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "openssh-server.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Always
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- if or .Values.sshHostKeys.ed25519 .Values.sshHostKeys.rsa .Values.sshHostKeys.ecdsa .Values.sshHostKeys.dsa }}
+      initContainers:
+        - name: copy-pubkeys-files
+          image: busybox
+          command: ['sh', '-c', 'mkdir -p /config/ssh_host_keys && cp -R /pubkeys/* /config/ssh_host_keys/ && chmod 600 /config/ssh_host_keys/*_key']
+          volumeMounts:
+            - name: {{ include "openssh-server.fullname" . }}-volume
+              mountPath: "/config"
+            {{- if or .Values.sshHostKeys.ed25519 }}
+            - mountPath: /pubkeys/ssh_host_ed25519_key
+              name: openssh-server-hostkey-vol
+              subPath: ssh_host_ed25519_key
+            {{- end }}
+            {{- if or .Values.sshHostKeys.rsa }}
+            - mountPath: /pubkeys/ssh_host_rsa_key
+              name: openssh-server-hostkey-vol
+              subPath: ssh_host_rsa_key
+            {{- end }}
+            {{- if or .Values.sshHostKeys.ecdsa }}
+            - mountPath: /pubkeys/ssh_host_ecdsa_key
+              name: openssh-server-hostkey-vol
+              subPath: ssh_host_ecdsa_key
+            {{- end }}
+            {{- if or .Values.sshHostKeys.dsa }}
+            - mountPath: /pubkeys/ssh_host_dsa_key
+              name: openssh-server-hostkey-vol
+              subPath: ssh_host_dsa_key
+            {{- end }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- if .Values.ssh.hostname }}
+            - name: HOSTNAME
+              value: {{ .Values.ssh.hostname | quote  }}
+            {{- end }}
+            {{- if .Values.ssh.uid }}
+            - name: PUID
+              value: {{ .Values.ssh.uid | quote  }}
+            {{- end }}
+            {{- if .Values.ssh.gid }}
+            - name: PGID
+              value: {{ .Values.ssh.gid | quote  }}
+            {{- end }}
+            {{- if .Values.ssh.timezone }}
+            - name: TZ
+              value: {{ .Values.ssh.timezone | quote  }}
+            {{- end }}
+            {{- if .Values.ssh.userName }}
+            - name: USER_NAME
+              value: {{ .Values.ssh.userName | quote  }}
+            {{- end }}
+            {{- if .Values.ssh.sudoAccess }}
+            - name: SUDO_ACCESS
+              value: {{ .Values.ssh.sudoAccess | quote  }}
+            {{- end }}
+            {{- if .Values.ssh.userPassword }}
+            - name: PASSWORD_ACCESS
+              value: "true"
+            - name: USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "openssh-server.fullname" . }}
+                  key: user-password
+            {{- end }}
+            {{- if .Values.publicKeys }}
+            - name: PUBLIC_KEY_FILE
+              value: "/config/authorized_keys"
+            {{- end }}
+          {{- with .Values.env }}
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          ports:
+            - name: ssh
+              containerPort: 2222
+              protocol: TCP
+          volumeMounts:
+            - name: {{ include "openssh-server.fullname" . }}-volume
+              mountPath: "/config"
+            {{- if or .Values.sshHostKeys.ed25519 }}
+            - mountPath: /pubkeys/ssh_host_ed25519_key
+              name: openssh-server-hostkey-vol
+              subPath: ssh_host_ed25519_key
+            {{- end }}
+            {{- if or .Values.sshHostKeys.rsa }}
+            - mountPath: /pubkeys/ssh_host_rsa_key
+              name: openssh-server-hostkey-vol
+              subPath: ssh_host_rsa_key
+            {{- end }}
+            {{- if or .Values.sshHostKeys.ecdsa }}
+            - mountPath: /pubkeys/ssh_host_ecdsa_key
+              name: openssh-server-hostkey-vol
+              subPath: ssh_host_ecdsa_key
+            {{- end }}
+            {{- if or .Values.sshHostKeys.dsa }}
+            - mountPath: /pubkeys/ssh_host_dsa_key
+              name: openssh-server-hostkey-vol
+              subPath: ssh_host_dsa_key
+            {{- end }}
+            {{- if or .Values.publicKeys }}
+            - mountPath: /config/authorized_keys
+              name: openssh-server-pubkey-vol
+              subPath: authorized_keys
+            {{- end }}
+            {{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+            {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: {{ include "openssh-server.fullname" . }}-volume
+          emptyDir: {}
+        {{- if or .Values.sshHostKeys.ed25519 .Values.sshHostKeys.rsa .Values.sshHostKeys.ecdsa .Values.sshHostKeys.dsa }}
+        - name: openssh-server-hostkey-vol
+          configMap:
+            name: {{ include "openssh-server.fullname" . }}-hostkey
+        {{- end }}
+        {{- if .Values.publicKeys }}
+        - name: openssh-server-pubkey-vol
+          configMap:
+            name: {{ include "openssh-server.fullname" . }}-pubkey
+        {{- end }}
+        {{- with .Values.volumes }}
+{{ toYaml . | indent 8 }}
+        {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

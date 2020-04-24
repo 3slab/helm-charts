@@ -1,0 +1,118 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "superset.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "superset.name" . }}
+    helm.sh/chart: {{ include "superset.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: 1
+  {{- if .Values.strategy.type }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "superset.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "superset.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Always
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      initContainers:
+        - name: "db-upgrade"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["superset", "db", "upgrade"]
+          {{- with .Values.env }}
+          env:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          volumeMounts:
+            - mountPath: /app/pythonpath/superset_config.py
+              name: superset-config
+              subPath: superset_config.py
+{{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+{{- end }}
+        - name: "create-admin-user"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["flask", "fab", "create-admin", "--username", {{ .Values.admin.username | quote }}, "--firstname", {{ .Values.admin.firstname | quote }}, "--lastname", {{ .Values.admin.lastname | quote }}, "--email", {{ .Values.admin.email | quote }}, "--password", {{ .Values.admin.password | quote }}]
+          {{- with .Values.env }}
+          env:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          volumeMounts:
+            - mountPath: /app/pythonpath/superset_config.py
+              name: superset-config
+              subPath: superset_config.py
+{{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+{{- end }}
+        - name: "init"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["superset", "init"]
+          {{- with .Values.env }}
+          env:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          volumeMounts:
+            - mountPath: /app/pythonpath/superset_config.py
+              name: superset-config
+              subPath: superset_config.py
+{{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+{{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: SUPERSET_PORT
+              value: "8080"
+          {{- with .Values.env }}
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /app/pythonpath/superset_config.py
+              name: superset-config
+              subPath: superset_config.py
+{{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+{{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: superset-config
+          configMap:
+            name: {{ include "superset.fullname" . }}
+{{- with .Values.volumes }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

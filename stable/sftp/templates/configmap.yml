@@ -1,0 +1,73 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sftp.fullname" . }}-bindmount
+  labels:
+    app.kubernetes.io/name: {{ include "sftp.name" . }}
+    helm.sh/chart: {{ include "sftp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  bindmount.sh: |-
+{{ .Values.bindMountFile | indent 4 }}
+  {{- range .Values.customScripts }}
+  {{ .scriptName }}: |-
+{{ toYaml .scriptContent  | replace "|-" "" | indent 4 }}
+  {{- end}}
+
+{{- if or .Values.sshHostKeys.ed25519 .Values.sshHostKeys.rsa }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sftp.fullname" . }}-hostkey
+  labels:
+    app.kubernetes.io/name: {{ include "sftp.name" . }}
+    helm.sh/chart: {{ include "sftp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+{{- if .Values.sshHostKeys.ed25519 }}
+  ssh_host_ed25519_key: |+
+{{ .Values.sshHostKeys.ed25519 | indent 4 }}
+{{- end }}
+{{- if .Values.sshHostKeys.rsa }}
+  ssh_host_rsa_key: |+
+{{ .Values.sshHostKeys.rsa | indent 4 }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.publicKeys }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sftp.fullname" . }}-pubkey
+  labels:
+    app.kubernetes.io/name: {{ include "sftp.name" . }}
+    helm.sh/chart: {{ include "sftp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  {{- range .Values.publicKeys }}
+  {{ .username }}: |
+{{ toYaml .key | replace "|-" "" | indent 4 }}
+  {{- end}}
+{{- end }}
+
+{{- if .Values.users }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sftp.fullname" . }}-users
+  labels:
+    app.kubernetes.io/name: {{ include "sftp.name" . }}
+    helm.sh/chart: {{ include "sftp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  users.conf: |-
+{{ .Values.users | indent 4 }}
+{{- end }}

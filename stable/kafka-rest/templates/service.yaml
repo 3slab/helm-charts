@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kafka-rest.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "kafka-rest.name" . }}
+    helm.sh/chart: {{ include "kafka-rest.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: kafka-rest-web
+  selector:
+    app.kubernetes.io/name: {{ include "kafka-rest.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  status:
+    loadBalancer: {}
