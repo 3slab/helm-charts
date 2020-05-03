@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pentaho-server-ce.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "pentaho-server-ce.name" . }}
+    helm.sh/chart: {{ include "pentaho-server-ce.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "pentaho-server-ce.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
