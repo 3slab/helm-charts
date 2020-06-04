@@ -11,8 +11,8 @@ metadata:
 data:
   api.conf: |-
     {{- if .Values.configMap.dollar.enabled }}
-    geo $dollar {                                                                                                                                                                             
-      default "$";                                                                                                                                                                             
+    geo $dollar {
+      default "$";
     }
     {{- end }}
 
@@ -25,6 +25,10 @@ data:
       }
 
       location ~ ^/{{ .Values.nginx.mainControllerName }}\.php(/|$) {
+        {{- range $locationParam := .Values.locationParams }}
+        {{ locationParam }}
+        {{- end }}
+
         fastcgi_pass unix:/var/run/php-fpm.sock;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;

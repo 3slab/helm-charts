@@ -51,6 +51,7 @@ nginx:
   mainControllerName: index
   accessLogPath: /var/log/nginx/access.log
   errorLogPath: /var/log/nginx/error.log
+  locationParams: []
 
 # env:
 #   # env variables passed to the container and webserver

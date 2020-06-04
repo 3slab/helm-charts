@@ -33,6 +33,7 @@ Parameter                  | Description                                        
 `nginx.mainControllerName` | Directory in sourcesPath where the Symfony application is located        | `index`
 `nginx.accessLogPath`      | Path where Nginx access_log is located                                   | `/var/log/nginx/access.log`
 `nginx.errorLogPath`       | Path where Nginx error_log is located                                    | `/var/log/nginx/error.log`
+`nginx.locationParams`     | List of params added to location block in nginx config file              | `[]`
 `env.container`            | Environment variables that are passed to the container and the webserver |
 `env.initContainer`        | Environment variables that are passed to each initContainer              |
 `extraEnv`                 | Add specific environment variable to the container                       | `[]`
