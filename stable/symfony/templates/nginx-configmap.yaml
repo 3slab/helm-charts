@@ -25,7 +25,7 @@ data:
       }
 
       location ~ ^/{{ .Values.nginx.mainControllerName }}\.php(/|$) {
-        {{- range $locationParam := .Values.locationParams }}
+        {{- range $locationParam := .Values.nginx.locationParams }}
         {{ $locationParam }}
         {{- end }}
 
