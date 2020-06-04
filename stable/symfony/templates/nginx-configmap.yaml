@@ -26,7 +26,7 @@ data:
 
       location ~ ^/{{ .Values.nginx.mainControllerName }}\.php(/|$) {
         {{- range $locationParam := .Values.locationParams }}
-        {{ locationParam }}
+        {{ $locationParam }}
         {{- end }}
 
         fastcgi_pass unix:/var/run/php-fpm.sock;
