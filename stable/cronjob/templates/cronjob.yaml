@@ -22,6 +22,12 @@ spec:
       backoffLimit: {{ .Values.backoffLimit }}
       template:
         spec:
+          {{- if .Values.image.pullSecrets }}
+          imagePullSecrets:
+            {{- range $secret := .Values.image.pullSecrets }}
+            - name: {{ $secret }}
+            {{- end }}
+          {{- end }}
           restartPolicy: {{ .Values.restartPolicy }}
           containers:
             - name: {{ template "cronjob.fullname" . }}

@@ -50,6 +50,7 @@ The following tables lists the configurable parameters of the Cronjob chart and 
 | `image.repository`            | `cronjob` image repository                                                | `suezenv/cronjob`                                          |
 | `image.tag`                   | `cronjob` image tag                                                       | `5.2.7`                                                    |
 | `image.pullPolicy`            | Image pull policy                                                         | `IfNotPresent`                                             |
+| `image.pullSecrets`           | container image pull secrets                                              |                                                            |
 | `nameOverride`                | Override the app name                                                     | ``                                                         |
 | `fullnameOverride`            | Override the fullname of the chart                                        | ``                                                         |
 | `schedule`                    | Schedule for the CronJob.                                                 | `0 0 * * *`                                                |
