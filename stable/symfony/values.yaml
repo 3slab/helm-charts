@@ -131,3 +131,12 @@ persistence:
 configMap:
   dollar:
     enabled: false
+
+job:
+  enabled: false
+  activeDeadlineSeconds: 60
+  restartPolicy: Never
+  name: job
+  cmd: []
+  args: []
+  annotations: {}
