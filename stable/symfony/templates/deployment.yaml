@@ -13,6 +13,10 @@ spec:
       app: {{ template "name" . }}
       release: {{ .Release.Name }}
   replicas: {{ .Values.replicaCount }}
+  {{- if .Values.strategy }}
+  strategy:
+{{ toYaml .Values.strategy | indent 4 }}
+  {{- end }}
   template:
     metadata:
       labels:

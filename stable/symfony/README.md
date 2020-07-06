@@ -46,7 +46,8 @@ Parameter                  | Description                                        
 `job.name`                 | Pod suffixe name (Release.Name+this parameter)                           | `job`
 `job.cmd`                  | Command to run                                                           | `[]`
 `job.args`                 | Command arguments                                                        | `[]`
-`job.annotations`          | Define the hooks to use and their delete                                 | `{}`
+`job.annotations`          | Defines the hooks to use and their delete                                | `{}`
+`strategy`                 | Defines deployment strategy                                              | `{type: 'Recreate'}`
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
