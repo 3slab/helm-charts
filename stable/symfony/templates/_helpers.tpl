@@ -36,3 +36,14 @@ Return the appropriate apiVersion for ingress.
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return custom name for job or release-job
+*/}}
+{{- define "jobFullname" -}}
+{{- if .Values.job.nameOverride -}}
+{{- print .Values.job.nameOverride -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name .Values.job.name -}}
+{{- end -}}
+{{- end -}}

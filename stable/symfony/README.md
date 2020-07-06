@@ -40,6 +40,13 @@ Parameter                  | Description                                        
 `initContainers`           | Allow to configure initContainers for the deployment (YAML)              |
 `secrets`                  | Allow to configure secrets (mounted only for now)                        |
 `configMap.dollar.enabled` | Allow to pass variable with $ in value                                   | `false`
+`job.enabled`              | Enables a pre-update job                                                 | `false`
+`job.activeDeadlineSeconds`| Pod activeDeadlineSeconds parameter                                      | `60`
+`job.restartPolicy`        | Pod restartPolicy parameter                                              | `Never`
+`job.name`                 | Pod suffixe name (Release.Name+this parameter)                           | `job`
+`job.cmd`                  | Command to run                                                           | `[]`
+`job.args`                 | Command arguments                                                        | `[]`
+`job.annotations`          | Define the hooks to use and their delete                                 | `{}`
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
