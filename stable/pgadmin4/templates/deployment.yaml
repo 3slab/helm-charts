@@ -115,6 +115,9 @@ spec:
               subPath: {{ .subPath | default "" }}
               readOnly: {{ .readOnly }}
           {{- end }}
+{{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+{{- end }}
           resources:
             {{- .Values.resources | toYaml | nindent 12 }}
     {{- with .Values.extraContainers }}
@@ -156,6 +159,9 @@ spec:
             - key: pgpassfile
               path: pgpassfile
       {{- end }}
+{{- with .Values.volumes }}
+{{ toYaml . | indent 8 }}
+{{- end }}
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- .Values.imagePullSecrets | toYaml | nindent 8 }}

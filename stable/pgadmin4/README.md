@@ -75,6 +75,8 @@ The command removes nearly all the Kubernetes components associated with the cha
 | `tolerations` | Node tolerations for pod assignment | `[]` |
 | `affinity` | Node affinity for pod assignment | `{}` |
 | `existingSecret` | The name of an existing secret containing the pgadmin4 default password. | `""` |
+| `volumeMounts` | Volume mounts to configure configmap | `[]` |
+| `volumes` | Volumes | `[]` |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example:
 

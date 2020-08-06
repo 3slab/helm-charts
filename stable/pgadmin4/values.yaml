@@ -57,10 +57,10 @@ pgPassFile:
 
   ## Don't forget to setup the PassFile settings in your servers.json file
   path: /var/lib/pgadmin/.pgpassfile
-  
+
   ## Set the pgpassfile content
   content: ~
-  
+
 ingress:
   ## If true, pgAdmin4 Ingress will be created
   ##
@@ -193,6 +193,17 @@ readinessProbe:
   timeoutSeconds: 15
   successThreshold: 1
   failureThreshold: 3
+
+## Additional volumes mount information in the container
+volumeMounts: []
+#  - mountPath: /var/data/
+#    name: data-vol
+
+## Additionnal volumes information in the pod
+volumes: []
+#  - name: data-vol
+#    configMap:
+#      name: data-configmap
 
 ## Node labels for pgAdmin4 pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
