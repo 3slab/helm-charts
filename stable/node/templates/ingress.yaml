@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "node.fullname" . -}}
 {{- $servicePort := .Values.service.port -}}
-apiVersion: extensions/v1beta1
+apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ template "node.fullname" . }}

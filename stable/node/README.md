@@ -73,15 +73,14 @@ The following table lists the configurable parameters of the Node chart and thei
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
-helm install --name $HELM_NAME \
-  --set tag=1.1.2 \
-    suez-incubator/node
+helm install $HELM_NAME 3slab/node \
+  --set tag=1.1.2
 ```
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
 
 ```console
-helm install --name $HELM_NAME -f values.yaml suez-incubator/node
+helm install $HELM_NAME 3slab/node -f values.yaml
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

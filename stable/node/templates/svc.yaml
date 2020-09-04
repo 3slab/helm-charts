@@ -22,6 +22,5 @@ spec:
   selector:
     app: {{ template "node.name" . }}
     release: "{{ .Release.Name }}"
-
 status:
   loadBalancer: {}
