@@ -1,5 +1,5 @@
 {{- $fullName := include "sftp.fullname" . -}}
-apiVersion: apps/v1beta2
+apiVersion: {{ template "deployment.apiVersion" . }}
 kind: Deployment
 metadata:
   name: {{ include "sftp.fullname" . }}
