@@ -35,10 +35,8 @@ spec:
       {{- range $container := .Values.initContainers }}
         -
 {{ toYaml $container | indent 10 }}
+          {{ if $.Values.env.initContainer }}
           env:
-            - name: SERVICE_NAME
-              value: {{ template "fullname" $ }}
-            {{ if $.Values.env.initContainer }}
             {{ range $env := $.Values.env.initContainer }}
             - name: {{ $env.name }}
             {{ if $env.typeSecret }}
@@ -50,7 +48,7 @@ spec:
               value: {{ $env.value | quote }}
             {{ end }}
             {{ end }}
-            {{ end }}
+          {{ end }}
       {{ end }}
       {{- end }}
 
