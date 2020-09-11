@@ -16,9 +16,7 @@ spec:
       release: {{ .Release.Name }}
   replicas: {{ .Values.replicaCount }}
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-{{ toYaml .Values.global.strategy.rollingUpdate | indent 6 }}
+    type: Recreate
   template:
     metadata:
       annotations:
