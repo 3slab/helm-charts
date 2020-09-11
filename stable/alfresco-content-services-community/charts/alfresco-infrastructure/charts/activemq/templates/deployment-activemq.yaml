@@ -24,7 +24,7 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-        - name:   
+        - name: ACTIVEMQ_CONFIG_MINMEMORY  
           value: "{{ .Values.resources.requests.memory | replace "Mi" "" }}"
         - name: ACTIVEMQ_CONFIG_MAXMEMORY
           value: "{{ .Values.resources.limits.memory | replace "Mi" "" }}"
