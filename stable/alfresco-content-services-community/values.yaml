@@ -145,6 +145,8 @@ persistence:
     data:
       mountPath: "/usr/local/tomcat/alf_data"
       subPath: "alfresco-content-services/repository-data"
+    volumeMounts: []
+    volumes: []
 
 # Settings that define that alfresco-content-services (this helm chart) is dependent of alfresco-infrastructure chart
 # alfresco-infrastructure is defined here: https://github.com/Alfresco/alfresco-infrastructure-deployment/tree/master/charts/incubator/alfresco-infrastructure

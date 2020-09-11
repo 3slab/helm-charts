@@ -46,6 +46,9 @@ spec:
           - name: data
             mountPath: {{ .Values.persistence.repository.data.mountPath }}
             subPath: {{ .Values.persistence.repository.data.subPath }}
+          {{- with .Values.persistence.repository.volumeMounts }}
+{{ toYaml . | indent 10 }}
+          {{- end }}
           readinessProbe:
             httpGet:
               path: /alfresco/api/-default-/public/alfresco/versions/1/probes/-ready-
@@ -81,3 +84,6 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.existingClaim }}
+      {{- with .Values.persistence.repository.volumes }}
+{{ toYaml . | indent 6 }}
+      {{- end }}
