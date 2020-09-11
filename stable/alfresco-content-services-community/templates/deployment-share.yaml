@@ -1,0 +1,56 @@
+# Defines the deployment for the alfresco share app
+apiVersion: {{ template "deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ template "content-services.shortname" . }}-share
+  labels:
+    app: {{ template "content-services.shortname" . }}-share
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: share
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "content-services.shortname" . }}-share
+      release: {{ .Release.Name }}
+      component: share
+  replicas: {{ .Values.share.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "content-services.shortname" . }}-share
+        release: {{ .Release.Name }}
+        component: share
+    spec:
+      {{- if .Values.global.alfrescoRegistryPullSecrets }}
+      # only set this secret if a private docker registry variable is defined
+      imagePullSecrets:
+        - name: {{ .Values.global.alfrescoRegistryPullSecrets }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.share.image.repository }}:{{ .Values.share.image.tag }}"
+          imagePullPolicy: {{ .Values.share.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.share.image.internalPort }}
+          resources:
+{{ toYaml .Values.share.resources | indent 12 }}
+          envFrom:
+          - configMapRef:
+              name: {{ template "content-services.shortname" . }}-share-configmap
+          readinessProbe:
+            httpGet:
+              path: /share
+              port: {{ .Values.share.image.internalPort }}
+            initialDelaySeconds: {{ .Values.share.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.share.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.share.readinessProbe.timeoutSeconds }}
+          livenessProbe:
+            httpGet:
+              path: /share
+              port: {{ .Values.share.image.internalPort }}
+            initialDelaySeconds: {{ .Values.share.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.share.livenessProbe.periodSeconds }}
+            failureThreshold: 1
+            timeoutSeconds: {{ .Values.share.livenessProbe.timeoutSeconds }}

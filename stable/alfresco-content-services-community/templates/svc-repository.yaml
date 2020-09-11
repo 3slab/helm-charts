@@ -1,0 +1,20 @@
+# Defines the service for the alfresco content repository app
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "content-services.shortname" . }}-repository
+  labels:
+    app: {{ template "content-services.shortname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: repository
+spec:
+  type: {{ .Values.repository.service.type }}
+  ports:
+    - port: {{ .Values.repository.service.externalPort }}
+      targetPort: {{ .Values.repository.image.internalPort }}
+      name: {{ .Values.repository.service.name }}
+  selector:
+    app: {{ template "content-services.shortname" . }}-repository
+    release: {{ .Release.Name }}

@@ -1,0 +1,79 @@
+# Defines the deployment for the aio transformer app
+# Details: https://git.alfresco.com/Repository/alfresco-docker-transformers
+apiVersion: {{ template "deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ template "content-services.shortname" . }}-aio
+  labels:
+    app: {{ template "content-services.shortname" . }}-aio
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: transformers
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "content-services.shortname" . }}-aio
+      release: {{ .Release.Name }}
+      component: transformers
+  replicas: {{ .Values.aio.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "content-services.shortname" . }}-aio
+        release: {{ .Release.Name }}
+        component: transformers
+    spec:
+      {{- if .Values.global.alfrescoRegistryPullSecrets }}
+      # only set this secret if a private docker registry variable is defined
+      imagePullSecrets:
+        - name: {{ .Values.global.alfrescoRegistryPullSecrets }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 10
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ template "content-services.shortname" . }}-aio
+              topologyKey: failure-domain.beta.kubernetes.io/zone
+          - weight: 5
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ template "content-services.shortname" . }}-aio
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.aio.image.repository }}:{{ .Values.aio.image.tag }}"
+          imagePullPolicy: {{ .Values.aio.image.pullPolicy }}
+          envFrom:
+          - configMapRef:
+              # config map to use, defined in config-aio.yaml
+              name: {{ template "content-services.shortname" . }}-aio-configmap
+          ports:
+            - containerPort: {{ .Values.aio.image.internalPort }}
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: {{ .Values.aio.image.internalPort }}
+            initialDelaySeconds: {{ .Values.aio.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.aio.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.aio.readinessProbe.timeoutSeconds }}
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: {{ .Values.aio.image.internalPort }}
+            initialDelaySeconds: {{ .Values.aio.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.aio.livenessProbe.periodSeconds }}
+            failureThreshold: 1
+            timeoutSeconds: {{ .Values.aio.livenessProbe.timeoutSeconds }}
+          resources:
+{{ toYaml .Values.aio.resources | indent 12 }}

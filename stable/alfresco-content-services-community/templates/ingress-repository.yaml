@@ -1,0 +1,33 @@
+# Defines the ingress for the alfresco content repository
+apiVersion: {{ template "ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ template "content-services.shortname" . }}-repository
+  labels:
+    app: {{ template "content-services.shortname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  annotations:
+{{ toYaml .Values.repository.ingress.annotations | indent 4 }}
+spec:
+  rules:
+  {{- if .Values.externalHost }}
+  - host: {{ tpl .Values.externalHost $ }}
+    http:
+  {{- else }}
+  - http:
+  {{- end }}
+      paths:
+      - path: {{ .Values.repository.ingress.path }}
+        backend:
+          serviceName: {{ template "content-services.shortname" . }}-repository
+          servicePort: {{ .Values.repository.service.externalPort }}
+      - path: {{ .Values.apiexplorer.ingress.path }}
+        backend:
+          serviceName: {{ template "content-services.shortname" . }}-repository
+          servicePort: {{ .Values.repository.service.externalPort }}
+  {{- if .Values.repository.ingress.tls }}
+  tls:
+{{ toYaml .Values.repository.ingress.tls | indent 4 }}
+  {{- end -}}

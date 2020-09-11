@@ -1,0 +1,83 @@
+# Defines the deployment for the alfresco content repository app
+apiVersion: {{ template "deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ template "content-services.shortname" . }}-repository
+  labels:
+    app: {{ template "content-services.shortname" . }}-repository
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: repository
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "content-services.shortname" . }}-repository
+      release: {{ .Release.Name }}
+      component: repository
+  replicas: {{ .Values.repository.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "content-services.shortname" . }}-repository
+        release: {{ .Release.Name }}
+        component: repository
+    spec:
+      {{- if .Values.global.alfrescoRegistryPullSecrets }}
+      # only set this secret if a private docker registry variable is defined
+      imagePullSecrets:
+        - name: {{ .Values.global.alfrescoRegistryPullSecrets }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.repository.image.repository }}:{{ .Values.repository.image.tag }}"
+          imagePullPolicy: {{ .Values.repository.image.pullPolicy }}
+          envFrom:
+          - secretRef: 
+              name: {{ template "content-services.shortname" . }}-dbsecret
+          - configMapRef:
+              # config map to use, defined in config-repository.yaml
+              name: {{ template "content-services.shortname" . }}-repository-configmap
+          ports:
+            - containerPort: {{ .Values.repository.image.internalPort }}
+          resources:
+{{ toYaml .Values.repository.resources | indent 12 }}
+          volumeMounts:
+          - name: data
+            mountPath: {{ .Values.persistence.repository.data.mountPath }}
+            subPath: {{ .Values.persistence.repository.data.subPath }}
+          readinessProbe:
+            httpGet:
+              path: /alfresco/api/-default-/public/alfresco/versions/1/probes/-ready-
+              port: {{ .Values.repository.image.internalPort }}
+            initialDelaySeconds: {{ .Values.repository.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.repository.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.repository.readinessProbe.failureThreshold }}
+            timeoutSeconds: {{ .Values.repository.readinessProbe.timeoutSeconds }}
+          livenessProbe:
+            httpGet:
+              path: /alfresco/api/-default-/public/alfresco/versions/1/probes/-live-
+              port: {{ .Values.repository.image.internalPort }}
+            initialDelaySeconds: {{ .Values.repository.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.repository.livenessProbe.periodSeconds }}
+            failureThreshold: 1
+            timeoutSeconds: {{ .Values.repository.livenessProbe.timeoutSeconds }}
+      initContainers:
+      {{- if eq .Values.database.external false }}
+        # wait for the DB to startup before this deployment can start
+        - name: init-db
+          image: busybox
+          command: ['sh', '-c', 'until nc -w1 {{ printf "%s-%s" .Release.Name .Values.postgresql.nameOverride }} {{ .Values.postgresql.service.port }}; do echo "waiting for {{ printf "%s-%s" .Release.Name .Values.postgresql.nameOverride }}"; sleep 2; done;']
+      {{- end }}
+        - name: init-fs
+          image: busybox
+          # command to allow repository to write to EFS volume.
+          command: ["sh", "-c", "chown -R 33000:1000 {{ .Values.persistence.repository.data.mountPath }}"]
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.persistence.repository.data.mountPath }}
+              subPath: {{ .Values.persistence.repository.data.subPath }}
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim }}

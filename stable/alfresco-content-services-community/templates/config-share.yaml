@@ -1,0 +1,23 @@
+# Defines the properties required by the share app
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "content-services.shortname" . }}-share-configmap
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    component: share
+data:
+  {{ $alfhost := tpl (.Values.externalHost | default (printf "%s-share" (include "content-services.shortname" .))) $ }}
+  {{ $alfprotocol := tpl (.Values.externalProtocol | default "http") $ }}
+  # The CATALINA_OPTS defined in the values.yaml file for the "share" are set here using proper quotes
+  {{- if .Values.share.environment }}
+  {{- range $key, $val := .Values.share.environment }}
+  {{ $key }}: {{ tpl $val $ | quote }}
+  {{- end }}
+  {{- end }}
+  REPO_HOST: "{{ template "content-services.shortname" . }}-repository"
+  REPO_PORT: "{{ .Values.repository.service.externalPort }}"
+  CSRF_FILTER_REFERER: "{{ $alfprotocol }}://{{ $alfhost }}/.*"
+  CSRF_FILTER_ORIGIN: "{{ $alfprotocol }}://{{ $alfhost }}"

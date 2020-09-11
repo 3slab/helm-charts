@@ -1,0 +1,29 @@
+# Defines the ingress for the alfresco share app
+apiVersion: {{ template "ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ template "content-services.shortname" . }}-share
+  labels:
+    app: {{ template "content-services.shortname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  annotations:
+{{ toYaml .Values.share.ingress.annotations | indent 4 }}
+spec:
+  rules:
+  {{- if .Values.externalHost }}
+  - host: {{ tpl .Values.externalHost $ }}
+    http:
+  {{- else }}
+  - http:
+  {{- end }}
+      paths:
+      - path: {{ .Values.share.ingress.path }}
+        backend:
+          serviceName: {{ template "content-services.shortname" . }}-share
+          servicePort: {{ .Values.share.service.externalPort }}
+  {{- if .Values.share.ingress.tls }}
+  tls:
+{{ toYaml .Values.share.ingress.tls | indent 4 }}
+  {{- end -}}
