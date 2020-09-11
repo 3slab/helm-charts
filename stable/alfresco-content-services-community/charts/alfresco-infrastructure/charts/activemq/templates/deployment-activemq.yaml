@@ -44,15 +44,23 @@ spec:
         - name: web-console
           containerPort: {{ .Values.services.webConsole.ports.internal.webConsole | default 8161 }}
         readinessProbe:
-          tcpSocket:
-            port: {{ .Values.services.broker.ports.internal.openwire | default 61616 }}
+          httpGet:
+            path: /api/jolokia/read/org.apache.activemq:type=Broker,brokerName=localhost,service=Health
+            port: {{ .Values.services.webConsole.ports.internal.webConsole | default 8161 }}
+            httpHeaders:
+              - name: Authorization
+                value: Basic {{ (printf "%s:%s" .Values.adminUser.username .Values.adminUser.password ) | b64enc }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         livenessProbe:
-          tcpSocket:
-            port: {{ .Values.services.broker.ports.internal.openwire | default 61616 }}
+          httpGet:
+            path: /api/jolokia/read/org.apache.activemq:type=Broker,brokerName=localhost,service=Health
+            port: {{ .Values.services.webConsole.ports.internal.webConsole | default 8161 }}
+            httpHeaders:
+              - name: Authorization
+                value: Basic {{ (printf "%s:%s" .Values.adminUser.username .Values.adminUser.password ) | b64enc }}
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
           failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
