@@ -39,6 +39,7 @@ repository: {}
 # Additionnal volume mounts
 volumeMounts: []
 volumes: []
+initContainers: []
 environment:
   SOLR_CREATE_ALFRESCO_DEFAULTS: alfresco,archive
   ALFRESCO_SECURE_COMMS: "none"

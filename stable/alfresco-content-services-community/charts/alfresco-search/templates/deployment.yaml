@@ -85,6 +85,9 @@ spec:
           - name: data
             mountPath: {{ .Values.persistence.search.data.mountPath }}
             subPath: {{ .Values.persistence.search.data.subPath }}
+      {{- with .Values.initContainers }}
+{{ toYaml . | indent 8 }}
+      {{- end }}            
       volumes:
       - name: data
         persistentVolumeClaim:
