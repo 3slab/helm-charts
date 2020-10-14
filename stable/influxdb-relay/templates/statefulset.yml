@@ -11,8 +11,8 @@ spec:
   selector:
     matchLabels:
       app: {{ template "influxdb-relay.name" . }}
-    updateStrategy:
-      type: RollingUpdate
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       {{- if .Values.annotations }}
