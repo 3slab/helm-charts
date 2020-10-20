@@ -31,6 +31,9 @@ spec:
       - name: {{ template "node.fullname" . }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        {{ if .Values.command.enabled }}
+        command: [ '/bin/bash', '-c', 'npm start' ]
+        {{ end }}
         env:
         - name: PUBLIC_PATH
           value: "/"
@@ -39,7 +42,7 @@ spec:
 {{- end }}
         ports:
         - name: http
-          containerPort: 80
+          containerPort: {{ .Values.applicationPort | default "80" }}
         {{- if .Values.healthChecks.enabled }}
         livenessProbe:
           httpGet:

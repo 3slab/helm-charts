@@ -3,7 +3,7 @@ entries:
   alfresco-content-services-community:
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: 2020-10-14T09:09:52.357108998+02:00
+    created: 2020-10-20T17:20:11.140910795+02:00
     description: A Helm chart for deploying Alfresco Content Services Community
     digest: 89cc2ac5555d48321b2fc4bdde2f49a598f7d90b8ac31c77d1c14e3b831f6fec
     home: https://www.alfresco.com
@@ -23,7 +23,7 @@ entries:
     version: 4.0.8
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: 2020-10-14T09:09:52.350145867+02:00
+    created: 2020-10-20T17:20:11.134511516+02:00
     description: A Helm chart for deploying Alfresco Content Services Community
     digest: 2fd39bc4e32a9f66c253da8580b650cd5469f6c7d8850057cb990572e57c1525
     home: https://www.alfresco.com
@@ -43,7 +43,7 @@ entries:
     version: 4.0.7
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: 2020-10-14T09:09:52.345285472+02:00
+    created: 2020-10-20T17:20:11.129827874+02:00
     description: A Helm chart for deploying Alfresco Content Services Community
     digest: f9cb6c4effa964b70b4318e30f2fb589e0548b96448604935b7f27405b1292d3
     home: https://www.alfresco.com
@@ -63,7 +63,7 @@ entries:
     version: 4.0.6
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: 2020-10-14T09:09:52.340177869+02:00
+    created: 2020-10-20T17:20:11.12521982+02:00
     description: A Helm chart for deploying Alfresco Content Services Community
     digest: f95412dc9c32fc381928bf34358b41438248ae8ad25ce71a8fa49ef1e2c5c758
     home: https://www.alfresco.com
@@ -83,7 +83,7 @@ entries:
     version: 4.0.5
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: 2020-10-14T09:09:52.33223206+02:00
+    created: 2020-10-20T17:20:11.118842627+02:00
     description: A Helm chart for deploying Alfresco Content Services Community
     digest: dddbf1737c60b8a95fc6b3c0877237a0068ef3780d2e3c6a93bd76d7f8bd8794
     home: https://www.alfresco.com
@@ -103,7 +103,7 @@ entries:
     version: 4.0.4
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: 2020-10-14T09:09:52.327117552+02:00
+    created: 2020-10-20T17:20:11.113685028+02:00
     description: A Helm chart for deploying Alfresco Content Services Community
     digest: 34e478e8f0c1fdd05e2d151bcb899577cae3e87391f58ae9fb57801cab4e882d
     home: https://www.alfresco.com
@@ -123,7 +123,7 @@ entries:
     version: 4.0.3
   - apiVersion: v1
     appVersion: 6.2.1-ea
-    created: 2020-10-14T09:09:52.322080379+02:00
+    created: 2020-10-20T17:20:11.108904528+02:00
     description: A Helm chart for deploying Alfresco Content Services Community
     digest: 04da1a6574bb4fc19cdba8d1c5a9606b91749087356f90b7a3a3dbbd0d6f9cf5
     home: https://www.alfresco.com
@@ -143,7 +143,7 @@ entries:
     version: 4.0.2
   - apiVersion: v1
     appVersion: 6.2.1-ea
-    created: 2020-10-14T09:09:52.31519874+02:00
+    created: 2020-10-20T17:20:11.104092198+02:00
     description: A Helm chart for deploying Alfresco Content Services Community
     digest: 8a512c5618bc911e958302b43d4956076bb91ddc831ad1f7436e17c7a8b1d104
     home: https://www.alfresco.com
@@ -163,7 +163,7 @@ entries:
     version: 4.0.1
   - apiVersion: v1
     appVersion: 6.2.1-ea
-    created: 2020-10-14T09:09:52.309887414+02:00
+    created: 2020-10-20T17:20:11.097037302+02:00
     description: A Helm chart for deploying Alfresco Content Services Community
     digest: 19f5cc1edb0cb0aa677c600d4eeb52c83883bc41b5052bc169fd8bc8dcccd7f9
     home: https://www.alfresco.com
@@ -183,7 +183,7 @@ entries:
     version: 4.0.0
   alfresco-infrastructure:
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.360319491+02:00
+    created: 2020-10-20T17:20:11.144044735+02:00
     description: A Helm chart Providing the required Alfresco infrastructure for the
       Digital Business Platform. This includes activemq, alfresco-identity-service,
       nginx-ingress and a persistent volume to use with the DBP chart.
@@ -195,7 +195,7 @@ entries:
     version: 4.1.1
   alfresco-search:
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.361163956+02:00
+    created: 2020-10-20T17:20:11.144783101+02:00
     description: A Helm chart for deploying Alfresco Search
     digest: b05ccc828fb2539208f5341fdcb81bf586f63e5f88d525d37af21c8d8d118fd7
     home: https://www.alfresco.com
@@ -216,7 +216,7 @@ entries:
   cronjob:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.362736106+02:00
+    created: 2020-10-20T17:20:11.145896379+02:00
     description: A Helm chart for Kubernetes
     digest: 755803fcbfaf1cc077d6ffb91f99a81ebc1525ebed4837d77de02719d3e221b4
     name: cronjob
@@ -225,7 +225,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.362242923+02:00
+    created: 2020-10-20T17:20:11.145518218+02:00
     description: A Helm chart for Kubernetes
     digest: 9b3388a93c17bd270857fe3d8dadd645d0e7a5b606aa8f1ae564f9b97503a02a
     name: cronjob
@@ -234,7 +234,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.361600316+02:00
+    created: 2020-10-20T17:20:11.145156068+02:00
     description: A Helm chart for Kubernetes
     digest: 0e27aac604ff63dfef67855d79215e5f6db282ece83df4f4df33eb379eb1a834
     name: cronjob
@@ -243,7 +243,7 @@ entries:
     version: 1.0.0
   curator-cron:
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.363076447+02:00
+    created: 2020-10-20T17:20:11.146241827+02:00
     description: A Helm chart for Kubernetes
     digest: a91f540dd262e7c0bd4abbdee566782f655251b9ef9e292f1f347ef9dfc2b4f2
     name: curator-cron
@@ -253,7 +253,7 @@ entries:
   influxdb:
   - apiVersion: v1
     appVersion: 1.7.6
-    created: 2020-10-14T09:09:52.366218035+02:00
+    created: 2020-10-20T17:20:11.149446508+02:00
     description: A Helm chart for Kubernetes
     digest: e633151bbc727e4aa2ccc01c22ffbc66091143c0e16f60e5d2637e1b546fdf4a
     name: influxdb
@@ -262,7 +262,7 @@ entries:
     version: 1.3.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: 2020-10-14T09:09:52.365773486+02:00
+    created: 2020-10-20T17:20:11.149021068+02:00
     description: A Helm chart for Kubernetes
     digest: 7038209c383f651bcd5cca015e8ebbf1a1f80036a5d228052ad1373052cbd0d6
     name: influxdb
@@ -271,7 +271,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: 2020-10-14T09:09:52.365116895+02:00
+    created: 2020-10-20T17:20:11.148393061+02:00
     description: A Helm chart for Kubernetes
     digest: ee1b50dc097166aa97d507129fc30cb870f142aedac6bf2b3b261d1ce76bb180
     name: influxdb
@@ -280,7 +280,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: 2020-10-14T09:09:52.36445454+02:00
+    created: 2020-10-20T17:20:11.147690666+02:00
     description: A Helm chart for Kubernetes
     digest: 6147797befa379a4791284df10be979bb618dbeaee9c315b566b8eea276ac6b3
     name: influxdb
@@ -288,7 +288,7 @@ entries:
     - influxdb-1.0.0.tgz
     version: 1.0.0
   - appVersion: "1.4"
-    created: 2020-10-14T09:09:52.363836994+02:00
+    created: 2020-10-20T17:20:11.147031957+02:00
     description: Scalable datastore for metrics, events, and real-time analytics.
     digest: 23eb530ed9d898d97d65c7101541ed4340ce97e24f3b8ad9575f55e9bd4ca26c
     engine: gotpl
@@ -309,7 +309,7 @@ entries:
   influxdb-relay:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.368041495+02:00
+    created: 2020-10-20T17:20:11.151262796+02:00
     description: A Helm chart for Kubernetes
     digest: e1ea4f4ae638feba354c0beb9d302982061dfa782bf7f968f93bbc4c721bada4
     name: influxdb-relay
@@ -318,7 +318,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.367688912+02:00
+    created: 2020-10-20T17:20:11.150935902+02:00
     description: A Helm chart for Kubernetes
     digest: 2b199caf8e8adb68e4a68358650eea55d2ad7b5743e0125d0eaf619fa7d4f59e
     name: influxdb-relay
@@ -327,7 +327,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.367078665+02:00
+    created: 2020-10-20T17:20:11.150357529+02:00
     description: A Helm chart for Kubernetes
     digest: e2d5c142fde8586f251fe4def63a468ffe2b6347706266eac3aeba3a0eb76fbe
     name: influxdb-relay
@@ -336,7 +336,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.366685801+02:00
+    created: 2020-10-20T17:20:11.149940869+02:00
     description: A Helm chart for Kubernetes
     digest: d0d40f8325f542a631e8f057a1b7de26584aa814b7d8c3284a3250a81024083e
     name: influxdb-relay
@@ -346,7 +346,7 @@ entries:
   kafka-rest:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.370644885+02:00
+    created: 2020-10-20T17:20:11.153527781+02:00
     description: A Helm chart for Kubernetes
     digest: a9fc2d0adb6bc171ad26969f7323ea7dca505078adfcd7c589ed5ae5a3ec938d
     name: kafka-rest
@@ -355,7 +355,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.370134633+02:00
+    created: 2020-10-20T17:20:11.153249676+02:00
     description: A Helm chart for Kubernetes
     digest: dd5566916428f221a6851389186eaf304673d5ea6a068816b2fc8007724b604d
     name: kafka-rest
@@ -364,7 +364,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.369774949+02:00
+    created: 2020-10-20T17:20:11.152815445+02:00
     description: A Helm chart for Kubernetes
     digest: 0d78303c90f02b7de25505f29881b26fd4fb97187b956749b843c0691df10de4
     name: kafka-rest
@@ -373,7 +373,7 @@ entries:
     version: 1.0.3
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.369365695+02:00
+    created: 2020-10-20T17:20:11.152463481+02:00
     description: A Helm chart for Kubernetes
     digest: ba4449f1cbaa66145dcbb6d899527c1c909bc406f43397e20e83bf6e1a2c0152
     name: kafka-rest
@@ -382,7 +382,7 @@ entries:
     version: 1.0.2
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.36896736+02:00
+    created: 2020-10-20T17:20:11.152101494+02:00
     description: A Helm chart for Kubernetes
     digest: bf1351396a3acf5a79081b2fca4f4b65bbb0b42b1e21c6734e2d5adfea2d6f80
     name: kafka-rest
@@ -391,7 +391,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.368502194+02:00
+    created: 2020-10-20T17:20:11.151684886+02:00
     description: A Helm chart for Kubernetes
     digest: cd94c20ec40e1091cde4775aad679043daa5631f8d36af9f23c50595bd4d5b49
     name: kafka-rest
@@ -401,7 +401,7 @@ entries:
   mailcatcher:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.371605491+02:00
+    created: 2020-10-20T17:20:11.154408278+02:00
     description: A Helm chart for Kubernetes
     digest: 7a28e4650ac07613fc2b41f585a8af026b9b2259b3b562ec6144c3a7e8217a31
     name: mailcatcher
@@ -410,7 +410,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.371150351+02:00
+    created: 2020-10-20T17:20:11.153932823+02:00
     description: A Helm chart for Kubernetes
     digest: bb825508f391e371bd55936c6c9091aece9db2d26fb51de1ef77d27735950e86
     name: mailcatcher
@@ -420,7 +420,23 @@ entries:
   node:
   - apiVersion: v1
     appVersion: 11.2.0
-    created: 2020-10-14T09:09:52.37238228+02:00
+    created: 2020-10-20T17:20:11.155718518+02:00
+    description: Event-driven I/O server-side JavaScript environment based on V8
+    digest: d431c3f9543d9a97f574adb2fa008a403a3ed3f9b491e7156eb11d0dc064a68b
+    engine: gotpl
+    home: http://nodejs.org/
+    icon: https://bitnami.com/assets/stacks/nodejs/img/nodejs-stack-110x117.png
+    keywords:
+    - node
+    - javascript
+    - nodejs
+    name: node
+    urls:
+    - node-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v1
+    appVersion: 11.2.0
+    created: 2020-10-20T17:20:11.154841436+02:00
     description: Event-driven I/O server-side JavaScript environment based on V8
     digest: 574c62a3060659a4e2589038e433c57da93224a6ef0891ba8305ebe54beb9336
     home: http://nodejs.org/
@@ -435,7 +451,7 @@ entries:
     version: 1.0.0
   nodered:
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.377940075+02:00
+    created: 2020-10-20T17:20:11.160991963+02:00
     description: A Helm chart for Kubernetes
     digest: de08cf65970a257ccee76aa84975b93072f1257b1f0cbe4bcf5dd54164eb4e68
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -444,7 +460,7 @@ entries:
     - nodered-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.37713379+02:00
+    created: 2020-10-20T17:20:11.160344635+02:00
     description: A Helm chart for Kubernetes
     digest: 2336324f4cdff1415636980887eb73cff0423db4c859a9af902b51a46cf0bc9a
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -453,7 +469,7 @@ entries:
     - nodered-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.376406626+02:00
+    created: 2020-10-20T17:20:11.159701385+02:00
     description: A Helm chart for Kubernetes
     digest: 01af0c82533967c335597e093d09ea72f5357f7444d9e40faa7e40687601acf4
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -462,7 +478,7 @@ entries:
     - nodered-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.375899847+02:00
+    created: 2020-10-20T17:20:11.159220573+02:00
     description: A Helm chart for Kubernetes
     digest: 7a8af28fe378ed05275b14cec24f31694412a9c4b30d51e1c23be758b4f7603f
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -471,7 +487,7 @@ entries:
     - nodered-0.4.1.tgz
     version: 0.4.1
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.375367473+02:00
+    created: 2020-10-20T17:20:11.158707274+02:00
     description: A Helm chart for Kubernetes
     digest: e67abc204b674ed88563399f17b9106d38d1bbb63d273811549a0c2d1584a7da
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -480,7 +496,7 @@ entries:
     - nodered-0.4.0.tgz
     version: 0.4.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.374733236+02:00
+    created: 2020-10-20T17:20:11.158198955+02:00
     description: A Helm chart for Kubernetes
     digest: 57c958516103eb92060ed25fb88bc418011951eda84ac02382528bf7474163e2
     name: nodered
@@ -488,7 +504,7 @@ entries:
     - nodered-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.373846192+02:00
+    created: 2020-10-20T17:20:11.157402843+02:00
     description: A Helm chart for Kubernetes
     digest: 5766ed47948d2be347e261eb43f2eb5e1d22284fa2f32502868de1573c6dd417
     name: nodered
@@ -496,7 +512,7 @@ entries:
     - nodered-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.372841714+02:00
+    created: 2020-10-20T17:20:11.156329844+02:00
     description: A Helm chart for Kubernetes
     digest: fde2e9b34cc8505079e33c47a32a1d477a5b420aa78cf84238ebc4ee6bafcecf
     name: nodered
@@ -506,7 +522,7 @@ entries:
   openssh-server:
   - apiVersion: v1
     appVersion: "8.1"
-    created: 2020-10-14T09:09:52.379087398+02:00
+    created: 2020-10-20T17:20:11.162012172+02:00
     description: A Helm chart for Kubernetes
     digest: 7dbe2fed03fe9772c7963bff3e456170211bceb7e2d3e58e873e857b423cb8fa
     name: openssh-server
@@ -515,7 +531,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "8.1"
-    created: 2020-10-14T09:09:52.378543806+02:00
+    created: 2020-10-20T17:20:11.161511084+02:00
     description: A Helm chart for Kubernetes
     digest: 564271438b84da2591704e77fbfeca421138ec28a339e61bf64fdfe7b828c5e9
     name: openssh-server
@@ -525,7 +541,7 @@ entries:
   pentaho-server-ce:
   - apiVersion: v1
     appVersion: 9.0.0-423
-    created: 2020-10-14T09:09:52.380106671+02:00
+    created: 2020-10-20T17:20:11.162981818+02:00
     description: A Helm chart for Kubernetes
     digest: 766c45fd423708f152971930ac71cf30266d63c02a503cb7a7a891e5083bfcd1
     name: pentaho-server-ce
@@ -534,7 +550,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 9.0.0-423
-    created: 2020-10-14T09:09:52.379636607+02:00
+    created: 2020-10-20T17:20:11.162531483+02:00
     description: A Helm chart for Kubernetes
     digest: 52ec9c73b9a2fa424686857e6c89ae650e7c90ea6b475cffec1154f6d3a6e218
     name: pentaho-server-ce
@@ -544,7 +560,7 @@ entries:
   pgadmin4:
   - apiVersion: v1
     appVersion: 4.20.0
-    created: 2020-10-14T09:09:52.381455461+02:00
+    created: 2020-10-20T17:20:11.164201694+02:00
     description: pgAdmin4 is a web based administration tool for PostgreSQL database
     digest: 5b158f0001d040350996bdbf30004964f43639783231d7e8d6a7cd0e53f3e422
     home: https://www.pgadmin.org/
@@ -554,7 +570,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 4.20.0
-    created: 2020-10-14T09:09:52.3807326+02:00
+    created: 2020-10-20T17:20:11.163563382+02:00
     description: pgAdmin4 is a web based administration tool for PostgreSQL database
     digest: 8bafd773122974c126cc15b30a2b375cad6fc4c7ef1a37ea0816faa32ea3f457
     home: https://www.pgadmin.org/
@@ -565,7 +581,7 @@ entries:
   phpbu:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.38258336+02:00
+    created: 2020-10-20T17:20:11.165273226+02:00
     description: A Helm chart for Kubernetes
     digest: 0234081ff9a13eed1259a2ef638ef64a034cde6d76dfef424e468a188ff2d859
     name: phpbu
@@ -574,7 +590,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.38198075+02:00
+    created: 2020-10-20T17:20:11.164660338+02:00
     description: A Helm chart for Kubernetes
     digest: cb46c1286dd4c8e6fc4e5b761d06c7cec59d417afa895ffcdd8316f71d893d7e
     name: phpbu
@@ -584,7 +600,7 @@ entries:
   phpldapadmin:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.384376921+02:00
+    created: 2020-10-20T17:20:11.167008271+02:00
     description: A Helm chart for Kubernetes
     digest: 3fb978d16d098facc6a204122d87cb6b440b41ab26e6bb797061bc7b3b8bb30f
     name: phpldapadmin
@@ -593,7 +609,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.383712822+02:00
+    created: 2020-10-20T17:20:11.166393593+02:00
     description: A Helm chart for Kubernetes
     digest: 60b9f2a9b5a0dfdae30a2c01aa7ce1400c2ce1e0f69483b8bd4e1fffd9d6d615
     name: phpldapadmin
@@ -602,7 +618,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.383180996+02:00
+    created: 2020-10-20T17:20:11.165870722+02:00
     description: A Helm chart for Kubernetes
     digest: 7f54b0d3d4fc9de1f086a98010b7ad5975d73c30b6206fcf7207e8cc2274e280
     name: phpldapadmin
@@ -612,7 +628,7 @@ entries:
   pygisapi:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.385378095+02:00
+    created: 2020-10-20T17:20:11.167873543+02:00
     description: A Helm chart for Kubernetes
     digest: 96143a0c2918cebdcb7910334f11e845653ba693269ad875f797d6f1a25dfe2c
     name: pygisapi
@@ -621,7 +637,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.384914555+02:00
+    created: 2020-10-20T17:20:11.167447482+02:00
     description: A Helm chart for Kubernetes
     digest: 0782f0d6265336a10a118882297bfba370709105b67d50e1ff0877903e314262
     name: pygisapi
@@ -631,7 +647,7 @@ entries:
   self-service-password:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.388110547+02:00
+    created: 2020-10-20T17:20:11.17044835+02:00
     description: A Helm chart for Kubernetes
     digest: 34bb50875e736c62635abd5c0a47b1af2d79fff9dc601eb9204865d07614f885
     name: self-service-password
@@ -640,7 +656,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.387373926+02:00
+    created: 2020-10-20T17:20:11.169818216+02:00
     description: A Helm chart for Kubernetes
     digest: 4b2bc6339270ec2bf3dc357e5ab107d6e63bcc1f2f9a8db8f063e5c436a2a70b
     name: self-service-password
@@ -649,7 +665,7 @@ entries:
     version: 1.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.386648107+02:00
+    created: 2020-10-20T17:20:11.169150231+02:00
     description: A Helm chart for Kubernetes
     digest: 882b026e8bb078af8e04258bc5f052415c8584e7fea93ba859d6d9cde77e25a7
     name: self-service-password
@@ -658,7 +674,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.385965713+02:00
+    created: 2020-10-20T17:20:11.168438102+02:00
     description: A Helm chart for Kubernetes
     digest: 85fc68e9ac0c59f64db88f7477311aafdfbe5264a20c95b94dcacb8c23fbd14f
     name: self-service-password
@@ -668,7 +684,7 @@ entries:
   sftp:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.390327504+02:00
+    created: 2020-10-20T17:20:11.172168057+02:00
     description: A Helm chart for Kubernetes
     digest: 387653176b090ad2b8c2e8f3f1a0de6379b490b54162783724aeeb7579f3487f
     name: sftp
@@ -677,7 +693,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.389484486+02:00
+    created: 2020-10-20T17:20:11.171688804+02:00
     description: A Helm chart for Kubernetes
     digest: e3b468c8b49cbac203b08c10c061d040b118490daf871e574961e773ecd0e5f5
     name: sftp
@@ -686,7 +702,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.388802985+02:00
+    created: 2020-10-20T17:20:11.171155178+02:00
     description: A Helm chart for Kubernetes
     digest: 7ab8d9598e7a44241101d26cdb66914b5d7ee1d7aeff3ce15865c13e7884dc91
     name: sftp
@@ -696,7 +712,7 @@ entries:
   simplesamlphp:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.393329019+02:00
+    created: 2020-10-20T17:20:11.175944994+02:00
     description: A Helm chart for Kubernetes
     digest: b1ffa304ba30129006c4bbc53e4c58a588d31f313c11ea153f74694e47cfd615
     name: simplesamlphp
@@ -705,7 +721,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.392400632+02:00
+    created: 2020-10-20T17:20:11.174751212+02:00
     description: A Helm chart for Kubernetes
     digest: 12400fc71fb3c866aa963e8106f79f319614d0acb7b261a9af6607429714d9e1
     name: simplesamlphp
@@ -714,7 +730,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.39157052+02:00
+    created: 2020-10-20T17:20:11.173865011+02:00
     description: A Helm chart for Kubernetes
     digest: e6a52e09da87818183ffe5f8f7c57db19a0a6bdf2a03604f2c8c46dac73d4d82
     name: simplesamlphp
@@ -723,7 +739,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-10-14T09:09:52.390975149+02:00
+    created: 2020-10-20T17:20:11.172660513+02:00
     description: A Helm chart for Kubernetes
     digest: 8d26be35ca2f2b476dd0ba5091f35031c9b3f1df145964c525f61e7dc5ad78a1
     name: simplesamlphp
@@ -733,7 +749,7 @@ entries:
   superset:
   - apiVersion: v1
     appVersion: 0.36.0rc1
-    created: 2020-10-14T09:09:52.394643346+02:00
+    created: 2020-10-20T17:20:11.177107594+02:00
     description: A Helm chart for Kubernetes
     digest: 89ae7d685f93b53dad05e542998c445771a2c7a87e2cadd7efbfebc8d8e84a3d
     name: superset
@@ -742,7 +758,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: 0.36.0rc1
-    created: 2020-10-14T09:09:52.39392898+02:00
+    created: 2020-10-20T17:20:11.176521728+02:00
     description: A Helm chart for Kubernetes
     digest: ec8cdcb7ae4628cab56406d9c6aa405f9774ad2f46b856d2ff45a231fbc83326
     name: superset
@@ -751,7 +767,7 @@ entries:
     version: 0.1.0
   symfony:
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.405483769+02:00
+    created: 2020-10-20T17:20:11.18670054+02:00
     description: A Helm chart for Symfony application deployment
     digest: c3aea7b471a2cf2426e108ff42e449182b3d1b48e17b294e132be27f66ad7f41
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -760,7 +776,7 @@ entries:
     - symfony-1.6.2.tgz
     version: 1.6.2
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.404963886+02:00
+    created: 2020-10-20T17:20:11.186027858+02:00
     description: A Helm chart for Symfony application deployment
     digest: b6e656d7c8bd59c33f4e37a408c25f753920cb4064ecdf13dc4ae0b70ecb8bca
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -769,7 +785,7 @@ entries:
     - symfony-1.6.1.tgz
     version: 1.6.1
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.404432624+02:00
+    created: 2020-10-20T17:20:11.185454077+02:00
     description: A Helm chart for Symfony application deployment
     digest: 7ac18ed7eba453e13faf46ecce9bb9eb6d46c830182bd37f46a3d99529ebf270
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -778,7 +794,7 @@ entries:
     - symfony-1.6.0.tgz
     version: 1.6.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.403892355+02:00
+    created: 2020-10-20T17:20:11.184903675+02:00
     description: A Helm chart for Symfony application deployment
     digest: c8a866603f067cfdba3a84b31e6b439a1a55835cf01b8efb19ead8f220f78f2f
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -787,7 +803,7 @@ entries:
     - symfony-1.5.0.tgz
     version: 1.5.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.403393694+02:00
+    created: 2020-10-20T17:20:11.184424816+02:00
     description: A Helm chart for Symfony application deployment
     digest: ba4bb7974d5973f0a465e190f1598685a187fcd9070957f941eee2df59df4233
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -796,7 +812,7 @@ entries:
     - symfony-1.4.1.tgz
     version: 1.4.1
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.402819521+02:00
+    created: 2020-10-20T17:20:11.183948115+02:00
     description: A Helm chart for Symfony application deployment
     digest: c5cda97a3fc05c3ca1374d796e2d7b6456abde3de32e8af7881636988e016938
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -805,7 +821,7 @@ entries:
     - symfony-1.4.0.tgz
     version: 1.4.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.402201641+02:00
+    created: 2020-10-20T17:20:11.183387375+02:00
     description: A Helm chart for Symfony application deployment
     digest: d8b10fb7a0adf253a95ccd817a40856d506e605327249cc4cbb377e21de44298
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -814,7 +830,7 @@ entries:
     - symfony-1.3.1.tgz
     version: 1.3.1
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.401664725+02:00
+    created: 2020-10-20T17:20:11.182873564+02:00
     description: A Helm chart for Symfony application deployment
     digest: aa3fcb53d2dc5be8a48a9b54f4e2e261284f886c3b675d708c44887311c43402
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -823,7 +839,7 @@ entries:
     - symfony-1.3.0.tgz
     version: 1.3.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.401080828+02:00
+    created: 2020-10-20T17:20:11.182368417+02:00
     description: A Helm chart for Symfony application deployment
     digest: 51917745e4148866266098dc6e4e6aec837b10abd008ccc5c5e702b18047fea4
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -832,7 +848,7 @@ entries:
     - symfony-1.2.6.tgz
     version: 1.2.6
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.400543894+02:00
+    created: 2020-10-20T17:20:11.18189092+02:00
     description: A Helm chart for Symfony application deployment
     digest: 3ea7fc754f4eb9b63cd184550b687e93d05144dc09d1ffdddd9c91b812fe83be
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -841,7 +857,7 @@ entries:
     - symfony-1.2.5.tgz
     version: 1.2.5
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.399980348+02:00
+    created: 2020-10-20T17:20:11.181430598+02:00
     description: A Helm chart for Symfony application deployment
     digest: dad6222d7a1ae19d220f08875e87b9fe29d7a3d25441931a81adf2a75c4efd60
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -850,7 +866,7 @@ entries:
     - symfony-1.2.4.tgz
     version: 1.2.4
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.399405133+02:00
+    created: 2020-10-20T17:20:11.180964413+02:00
     description: A Helm chart for Symfony application deployment
     digest: 86522ea70205a3df34fcacfe0f7d016524bc4cee3333e1f8ac3c87f20673a726
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -859,7 +875,7 @@ entries:
     - symfony-1.2.3.tgz
     version: 1.2.3
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.398858894+02:00
+    created: 2020-10-20T17:20:11.18051678+02:00
     description: A Helm chart for Symfony application deployment
     digest: 88931c9e1159cd9dfeb7b9d3924cfb85a9e37b349b65f22adf9aa67b964701d5
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -868,7 +884,7 @@ entries:
     - symfony-1.2.2.tgz
     version: 1.2.2
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.398249072+02:00
+    created: 2020-10-20T17:20:11.180039616+02:00
     description: A Helm chart for Symfony application deployment
     digest: 5ec5b2f0b4932a874b3a6c6d7280e0659dec21a541400443d9d1fa8b55c05d0c
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -877,7 +893,7 @@ entries:
     - symfony-1.2.1.tgz
     version: 1.2.1
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.397539056+02:00
+    created: 2020-10-20T17:20:11.17956581+02:00
     description: A Helm chart for Symfony application deployment
     digest: a7c3e516260ada21c13a1e6cacf0cd8fc3afd7d70c55ef0a5029e6c71a4ca965
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -886,7 +902,7 @@ entries:
     - symfony-1.1.1.tgz
     version: 1.1.1
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.396885075+02:00
+    created: 2020-10-20T17:20:11.179100261+02:00
     description: A Helm chart for Symfony application deployment
     digest: 12b81c347892968ee5be58d6320ade8a98f01311bdd4bbac3ea7baa94bc3e643
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -895,7 +911,7 @@ entries:
     - symfony-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.39637403+02:00
+    created: 2020-10-20T17:20:11.178632907+02:00
     description: A Helm chart for Symfony application deployment
     digest: 2d2e1b400e2bbcaff27c5f727af8298a6935c5973081d0d7d9086adb2021da60
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -904,7 +920,7 @@ entries:
     - symfony-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.395779356+02:00
+    created: 2020-10-20T17:20:11.178141445+02:00
     description: A Helm chart for Symfony application deployment
     digest: 00873cec2f80b94a804dde0a092f49ba70348c768557aab30f448ecbae9972cc
     name: symfony
@@ -912,11 +928,11 @@ entries:
     - symfony-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v1
-    created: 2020-10-14T09:09:52.395209085+02:00
+    created: 2020-10-20T17:20:11.177591727+02:00
     description: A Helm chart for Symfony application deployment
     digest: ca51b9d93fdc4279213785d7d4c5c03bcfe06142129f9b7049b8028af50d05e4
     name: symfony
     urls:
     - symfony-0.1.1.tgz
     version: 0.1.1
-generated: 2020-10-14T09:09:52.304814543+02:00
+generated: 2020-10-20T17:20:11.090646037+02:00

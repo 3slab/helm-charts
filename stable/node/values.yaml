@@ -117,3 +117,6 @@ ingress:
 healthChecks:
   enabled: false
   httpPath: ~
+
+command:
+  enabled: false
