@@ -47,6 +47,16 @@ resources: {}
 
 # nodeSelector:
 
+command: []
+#command:
+#  - /bin/sh
+#  - -c
+
+args: []
+#args:
+#  - kubectl get pod -n smartcoach-int -l app=symfony,release=users-api-int -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -i kubectl -n smartcoach-int exec {}  bin/console app:subscription:import -- -v
+
+
 nginx:
   enabled: true
   sourcesPath: /var/www/symfony # override with own symfony app source path

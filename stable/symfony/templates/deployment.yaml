@@ -56,6 +56,14 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.command }}
+          command:
+{{ toYaml . | indent 8 }}
+          {{- end }}
+          {{- with .Values.args }}
+          args:
+{{ toYaml . | indent 8 }}
+          {{- end }}
           ports:
             - containerPort: {{ .Values.service.internalPort }}
           volumeMounts:
