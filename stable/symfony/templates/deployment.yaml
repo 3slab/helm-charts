@@ -58,11 +58,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- with .Values.command }}
           command:
-{{ toYaml . | indent 8 }}
+{{ toYaml . | indent 10 }}
           {{- end }}
           {{- with .Values.args }}
           args:
-{{ toYaml . | indent 8 }}
+{{ toYaml . | indent 10 }}
           {{- end }}
           ports:
             - containerPort: {{ .Values.service.internalPort }}
