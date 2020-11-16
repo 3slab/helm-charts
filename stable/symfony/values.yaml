@@ -128,6 +128,22 @@ volumes: []
 #    configMap:
 #      name: sftp-data-config
 
+livenessProbe: {}
+#  httpGet:
+#    path: /liveness
+#    port: 80
+#  initialDelaySeconds: 5
+#  periodSeconds: 30
+#  timeoutSeconds: 30
+
+readinessProbe: {}
+#  httpGet:
+#    path: /readiness
+#    port: 80
+#  initialDelaySeconds: 5
+#  periodSeconds: 10
+#  timeoutSeconds: 30
+
 persistence:
   enabled: false
   annotations: {}

@@ -106,14 +106,10 @@ spec:
           {{- if .Values.extraEnv }}
 {{ toYaml .Values.extraEnv | indent 12 }}
           {{- end }}
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: {{ .Values.service.internalPort }}
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: {{ .Values.service.internalPort }}
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 12 }}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 12 }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
 

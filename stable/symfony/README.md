@@ -22,6 +22,8 @@ Parameter                  | Description                                        
 `service.type`             | type of the service                                                      | `ClusterIp`
 `service.externalPort`     | external port of the service                                             | `80`
 `service.internalPort`     | internal port of the service                                             | `80`
+`livenessProbe`            | liveness probe (YAML)                                                    | `{}`
+`readinessProbe`           | readiness probe (YAML)                                                   | `{}`
 `resources`                | resource requests and limits (YAML)                                      | `{}`
 `nodeSelector`             | node labels for pod assignment                                           |
 `ingress.enabled`          | Either or not the ingress is enabled                                     | `false`
