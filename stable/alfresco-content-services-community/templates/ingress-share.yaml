@@ -1,3 +1,4 @@
+{{- if not .Values.mellon.enabled -}}
 # Defines the ingress for the alfresco share app
 apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
@@ -27,3 +28,4 @@ spec:
   tls:
 {{ toYaml .Values.share.ingress.tls | indent 4 }}
   {{- end -}}
+{{- end -}}
