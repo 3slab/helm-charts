@@ -82,7 +82,7 @@ Parameter | Description | Default
 `alfresco-search.ingress.basicAuth` | If `alfresco-search.ingress.enabled` is `true`, user need to provide a `base64` encoded `htpasswd` format user name & password (ex: `echo -n "$(htpasswd -nbm solradmin somepassword)"` where `solradmin` is username and `somepassword` is the password) | None
 `alfresco-search.ingress.whitelist_ips` | If `alfresco-search.ingress.enabled` is `true`, user can restrict `/solr` to a list of IP addresses of CIDR notation | `0.0.0.0/0`
 
-# Activate Apahce Mellon
+# Activate Apache Mellon
 
 You can activate Apache Mellon to authenticate users from SAMLv2 server.
 
