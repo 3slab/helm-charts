@@ -81,3 +81,99 @@ Parameter | Description | Default
 `alfresco-search.ingress.enabled` | Enable external access for Alfresco Search Services | `false`
 `alfresco-search.ingress.basicAuth` | If `alfresco-search.ingress.enabled` is `true`, user need to provide a `base64` encoded `htpasswd` format user name & password (ex: `echo -n "$(htpasswd -nbm solradmin somepassword)"` where `solradmin` is username and `somepassword` is the password) | None
 `alfresco-search.ingress.whitelist_ips` | If `alfresco-search.ingress.enabled` is `true`, user can restrict `/solr` to a list of IP addresses of CIDR notation | `0.0.0.0/0`
+
+# Activate Apahce Mellon
+
+You can activate Apache Mellon to authenticate users from SAMLv2 server.
+
+At first, you need to create key pairs for Apache Mellon - it will be used to encrypt messages from Apache to SAML provider:
+
+```bash
+# set the URL of the root endpoint, without protocol (only domain)
+export _HOST="ROOT-URL-TO-APACHE"
+
+# generate the openssl template
+/bin/cat  <<EOF > /tmp/mellon-template
+RANDFILE           = /dev/urandom
+[req]
+default_bits       = 3072
+default_keyfile    = privkey.pem
+distinguished_name = req_distinguished_name
+prompt             = no
+policy             = policy_anything
+[req_distinguished_name]
+commonName         = $_HOST
+EOF
+
+# generate key pair
+openssl req \
+    -utf8 -batch \
+    -config "/tmp/mellon-template" \
+    -new -x509 -days 3652 \
+    -nodes \
+    -out "mellon.crt" \
+    -keyout "mellon.key" 2>/dev/null
+
+# cleanup
+rm -f /tmp/mellon-template
+unset _HOST
+```
+
+Both files `mellon.key` and `mellon.crt` will be injected in `values.yaml`.
+
+Then get the SDP metadata file in XML format.
+
+In `values.yaml` (or any other anwser file you use with `-f` option from helm command line), add or modify the `mellon` section:
+
+```yaml
+mellon:
+  # set to true to activate SAMLv2 authentication
+  enable: true
+  # image to use for apache + mod_auth_mellon
+  image: 3spartnerdockerregistry.azurecr.io/apache-mellon:latest
+  # snippets to add to Apache httpd
+  server_snippets: |
+    <LocationMatch "^(/.*/service/api/solr/.*)$" >
+        deny from all
+    </LocationMatch>
+    <LocationMatch "^(/.*/s/api/solr/.*)$" >
+        deny from all
+    </LocationMatch>
+    <LocationMatch "^(/.*/wcservice/api/solr/.*)$" >
+        deny from all
+    </LocationMatch>
+    <LocationMatch "^(/.*/wcs/api/solr/.*)$">
+        deny from all
+    </LocationMatch>
+  # allowed_routes are routes to leave public
+  allowed_routes: []
+  # protected_routes are restricted to authenticated users
+  # from SAML server
+  protected_routes:
+  - path: /alfresco
+    suffix: -repository
+  - path: /api-explorer
+    suffix: -repository
+  - path: /share
+    suffix: -share
+  # Attributes from SAML to bind to headers
+  saml_attributes:
+  - name: email
+    set_header: X-Alfresco-Remote-Email
+  - name: uid
+    set_header: X-Alfresco-Remote-User
+  # The SP name to register in SAML SDP
+  entity_id: alfresco
+  cert: |
+    # paste here the SP certificate
+  key: |
+    # paste here the SP key
+  idp_metadata: |
+    # paste here the XML content of SDP Metadata
+```
+
+In this case:
+
+- only the ingress `ingress-mellon-protected`will be activated - everything will be sent to Apache
+- the saml attributes will be configured to send correct headers with SAML user information
+- if you change mellon configuration, you **need to restart apache-mellon pod**, you can do this by removing the apache pod, it will be recreated
