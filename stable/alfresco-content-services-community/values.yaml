@@ -246,6 +246,9 @@ mellon:
     suffix: -repository
   - path: /share
     suffix: -share
+  # SAML attribute to use with alfresco connector
+  # Note: this attribute MUST be set in saml_attributes !
+  connector_header: X-Alfresco-Remote-User
   # Attributes from SAML to bind to headers
   saml_attributes:
   - name: email
