@@ -128,9 +128,11 @@ In `values.yaml` (or any other anwser file you use with `-f` option from helm co
 ```yaml
 mellon:
   # set to true to activate SAMLv2 authentication
-  enable: true
+  enable: false
+
   # image to use for apache + mod_auth_mellon
   image: 3spartnerdockerregistry.azurecr.io/apache-mellon:latest
+
   # snippets to add to Apache httpd
   server_snippets: |
     <LocationMatch "^(/.*/service/api/solr/.*)$" >
@@ -156,12 +158,18 @@ mellon:
     suffix: -repository
   - path: /share
     suffix: -share
+
+  # SAML attribute to use with alfresco connector
+  # Note: this attribute MUST be set in saml_attributes !
+  connector_header: X-Alfresco-Remote-User
+
   # Attributes from SAML to bind to headers
   saml_attributes:
-  - name: email
-    set_header: X-Alfresco-Remote-Email
   - name: uid
     set_header: X-Alfresco-Remote-User
+  - name: email
+    set_header: X-Alfresco-Remote-Email
+
   # The SP name to register in SAML SDP
   entity_id: alfresco
   cert: |
@@ -172,7 +180,22 @@ mellon:
     # paste here the XML content of SDP Metadata
 ```
 
-In this case:
+You also need to change the global properties configmap. Somewhere in , add:
+
+```
+    {{ if .Values.mellon.enabled }}
+    authentication.chain=external1:external,alfrescoNtlm1:alfrescoNtlm,ldap1:ldap
+
+    external.authentication.proxyHeader={{ .Values.mellon.connector_header }}
+    external.authentication.proxyUserName=
+    {{ else }}
+    authentication.chain=alfrescoNtlm1:alfrescoNtlm,ldap1:ldap
+    {{ end }}
+```
+
+This will make the "external" authentication using the right header to bind users.
+
+Notes:
 
 - only the ingress `ingress-mellon-protected`will be activated - everything will be sent to Apache
 - the saml attributes will be configured to send correct headers with SAML user information
