@@ -1,4 +1,4 @@
-{{- if not .Values.mellon.enabled -}}
+{{- if .Values.mellon.enabled -}}
 # Defines the ingress for the alfresco content repository
 apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
@@ -13,21 +13,30 @@ metadata:
 {{ toYaml .Values.repository.ingress.annotations | indent 4 }}
 spec:
   rules:
-  {{- if .Values.externalHost }}
-  - host: {{ tpl .Values.externalHost $ }}
+  {{ $external := .Values.externalHost }}
+  {{- if $external }}
+  - host: {{ tpl $external $ }}
     http:
   {{- else }}
   - http:
   {{- end }}
       paths:
-      - path: {{ .Values.repository.ingress.path }}
+      - path: /mellon
         backend:
-          serviceName: {{ template "content-services.shortname" . }}-repository
-          servicePort: {{ .Values.repository.service.externalPort }}
-      - path: {{ .Values.apiexplorer.ingress.path }}
+          serviceName: {{ template "content-services.shortname" $ }}-apache-mellon
+          servicePort: 80
+      {{- range .Values.mellon.protected_routes }}
+      - path: {{ .path }}
         backend:
-          serviceName: {{ template "content-services.shortname" . }}-repository
-          servicePort: {{ .Values.repository.service.externalPort }}
+          serviceName: {{ template "content-services.shortname" $ }}-apache-mellon
+          servicePort: 80
+      {{- end -}}
+      {{ range .Values.mellon.allowed_routes }}
+      - path: {{ .path }}
+        backend:
+          serviceName: {{ template "content-services.shortname" $ }}-apache-mellon
+          servicePort: 80
+      {{- end -}}
   {{- if .Values.repository.ingress.tls }}
   tls:
 {{ toYaml .Values.repository.ingress.tls | indent 4 }}

@@ -216,6 +216,55 @@ postgresql:
     limits:
       memory: "1500Mi"
 
+mellon:
+  # set to true to activate SAMLv2 authentication
+  enable: false
+  # image to use for apache + mod_auth_mellon
+  image: 3spartnerdockerregistry.azurecr.io/apache-mellon:latest
+  # snippets to add to Apache httpd
+  server_snippets: |
+    <LocationMatch "^(/.*/service/api/solr/.*)$" >
+        deny from all
+    </LocationMatch>
+    <LocationMatch "^(/.*/s/api/solr/.*)$" >
+        deny from all
+    </LocationMatch>
+    <LocationMatch "^(/.*/wcservice/api/solr/.*)$" >
+        deny from all
+    </LocationMatch>
+    <LocationMatch "^(/.*/wcs/api/solr/.*)$">
+        deny from all
+    </LocationMatch>
+  # allowed_routes are routes to leave public
+  allowed_routes: []
+  # protected_routes are restricted to authenticated users
+  # from SAML server
+  protected_routes:
+  - path: /alfresco
+    suffix: -repository
+  - path: /api-explorer
+    suffix: -repository
+  - path: /share
+    suffix: -share
+  # SAML attribute to use with alfresco connector
+  # Note: this attribute MUST be set in saml_attributes !
+  connector_header: X-Alfresco-Remote-User
+  # Attributes from SAML to bind to headers
+  saml_attributes:
+  - name: email
+    set_header: X-Alfresco-Remote-Email
+  - name: uid
+    set_header: X-Alfresco-Remote-User
+  # The SP name to register in SAML IDP
+  entity_id: alfresco
+  cert: |
+    # paste here the SP certificate
+  key: |
+    # paste here the SP key
+  idp_metadata: |
+    # paste here the XML content of IDP Metadata
+
+
 
 # If there is a need to pull images from a private docker repo, a secret can be defined in helm and passed as an argument
 # to the install command:

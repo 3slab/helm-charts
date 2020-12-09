@@ -1,0 +1,37 @@
+{{- if .Values.mellon.enabled -}}
+apiVersion: v1
+data:
+  mellon.crt: |
+{{ .Values.mellon.cert | indent 4 }}
+
+  mellon.key: |
+{{ .Values.mellon.key | indent 4 }}
+
+  metadata.xml: |
+{{ .Values.mellon.idp_metadata | indent 4 }}
+
+
+  mellon_metadata.xml: |
+    <EntityDescriptor entityID="{{ .Values.mellon.entity_id }}" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <KeyDescriptor use="signing">
+          <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:X509Data>
+              <ds:X509Certificate>{{- .Values.mellon.cert | replace "-----BEGIN CERTIFICATE-----" "" | replace "-----END CERTIFICATE-----" "" | indent 4 | trim }}</ds:X509Certificate>
+            </ds:X509Data>
+          </ds:KeyInfo>
+        </KeyDescriptor>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="{{ .Values.externalProtocol }}://{{ .Values.externalHost }}/mellon/logout"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="{{ .Values.externalProtocol }}://{{ .Values.externalHost }}/mellon/postResponse" index="0"/>
+      </SPSSODescriptor>
+    </EntityDescriptor>
+
+kind: ConfigMap
+metadata:
+  name: {{ template "content-services.shortname" . }}-apache-mellon-meta
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    component: apache-mellon
+{{- end -}}

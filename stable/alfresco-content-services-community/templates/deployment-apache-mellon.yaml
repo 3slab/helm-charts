@@ -1,0 +1,48 @@
+{{- if .Values.mellon.enabled -}}
+apiVersion: {{ template "deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: {{ template "content-services.shortname" . }}-apache-mellon
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: appache-mellon
+  name: {{ template "content-services.shortname" . }}-apache-mellon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "content-services.shortname" . }}-apache-mellon
+      release: {{ .Release.Name }}
+      component: apache-mellon
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ template "content-services.shortname" . }}-apache-mellon
+        release: {{ .Release.Name }}
+        component: apache-mellon
+    spec:
+      containers:
+      - image: {{ .Values.mellon.image }}
+        name: apache-mellon
+        resources: {}
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/httpd/conf.d
+          name: apache-mellon-config
+        - mountPath: /etc/httpd/saml2
+          name: apache-mellon-meta
+
+      volumes:
+        - name: apache-mellon-config
+          configMap:
+            name: {{ template "content-services.shortname" . }}-apache-mellon-config
+        - name: apache-mellon-meta
+          configMap:
+            name: {{ template "content-services.shortname" . }}-apache-mellon-meta
+status: {}
+{{- end -}}
