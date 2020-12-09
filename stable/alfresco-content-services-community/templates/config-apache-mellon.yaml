@@ -9,6 +9,9 @@ data:
     #
     # NOTE: if this file is removed, it will be restored on upgrades.
 
+    ServerName "{{ .Values.externalProtocol}}://{{ .Values.externalHost }}"
+    UseCanonicalName on
+
     {{ .Values.mellon.server_snippets | indent 4 | trim }}
 
     <LocationMatch "^/+$">
@@ -55,6 +58,8 @@ data:
     {{ range .}}
     <Location {{ .path }} >
         ProxyPass  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+        ProxyPassReverse  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+
     </Location>
     {{ end -}}
     {{ end }}
@@ -66,6 +71,8 @@ data:
         MellonEnable auth
         Require valid-user
         ProxyPass  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+        ProxyPassReverse  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+
     </Location>
     {{ end -}}
     {{ end }}
