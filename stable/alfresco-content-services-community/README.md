@@ -121,7 +121,7 @@ unset _HOST
 
 Both files `mellon.key` and `mellon.crt` will be injected in `values.yaml`.
 
-Then get the SDP metadata file in XML format.
+Then get the IDP metadata file in XML format.
 
 In `values.yaml` (or any other anwser file you use with `-f` option from helm command line), add or modify the `mellon` section:
 
@@ -170,14 +170,14 @@ mellon:
   - name: email
     set_header: X-Alfresco-Remote-Email
 
-  # The SP name to register in SAML SDP
+  # The SP name to register in SAML IDP
   entity_id: alfresco
   cert: |
     # paste here the SP certificate
   key: |
     # paste here the SP key
   idp_metadata: |
-    # paste here the XML content of SDP Metadata
+    # paste here the XML content of IDP Metadata
 ```
 
 You also need to change the global properties configmap. Somewhere in , add:

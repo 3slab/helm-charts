@@ -255,14 +255,14 @@ mellon:
     set_header: X-Alfresco-Remote-Email
   - name: uid
     set_header: X-Alfresco-Remote-User
-  # The SP name to register in SAML SDP
+  # The SP name to register in SAML IDP
   entity_id: alfresco
   cert: |
     # paste here the SP certificate
   key: |
     # paste here the SP key
   idp_metadata: |
-    # paste here the XML content of SDP Metadata
+    # paste here the XML content of IDP Metadata
 
 
 
