@@ -51,19 +51,8 @@ data:
 
         RequestHeader set secure_key "secure"
     </Location>
-
     {{ $contentservice :=  include "content-services.shortname" . }}
     {{ $defaultBakend := printf "http://%s" $contentservice}}
-    {{ with .Values.mellon.allowed_routes }}
-    {{ range .}}
-    <Location {{ .path }} >
-        ProxyPass  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
-        ProxyPassReverse  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
-
-    </Location>
-    {{ end -}}
-    {{ end }}
-
     {{ with .Values.mellon.protected_routes }}
     {{ range .}}
     <Location {{ .path }} >
@@ -72,7 +61,17 @@ data:
         Require valid-user
         ProxyPass  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
         ProxyPassReverse  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
-
+    </Location>
+    {{ end -}}
+    {{ end }}
+    {{ with .Values.mellon.allowed_routes }}
+    {{ range .}}
+    <Location {{ .path }} >
+        ProxyPass  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+        ProxyPassReverse  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+        Order deny,allow
+        Allow from All
+        Satisfy Any
     </Location>
     {{ end -}}
     {{ end }}
