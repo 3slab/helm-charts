@@ -36,6 +36,7 @@ data:
 
     <Location / >
         MellonEnable "off"
+        MellonSignatureMethod rsa-sha1
         MellonEndpointPath /mellon/
         MellonSPMetadataFile /etc/httpd/saml2/mellon_metadata.xml
         MellonSPPrivateKeyFile /etc/httpd/saml2/mellon.key
