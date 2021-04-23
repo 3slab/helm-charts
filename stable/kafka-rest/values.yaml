@@ -6,9 +6,26 @@ replicaCount: 1
 
 image:
   repository: confluentinc/cp-kafka-rest
-  tag: latest
+  tag: 5.3.1
   pullPolicy: IfNotPresent
   restartPolicy: Always
+  env: []
+#    - name: KAFKA_REST_BOOTSTRAP_SERVERS
+#      value: bootstrap_url
+#    # env for event hub connection
+#    - name: KAFKA_REST_CLIENT_SECURITY_PROTOCOL
+#      value: SASL_SSL
+#    - name: KAFKA_REST_CLIENT_SASL_MECHANISM
+#      value: PLAIN
+#    - name: KAFKA_REST_CLIENT_SASL_JAAS_CONFIG
+#      value: jaas_config
+#    # env for classic kafka & zookeeper configuration
+#    - name: KAFKA_REST_ZOOKEEPER_CONNECT
+#      value: zookeeper-service:2181
+#    - name: KAFKA_REST_ZOOKEEPER_SERVER
+#      value: kafka-int-0.kafka-int-headless:9092,kafka-int-1.kafka-int-headless:9092,kafka-int-2.kafka-int-headless:9092
+#    - name: KAFKA_REST_SCHEMA_REGISTRY_URL
+#      value: resgistry_url
 
 nameOverride: ""
 fullnameOverride: ""
@@ -17,6 +34,21 @@ service:
   type: ClusterIP
   port: 8082
   targetPort: 8082
+  protocol: TCP
+
+ingress:
+  enabled: false
+  # Used to create an Ingress record.
+  hosts:
+#    - chart-example.local
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  tls: []
+    # Secrets must be manually created in the namespace.
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
 
 # Zookeeper connection
 # kafkaRestZookeeperConnect: zookeeper-service:2181
@@ -26,14 +58,6 @@ service:
 
 # Schema registry url
 # kafkaRestSchemaRegistryUrl: http://kafka-schema-registry-service:8081
-
-kong:
-  enable: false
-  policy:
-    enable: false
-  url: http://kong-admin-client:8001
-  apiKey: generateThisApiKey
-  # username:
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -52,9 +76,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-# Define custom environment variables to pass to the image here
-extraEnv: {}
 
 # Define initContainers if necessary
 initContainers: []
