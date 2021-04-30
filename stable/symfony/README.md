@@ -22,6 +22,7 @@ Parameter                  | Description                                        
 `service.type`             | type of the service                                                      | `ClusterIp`
 `service.externalPort`     | external port of the service                                             | `80`
 `service.internalPort`     | internal port of the service                                             | `80`
+`service.annotations`      | Service annotation configuration                                         | `{}`
 `livenessProbe`            | liveness probe (YAML)                                                    | `{}`
 `readinessProbe`           | readiness probe (YAML)                                                   | `{}`
 `resources`                | resource requests and limits (YAML)                                      | `{}`

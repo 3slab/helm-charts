@@ -18,6 +18,7 @@ service:
   type: ClusterIP
   externalPort: 80
   internalPort: 80
+  annotations: {}
 
 ingress:
   enabled: false
