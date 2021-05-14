@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "smartshape.doc.fullname" . }}
+  labels:
+    {{- include "smartshape.doc.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.doc.autoscaling.enabled }}
+  replicas: {{ .Values.doc.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "smartshape.doc.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.doc.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "smartshape.doc.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.doc.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "smartshape.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.doc.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.doc.securityContext | nindent 12 }}
+          image: "{{ .Values.doc.image.repository }}:{{ .Values.doc.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.doc.image.pullPolicy }}
+          ports:
+            - name: {{ .Values.doc.service.name | default "http" }}
+              containerPort: {{ .Values.doc.service.port | default "80" }}
+              protocol: {{ .Values.doc.service.protocol | default "TCP" }}
+          {{- if .Values.doc.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.doc.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.doc.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.doc.readinessProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.doc.resources | nindent 12 }}
+          {{- with .Values.doc.volumeMounts }}
+          volumeMounts:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.doc.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.doc.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.doc.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.doc.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

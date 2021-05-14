@@ -1,0 +1,14 @@
+{{- if .Values.app.configMap.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.app.configMap.name }}
+  labels:
+    name: {{ .Values.app.configMap.name }}
+    {{- include "smartshape.app.labels" . | nindent 4 }}
+data:
+  {{- range .Values.app.configMap.data }}
+    {{ .name }}: |-
+{{ .value | indent 6 }}
+  {{- end }}
+{{- end }}
