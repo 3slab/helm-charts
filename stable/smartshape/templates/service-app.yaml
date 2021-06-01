@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "smartshape.app.fullname" . }}
+  labels:
+    {{- include "smartshape.app.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    {{- with .Values.app.ports }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  selector:
+    {{- include "smartshape.app.selectorLabels" . | nindent 4 }}
