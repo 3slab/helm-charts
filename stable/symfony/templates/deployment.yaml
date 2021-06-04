@@ -128,9 +128,11 @@ spec:
 {{- end }}
         - name: var-volume
           emptyDir: {}
+        {{ if .Values.nginx.enabled }}
         - name: config-volume
           configMap:
             name: {{ template "fullname" . }}-nginx
+        {{- end }}
         {{- range $secret := .Values.secrets }}
         - name: {{ $secret.name }}-volume
           secret:

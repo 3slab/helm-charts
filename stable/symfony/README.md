@@ -18,6 +18,7 @@ Parameter                  | Description                                        
 `image.tag`                | container image tag                                                      | `stable`
 `image.pullPolicy`         | container image pull policy                                              | `IfNotPresent`
 `image.pullSecrets`        | container image pull secrets                                             |
+`service.enabled`          | enable the creation of the service resource                              | `true`
 `service.name`             | name of the service                                                      | `nginx`
 `service.type`             | type of the service                                                      | `ClusterIp`
 `service.externalPort`     | external port of the service                                             | `80`
@@ -31,6 +32,7 @@ Parameter                  | Description                                        
 `ingress.hosts`            | Hosts to reach the application                                           | `false`
 `ingress.annotations`      | Ingress annotation configuration                                         | `false`
 `ingress.tls`              | TLS support                                                              | `false`
+`nginx.enabled`            | Enable the creation of the configmap resource for nginx                  | `true`
 `nginx.sourcesPath`        | Path where the Symfony application is located                            | `/var/www/symfony`
 `nginx.sourcesDir`         | Directory in sourcesPath where the Symfony application is located        | `public`
 `nginx.mainControllerName` | Directory in sourcesPath where the Symfony application is located        | `index`
