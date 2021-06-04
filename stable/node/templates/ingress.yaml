@@ -1,6 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "node.fullname" . -}}
 {{- $servicePort := .Values.service.port -}}
+{{- $servicePathType := .Values.service.pathType -}}
 apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -21,9 +22,12 @@ spec:
       http:
         paths:
           - path: /
+            pathType: {{ $servicePathType }}
             backend:
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
     {{- end -}}
   {{- if .Values.ingress.tls }}
   tls:
