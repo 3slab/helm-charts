@@ -1,0 +1,119 @@
+apiVersion: {{ template "deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}
+      release: {{ .Release.Name }}
+  replicas: {{ .Values.replicaCount }}
+  {{- if .Values.strategy }}
+  strategy:
+{{ toYaml .Values.strategy | indent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range $secret := .Values.image.pullSecrets }}
+        - name: {{ $secret }}
+        {{- end }}
+      {{- end }}
+
+      {{- if .Values.initContainers }}
+      initContainers:
+      {{- range $container := .Values.initContainers }}
+        -
+{{ toYaml $container | indent 10 }}
+          {{ if $.Values.env.initContainer }}
+          env:
+            {{ range $env := $.Values.env.initContainer }}
+            - name: {{ $env.name }}
+            {{ if $env.typeSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.secretKeyRef.name }}
+                  key: {{ $env.secretKeyRef.key }}
+            {{ else }}
+              value: {{ $env.value | quote }}
+            {{ end }}
+            {{ end }}
+          {{ end }}
+      {{ end }}
+      {{- end }}
+
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.command }}
+          command:
+{{ toYaml . | indent 10 }}
+          {{- end }}
+          {{- with .Values.args }}
+          args:
+{{ toYaml . | indent 10 }}
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          volumeMounts:
+{{- if .Values.persistence.enabled -}}
+{{- if .Values.persistence.mounts }}
+{{ toYaml .Values.persistence.mounts | indent 12 }}
+{{- end }}
+{{- end }}
+{{- with .Values.volumeMounts }}
+{{ toYaml . | indent 12 }}
+{{- end }}
+          {{ if .Values.env }}
+          env:
+            {{- range $env := .Values.env.container }}
+            - name: {{ $env.name }}
+             {{ if $env.typeSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.secretKeyRef.name }}
+                  key: {{ $env.secretKeyRef.key }}
+            {{ else }}
+              value: {{ $env.value | quote }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.extraEnv }}
+{{ toYaml .Values.extraEnv | indent 12 }}
+          {{- end }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 12 }}
+          {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+
+      volumes:
+{{- if .Values.persistence.enabled -}}
+{{- if .Values.persistence.volumes }}
+{{ toYaml .Values.persistence.volumes | indent 8 }}
+{{- end }}
+{{- end }}
+{{- with .Values.volumes }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+
