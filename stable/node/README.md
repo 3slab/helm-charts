@@ -69,6 +69,8 @@ The following table lists the configurable parameters of the Node chart and thei
 | `ingress.secrets[0].name`               | TLS Secret Name                                           | `nil`                                                     |
 | `ingress.secrets[0].certificate`        | TLS Secret Certificate                                    | `nil`                                                     |
 | `ingress.secrets[0].key`                | TLS Secret Key                                            | `nil`                                                     |
+| `volumeMounts`             | Volume mounts to configure configmap                                     | `[]`
+| `volumes`                  | Volumes                                                                  | `[]`
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 

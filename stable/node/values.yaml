@@ -127,3 +127,12 @@ command: []
 args: []
 #args:
 #  - kubectl get pod -n smartcoach-int -l app=symfony,release=users-api-int -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -i kubectl -n smartcoach-int exec {}  bin/console app:subscription:import -- -v
+
+volumeMounts: []
+#  - name: sftp-data-vol
+#    mountPath: /var/www/html/data
+
+volumes: []
+#  - name: sftp-data-vol
+#    configMap:
+#      name: sftp-data-config

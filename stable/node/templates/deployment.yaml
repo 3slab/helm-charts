@@ -73,6 +73,9 @@ spec:
         - name: data
           mountPath: {{ .Values.persistence.path }}
         {{- end }}
+{{- with .Values.volumeMounts }}
+{{ toYaml . | indent 8 }}
+{{- end }}
       volumes:
       - name: app
         emptyDir: {}
@@ -83,3 +86,6 @@ spec:
       {{- else }}
         emptyDir: {}
       {{- end }}
+{{- with .Values.volumes }}
+{{ toYaml . | indent 6 }}
+{{- end }}
