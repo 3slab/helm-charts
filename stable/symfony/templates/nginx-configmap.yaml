@@ -1,4 +1,4 @@
-{{- if .Values.ingress.enabled -}}
+{{- if .Values.nginx.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
