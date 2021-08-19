@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart for a mongo bi connector
+name: mongobi
+version: 0.1.0

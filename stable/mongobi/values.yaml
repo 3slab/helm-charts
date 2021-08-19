@@ -1,0 +1,120 @@
+# Default values for simple.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+nameOverride: ''
+fullnameOverride: ''
+
+replicaCount: 1
+
+image:
+  repository: 3slab/mongobi
+  tag: v2.14.3
+  pullPolicy: IfNotPresent
+  # pullSecrets:
+  #   - example-secret
+
+strategy:
+    type: 'Recreate'
+
+service:
+  enabled: true
+  name: mongobi
+  type: ClusterIP
+  externalPort: 3307
+  internalPort: 3307
+  annotations: {}
+  pathType: ImplementationSpecific
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+# nodeSelector:
+
+command: []
+#command:
+#  - /bin/sh
+#  - -c
+
+args: []
+#args:
+#  - kubectl get pod -n smartcoach-int -l app=simple,release=users-api-int -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -i kubectl -n smartcoach-int exec {}  bin/console app:subscription:import -- -v
+
+env:
+  container: []
+  initContainer: []
+# env:
+#   # env variables passed to the container and webserver
+#   container:
+#     - name: APP_ENV
+#       value: prod
+#     - name: APP_SECRET
+#       value: changeit1234567890
+#   # add secret in env var
+#     - name: MYSQL_ROOT_PASSWORD
+#       typeSecret: true
+#       secretKeyRef:
+#           name: percona-percona
+#           key: mysql-root-password
+#   # env variables passed to each initContainer
+#   initContainer:
+#     - name: API_NAME
+#       value: users-api
+#   # add secret in env var
+#     - name: MYSQL_ROOT_PASSWORD
+#       typeSecret: true
+#       secretKeyRef:
+#           name: percona-percona
+#           key: mysql-root-password
+
+initContainers: []
+# Env Variables has to be set in `env.initContainer`
+# For each initContainers, the variable SERVICE_NAME is also available
+# ...with the value equal to {{ template "fullname" . }}
+# initContainers:
+#   - name: kong-subscriber
+#     image: appropriate/curl
+#     imagePullPolicy: Always
+#     command: ["/usr/bin/curl"]
+#     args:
+#       - "-X"
+#       - "GET"
+#       - "localhost/whatever"
+
+## Additional container environment variables
+##
+extraEnv: []
+#extraEnv:
+# - name: SOME_VAR
+#   value: 'some value'
+
+volumeMounts: []
+#  - name: sftp-data-vol
+#    mountPath: /var/www/html/data
+
+volumes: []
+#  - name: sftp-data-vol
+#    configMap:
+#      name: sftp-data-config
+
+livenessProbe:
+  tcpSocket:
+    port: 3307
+  initialDelaySeconds: 5
+  periodSeconds: 30
+  timeoutSeconds: 30
+
+readinessProbe:
+  tcpSocket:
+    port: 3307
+  initialDelaySeconds: 5
+  periodSeconds: 30
+  timeoutSeconds: 30
