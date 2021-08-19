@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 apiVersion: v1
-appVersion: "0.36.0rc1"
+appVersion: "1.2.0"
 description: A Helm chart for Kubernetes
 name: superset
-version: 0.2.0
+version: 0.3.0

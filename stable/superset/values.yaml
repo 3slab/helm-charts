@@ -6,8 +6,8 @@ strategy: {}
   # type: Recreate
 
 image:
-  repository: 3slab/superset
-  tag: 0.36.0rc1
+  repository: apache/superset
+  tag: 1.2.0
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -33,6 +33,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
+  pathType: ImplementationSpecific
   hosts:
     - chart-example.local
   tls: []
