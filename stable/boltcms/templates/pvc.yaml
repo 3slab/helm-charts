@@ -1,0 +1,34 @@
+{{- if and .Values.persistence.enabled -}}
+{{- $persistence := .Values.persistence }}
+{{- $chart := .Chart }}
+{{- $release := .Release }}
+{{- range $volume := .Values.persistence.volumes }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+{{- if $persistence.annotations }}
+  annotations:
+{{ toYaml $persistence.annotations | indent 4 }}
+{{- end }}
+  name: {{ $volume.persistentVolumeClaim.claimName }}
+  labels:
+    app: {{ $volume.persistentVolumeClaim.claimName }}
+    chart: "{{ $chart.Name }}-{{ $chart.Version }}"
+    release: "{{ $release.Name }}"
+    heritage: "{{ $release.Service }}"
+spec:
+  accessModes:
+    - {{ $persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ $persistence.size | quote }}
+{{- if $persistence.storageClass }}
+{{- if (eq "-" $persistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ $persistence.storageClass }}"
+{{- end }}
+{{- end }}
+---
+{{- end }}
+{{- end }}
