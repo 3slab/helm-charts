@@ -1,0 +1,53 @@
+{{- if .Values.job.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ template "jobFullname" . }}"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations: 
+{{ .Values.job.annotations | toYaml | indent 4 }}
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 6
+  activeDeadlineSeconds: {{ .Values.job.activeDeadlineSeconds }}
+  template:
+    metadata:
+      name: "{{ template "jobFullname" . }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: {{ .Values.job.restartPolicy }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range $secret := .Values.image.pullSecrets }}
+        - name: {{ $secret }}
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: job
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          command:
+{{ .Values.job.cmd | toYaml | indent 12 }}
+          args:
+{{ .Values.job.args | toYaml | indent 12 }}
+          {{ if .Values.env }}
+          env:
+            {{- range $env := .Values.env.container }}
+            - name: {{ $env.name }}
+             {{ if $env.typeSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.secretKeyRef.name }}
+                  key: {{ $env.secretKeyRef.key }}
+            {{ else }}
+              value: {{ $env.value | quote }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+{{- end }}

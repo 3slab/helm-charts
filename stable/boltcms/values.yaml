@@ -1,0 +1,174 @@
+# Default values for symfony.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: nginx # override with own docker image containign symfony sources
+  tag: stable
+  pullPolicy: IfNotPresent
+  # pullSecrets:
+  #   - example-secret
+
+strategy:
+    type: 'Recreate'
+
+service:
+  enabled: true
+  name: nginx
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+  annotations: {}
+  pathType: ImplementationSpecific
+
+ingress:
+  enabled: false
+  # Used to create an Ingress record.
+  hosts:
+    - chart-example.local
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  tls: []
+    # Secrets must be manually created in the namespace.
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+# nodeSelector:
+
+command: []
+#command:
+#  - /bin/sh
+#  - -c
+
+args: []
+#args:
+#  - kubectl get pod -n smartcoach-int -l app=symfony,release=users-api-int -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -i kubectl -n smartcoach-int exec {}  bin/console app:subscription:import -- -v
+
+
+nginx:
+  enabled: true
+  sourcesPath: /var/www/html # override with own symfony app source path
+  sourcesDir: public
+  mainControllerName: index
+  accessLogPath: /var/log/nginx/access.log
+  errorLogPath: /var/log/nginx/error.log
+  locationParams: []
+
+# env:
+#   # env variables passed to the container and webserver
+#   container:
+#     - name: APP_ENV
+#       value: prod
+#     - name: APP_SECRET
+#       value: changeit1234567890
+#   # add secret in env var
+#     - name: MYSQL_ROOT_PASSWORD
+#       typeSecret: true
+#       secretKeyRef:
+#           name: percona-percona
+#           key: mysql-root-password
+#   # env variables passed to each initContainer
+#   initContainer:
+#     - name: API_NAME
+#       value: users-api
+#   # add secret in env var
+#     - name: MYSQL_ROOT_PASSWORD
+#       typeSecret: true
+#       secretKeyRef:
+#           name: percona-percona
+#           key: mysql-root-password
+
+# Env Variables has to be set in `env.initContainer`
+# For each initContainers, the variable SERVICE_NAME is also available
+# ...with the value equal to {{ template "fullname" . }}
+# initContainers:
+#   - name: kong-subscriber
+#     image: appropriate/curl
+#     imagePullPolicy: Always
+#     command: ["/usr/bin/curl"]
+#     args:
+#       - "-X"
+#       - "GET"
+#       - "localhost/whatever"
+
+# Secrets are volume only
+# secrets:
+#   -
+#     folder: /path/tp/folder
+#     name: super-secret-name
+#     items:
+#       - key: key-inside-secret
+#         path: filename.txt
+
+## Additional container environment variables
+##
+extraEnv: []
+#extraEnv:
+# - name: SOME_VAR
+#   value: 'some value'
+
+volumeMounts: []
+#  - name: sftp-data-vol
+#    mountPath: /var/www/html/data
+
+volumes: []
+#  - name: sftp-data-vol
+#    configMap:
+#      name: sftp-data-config
+
+livenessProbe: {}
+#  httpGet:
+#    path: /liveness
+#    port: 80
+#  initialDelaySeconds: 5
+#  periodSeconds: 30
+#  timeoutSeconds: 30
+
+readinessProbe: {}
+#  httpGet:
+#    path: /readiness
+#    port: 80
+#  initialDelaySeconds: 5
+#  periodSeconds: 10
+#  timeoutSeconds: 30
+
+persistence:
+  enabled: false
+  annotations: {}
+  accessMode: ReadWriteOnce
+  size: 50Gi
+  storageClass: default
+  volumes:
+   - name: nothing
+     emptyDir: {}
+  mounts:
+   - mountPath: /path/to/nothing
+     name: nothing
+
+configMap:
+  dollar:
+    enabled: false
+
+job:
+  enabled: false
+  activeDeadlineSeconds: 60
+  restartPolicy: Never
+  name: job
+  cmd: []
+  args: []
+  annotations: {}
