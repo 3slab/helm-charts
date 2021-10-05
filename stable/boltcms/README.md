@@ -62,13 +62,13 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 To install the chart with the release name `my-release` and the namespace `prod` using a `values.yaml` file:
 
 ```bash
-helm install --name my-release --namespace prod suez/symfony -f ./values.yaml
+helm install --name my-release --namespace prod suez/boltcms -f ./values.yaml
 ```
 
 ```console
 $ helm install --name my-release \
   --set image.repository=pathtodockerhub/name/whatever \
-    suez/symfony
+    suez/boltcms
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
