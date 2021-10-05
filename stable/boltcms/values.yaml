@@ -67,7 +67,12 @@ nginx:
   mainControllerName: index
   accessLogPath: /var/log/nginx/access.log
   errorLogPath: /var/log/nginx/error.log
-  locationParams: []
+  locationParams:
+    - "fastcgi_buffer_size 32k;"
+    - "fastcgi_buffers 32 4k;"
+  serverParams:
+    - "client_max_body_size 8M;"
+
 
 # env:
 #   # env variables passed to the container and webserver
