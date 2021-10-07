@@ -11,12 +11,6 @@ metadata:
 
 data:
   default.conf: |-
-    {{- if .Values.configMap.dollar.enabled }}
-    geo $dollar {
-      default "$";
-    }
-    {{- end }}
-
     server {
         root {{ .Values.nginx.sourcesPath }}/{{ .Values.nginx.sourcesDir }};
 

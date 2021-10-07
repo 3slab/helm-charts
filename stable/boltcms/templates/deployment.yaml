@@ -81,6 +81,8 @@ spec:
             - mountPath: /etc/nginx/sites-enabled
               name: config-volume
             {{- end }}
+            - mountPath: {{ .Values.php_fpm.configDir }}
+              name: php-fpm-config-volume
             {{- if .Values.secrets }}
             {{- range $secret := .Values.secrets }}
 
@@ -133,6 +135,9 @@ spec:
           configMap:
             name: {{ template "fullname" . }}-nginx
         {{- end }}
+        - name: php-fpm-config-volume
+          configMap:
+            name: {{ template "fullname" . }}-php-fpm
         {{- range $secret := .Values.secrets }}
         - name: {{ $secret.name }}-volume
           secret:

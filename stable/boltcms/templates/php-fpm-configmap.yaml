@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}-php-fpm
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+
+data:
+  bolt.conf: |-
+    {{- range $phpFpmParam := .Values.php_fpm.phpFpmParams }}
+    {{ $phpFpmParam }}
+    {{- end }}
+
+    {{- if .Values.env }}
+    {{- range $env := .Values.env.container }}
+    env[{{ $env.name }}] = {{ $env.value | quote }};
+    {{- end }}
+    {{- end }}
+    {{- if .Values.extraEnv }}
+    {{- range $env := .Values.extraEnv }}
+    env[{{ $env.name }}] = {{ $env.value | quote }};
+    {{- end }}
+    {{- end }}
