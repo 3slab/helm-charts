@@ -32,6 +32,8 @@ Parameter                  | Description                                        
 `ingress.hosts`            | Hosts to reach the application                                           | `false`
 `ingress.annotations`      | Ingress annotation configuration                                         | `false`
 `ingress.tls`              | TLS support                                                              | `false`
+`php_fpm.configDir`        | php-fpm additional configuration files directory                         | `/usr/local/etc/php-fpm.d/custom`
+`php_fpm.phpFpmParams`     | List of params added to a php-fpm config file                            | `["clear_env = yes;"]`
 `nginx.enabled`            | Enable the creation of the configmap resource for nginx                  | `true`
 `nginx.sourcesPath`        | Path where the Bolt CMS application is located                           | `/var/www/html`
 `nginx.sourcesDir`         | Directory in sourcesPath where the Bolt CMS application is located       | `public`
@@ -62,19 +64,19 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 To install the chart with the release name `my-release` and the namespace `prod` using a `values.yaml` file:
 
 ```bash
-helm install --name my-release --namespace prod suez/boltcms -f ./values.yaml
+helm install --name my-release --namespace prod 3slab/boltcms -f ./values.yaml
 ```
 
 ```console
 $ helm install --name my-release \
   --set image.repository=pathtodockerhub/name/whatever \
-    suez/boltcms
+    3slab/boltcms
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-$ helm install --name my-release -f values.yaml suez/kube-lego
+$ helm install --name my-release -f values.yaml 3slab/boltcms
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
