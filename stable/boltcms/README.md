@@ -91,3 +91,31 @@ $ helm delete my-release --purge
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
+
+## Usage
+
+### Mount files as configmaps
+Configure your `values.yaml`:
+```yaml
+
+configMap:
+  enabled: true
+  name: boltcms-config
+  data:
+    - name: config.yaml
+      value: |-
+
+volumeMounts:
+  - name: boltcms-config-vol
+    mountPath: /some-path/config.yaml
+    subPath: config.yaml
+
+volumes:
+  - name: boltcms-config-vol
+    configMap:
+      name: boltcms-config
+```
+
+```bash
+helm install bolt-cms -f values.yaml --set-file "configMap.data[0].value=file.yaml" 3slab/boltcms 
+```
