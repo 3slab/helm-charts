@@ -171,8 +171,16 @@ persistence:
      name: nothing
 
 configMap:
-  dollar:
-    enabled: false
+  enabled: false
+  name: boltcms-config
+  data: []
+  # data:
+  #   - name: config.json
+  #     value: |-
+  #      {
+  #        "environment": "demo",
+  #        "product_name": "name"
+  #      }
 
 job:
   enabled: false

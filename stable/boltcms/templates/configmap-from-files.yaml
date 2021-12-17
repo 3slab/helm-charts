@@ -1,0 +1,17 @@
+{{- if .Values.configMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.name }}
+  labels:
+    app: {{ template "fullname" . }}
+    name: {{ .Values.configMap.name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  {{- range .Values.configMap.data }}
+    {{ .name }}: |-
+{{ .value | indent 6 }}
+  {{- end }}
+{{- end }}
