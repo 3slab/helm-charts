@@ -1,0 +1,74 @@
+{{- if .Values.mellon.enabled -}}
+# Defines the ingress for the alfresco content repository
+apiVersion: {{ template "ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ template "content-services.shortname" . }}-repository
+  labels:
+    app: {{ template "content-services.shortname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  annotations:
+{{ toYaml .Values.repository.ingress.annotations | indent 4 }}
+spec:
+  rules:
+  {{ $external := .Values.externalHost }}
+  {{- if $external }}
+  - host: {{ tpl $external $ }}
+    http:
+  {{- else }}
+  - http:
+  {{- end }}
+      paths:
+      - path: /mellon
+        {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+        pathType: Prefix
+        {{- end }}
+        backend:
+          {{- if semverCompare "<1.19-0" $.Capabilities.KubeVersion.GitVersion  }}
+          serviceName: {{  template "content-services.shortname" $  }}-apache-mellon
+          servicePort: 80
+          {{- else }}
+          service:
+            name: {{ template "content-services.shortname" $ }}-apache-mellon
+            port: 
+              number: 80
+          {{- end }}
+      {{- range .Values.mellon.protected_routes }}
+      - path: {{ .path }}
+        {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+        pathType: Prefix
+        {{- end }}
+        backend:
+          {{- if semverCompare "<1.19-0" $.Capabilities.KubeVersion.GitVersion  }}
+          serviceName: {{ template "content-services.shortname" $ }}-apache-mellon
+          servicePort: 80
+          {{- else  }}
+          service:
+            name: {{ template "content-services.shortname" $ }}-apache-mellon
+            port: 
+              number: 80
+          {{- end }}
+      {{- end -}}
+      {{ range .Values.mellon.allowed_routes }}
+      - path: {{ .path }}
+        {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+        pathType: Prefix
+        {{- end }}
+        backend:
+          {{- if semverCompare "<1.19-0" $.Capabilities.KubeVersion.GitVersion  }}
+          serviceName: {{ template "content-services.shortname" $ }}-apache-mellon
+          servicePort: 80
+          {{- else  }}
+          service:
+            name: {{ template "content-services.shortname" $ }}-apache-mellon
+            port: 
+              number: 80
+          {{- end }}
+      {{- end }}
+  {{- if .Values.repository.ingress.tls }}
+  tls:
+{{ toYaml .Values.repository.ingress.tls | indent 4 }}
+  {{- end -}}
+{{- end -}}
