@@ -1,0 +1,92 @@
+{{- if .Values.mellon.enabled -}}
+apiVersion: v1
+data:
+  welcome.conf: |
+    #
+    # This configuration file enables the default "Welcome" page if there
+    # is no default index page present for the root URL.  To disable the
+    # Welcome page, comment out all the lines below.
+    #
+    # NOTE: if this file is removed, it will be restored on upgrades.
+
+    ServerName "{{ .Values.externalProtocol}}://{{ .Values.externalHost }}"
+    UseCanonicalName on
+
+    {{ .Values.mellon.server_snippets | indent 4 | trim }}
+
+    <LocationMatch "^/+$">
+        Options -Indexes
+        ErrorDocument 403 /.noindex.html
+    </LocationMatch>
+
+    <Directory /usr/share/httpd/noindex>
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    Alias /.noindex.html /usr/share/httpd/noindex/index.html
+    Alias /noindex/css/bootstrap.min.css /usr/share/httpd/noindex/css/bootstrap.min.css
+    Alias /noindex/css/open-sans.css /usr/share/httpd/noindex/css/open-sans.css
+    Alias /images/apache_pb.gif /usr/share/httpd/noindex/images/apache_pb.gif
+    Alias /images/poweredby.png /usr/share/httpd/noindex/images/poweredby.png
+
+  auth_mellon.conf: |
+    MellonCacheSize 100
+    MellonLockFile "/run/mod_auth_mellon/lock"
+
+    <Location / >
+        MellonEnable "off"
+        MellonSignatureMethod rsa-sha1
+        MellonEndpointPath /mellon/
+        MellonSPMetadataFile /etc/httpd/saml2/mellon_metadata.xml
+        MellonSPPrivateKeyFile /etc/httpd/saml2/mellon.key
+        MellonSPCertFile /etc/httpd/saml2/mellon.crt
+        MellonIdPMetadataFile /etc/httpd/saml2/metadata.xml
+
+        {{ with .Values.mellon.saml_attributes }}
+        {{ range .}}
+        RequestHeader unset {{ .name }}
+        RequestHeader set {{ .set_header }} "%{MELLON_{{ .name }}}e" env=MELLON_{{ .name }}
+        {{ end -}}
+        {{ end }}
+
+        RequestHeader set secure_key "secure"
+    </Location>
+
+    {{ $contentservice :=  include "content-services.shortname" . }}
+    {{ $defaultBakend := printf "http://%s" $contentservice}}
+
+    {{ with .Values.mellon.protected_routes }}
+    {{ range .}}
+    <Location {{ .path | quote }} >
+        AuthType Mellon
+        MellonEnable auth
+        Require valid-user
+        ProxyPass  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+        ProxyPassReverse  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+
+    </Location>
+    {{ end -}}
+    {{ end }}
+
+    {{ with .Values.mellon.allowed_routes }}
+    {{ range .}}
+    <Location {{ .path | quote }} >
+        MellonEnable "off"
+        Order Deny,Allow
+        Allow from all
+        Satisfy Any
+        ProxyPass  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+        ProxyPassReverse  {{ printf "%s%s/%s" (.backend | default $defaultBakend | trimSuffix "/") .suffix (.path | trimPrefix "/" ) | quote }}
+    </Location>
+    {{ end -}}
+    {{ end }}
+kind: ConfigMap
+metadata:
+  name: {{ template "content-services.shortname" . }}-apache-mellon-config
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    component: apache-mellon
+{{- end -}}
