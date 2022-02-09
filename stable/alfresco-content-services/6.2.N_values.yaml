@@ -1,0 +1,63 @@
+# This is a YAML-formatted file.  Declare variables to be passed into your templates.
+
+repository:
+  image:
+    tag: 6.2.2
+  environment:
+    JAVA_TOOL_OPTIONS: "
+      -Dmetadata-keystore.aliases=metadata
+      -Dmetadata-keystore.metadata.algorithm=AES
+      "
+
+transformrouter:
+  image:
+    tag: 1.4.1
+
+pdfrenderer:
+  image:
+    tag: 2.5.1
+
+imagemagick:
+  image:
+    tag: 2.5.1
+
+libreoffice:
+  image:
+    tag: 2.5.1
+
+tika:
+  image:
+    tag: 2.5.1
+
+transformmisc:
+  image:
+    tag: 2.5.1
+
+aiTransformer:
+  image:
+    tag: 1.2.0
+
+filestore:
+  image:
+    tag: 0.16.0
+
+share:
+  image:
+    tag: 6.2.2
+
+alfresco-search:
+  searchServicesImage:
+    tag: 1.4.3
+
+postgresql:
+  image:
+    tag: 11.7.0
+
+postgresql-syncservice:
+  image:
+    tag: 11.7.0
+
+alfresco-sync-service:
+  syncservice:
+    image:
+      tag: 3.3.4.1
