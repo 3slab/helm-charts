@@ -1,0 +1,37 @@
+apiVersion: v2
+appVersion: s4.0
+dependencies:
+  - name: minio
+    condition: minio.enabled
+    repository: https://charts.bitnami.com/bitnami
+    version: 3.6.2
+  - name: postgresql
+    condition: postgresql.enabled
+    repository: https://charts.bitnami.com/bitnami
+    version: 9.1.1
+  - name: rabbitmq
+    condition: rabbitmq.enabled
+    repository: https://charts.bitnami.com/bitnami
+    version: 7.5.6
+  - name: redis
+    condition: redis.enabled
+    repository: https://charts.bitnami.com/bitnami
+    version: 10.6.2
+description: A Helm chart for Mayan EDMS
+home: https://www.mayan-edms.com/
+icon: https://www.mayan-edms.com/favicon.ico
+keywords:
+  - django
+  - dms
+  - edms
+  - mayan-edms
+  - python
+  - document-management
+maintainers:
+  - name: Roberto Rosario
+    email: roberto.rosario@mayan-edms.com
+name: mayanedms
+sources:
+  - https://gitlab.com/mayan-edms/mayan-edms
+type: application
+version: 4.0-1

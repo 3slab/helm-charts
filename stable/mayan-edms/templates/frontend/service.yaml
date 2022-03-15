@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "mayan.fullname" . }}-frontend
+  labels:
+    {{- include "mayan.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+spec:
+  ports:
+    - name: http
+      port: 8000
+      protocol: TCP
+  selector:
+    {{- include "mayan.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+

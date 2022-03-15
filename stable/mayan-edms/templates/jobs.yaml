@@ -1,0 +1,95 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-initialsetup"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    #"helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: {{ .Chart.Name }}-initialsetup
+        image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+        args:
+          - run_initialsetup
+        envFrom:
+          - secretRef:
+              name: {{ include "mayan.secretsName" . }}
+          - configMapRef:
+              name: {{ include "mayan.configMapName" . }}
+        volumeMounts:
+          - name: mayan-media
+            mountPath: /var/lib/mayan
+          - name: mayan-tmp
+            mountPath: /tmp
+      volumes:
+        - name: mayan-media
+          persistentVolumeClaim:
+            claimName: {{ include "mayan.persistentVolumeClaimName" . }}
+        - name: mayan-tmp
+          emptyDir: {}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-performupgrade"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-upgrade
+    #"helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: {{ .Chart.Name }}-performupgrade
+        image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+        args:
+          - run_performupgrade
+        envFrom:
+          - secretRef:
+              name: {{ include "mayan.secretsName" . }}
+          - configMapRef:
+              name: {{ include "mayan.configMapName" . }}
+        volumeMounts:
+          - name: mayan-media
+            mountPath: /var/lib/mayan
+          - name: mayan-tmp
+            mountPath: /tmp
+      volumes:
+        - name: mayan-media
+          persistentVolumeClaim:
+            claimName: {{ include "mayan.persistentVolumeClaimName" . }}
+        - name: mayan-tmp
+          emptyDir: {}

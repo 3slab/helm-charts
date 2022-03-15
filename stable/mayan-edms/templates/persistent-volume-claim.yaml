@@ -1,0 +1,19 @@
+{{- if and .Values.persistence.core.enabled (not .Values.persistence.core.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mayan.persistentVolumeClaimName" . }}
+{{- with .Values.persistence.core.annotations }}
+  annotations:
+  {{- range $key, $value := . }}
+    {{ $key }}: {{ $value }}
+  {{- end }}
+{{- end }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.persistence.core.size | quote }}
+  {{ include "mayan.storageClass" . }}
+{{- end }}
