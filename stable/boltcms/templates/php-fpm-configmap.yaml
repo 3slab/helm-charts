@@ -16,7 +16,9 @@ data:
 
     {{- if .Values.env }}
     {{- range $env := .Values.env.container }}
+    {{ if not $env.typeSecret }}
     env[{{ $env.name }}] = {{ $env.value | quote }};
+    {{- end }}
     {{- end }}
     {{- end }}
     {{- if .Values.extraEnv }}
