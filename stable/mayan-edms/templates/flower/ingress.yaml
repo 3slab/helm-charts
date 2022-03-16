@@ -1,11 +1,8 @@
 {{- if .Values.flower.ingress.enabled -}}
 {{- $fullName := include "mayan.fullname" . -}}
 {{- $svcPort := .Values.flower.service.port -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
+{{- $servicePathType := .Values.flower.service.pathType | default "ImplementationSpecific" -}}
+apiVersion: "networking.k8s.io/v1"
 kind: Ingress
 metadata:
   name: {{ $fullName }}-flower
@@ -34,9 +31,12 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ . }}
+            pathType: { { $servicePathType } }
             backend:
-              serviceName: {{ $fullName }}-flower
-              servicePort: {{ $svcPort }}
+              service:
+                name: { { $fullName } }-flower
+                port:
+                  number: { { $svcPort } }
           {{- end }}
     {{- end }}
 {{- end }}
