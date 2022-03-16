@@ -1,0 +1,17 @@
+{{- if .Values.persistence.core.volume.create }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "mayan.persistentVolumeName" . }}
+  labels:
+    type: local
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: {{ .Values.persistence.core.size }}
+{{- if .Values.persistence.core.volume.hostPath }}
+  hostPath:
+    path: {{ include "mayan.volume.hostPath" . }}
+{{- end }}
+{{- end -}}

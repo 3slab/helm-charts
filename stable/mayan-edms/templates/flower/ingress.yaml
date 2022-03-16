@@ -1,0 +1,42 @@
+{{- if .Values.flower.ingress.enabled -}}
+{{- $fullName := include "mayan.fullname" . -}}
+{{- $svcPort := .Values.flower.service.port -}}
+{{- $servicePathType := .Values.flower.service.pathType | default "ImplementationSpecific" -}}
+apiVersion: "networking.k8s.io/v1"
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-flower
+  labels:
+    {{- include "mayan.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flower
+  {{- with .Values.flower.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.flower.ingress.tls }}
+  tls:
+    {{- range .Values.flower.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.flower.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ . }}
+            pathType: { { $servicePathType } }
+            backend:
+              service:
+                name: { { $fullName } }-flower
+                port:
+                  number: { { $svcPort } }
+          {{- end }}
+    {{- end }}
+{{- end }}

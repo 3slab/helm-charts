@@ -1,0 +1,52 @@
+{{- if .Values.frontend.ingress.enabled -}}
+{{- $fullName := include "mayan.fullname" . -}}
+{{- $svcPort := .Values.frontend.service.port -}}
+{{- $servicePathType := .Values.frontend.service.pathType | default "ImplementationSpecific" -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-frontend
+  labels:
+    {{- include "mayan.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+  {{- with .Values.frontend.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if .Values.letsencrypt.enabled }}
+    cert-manager.io/issuer: {{ include "mayan.tlsUniqueName" . }}
+  {{- end }}
+spec:
+  {{- if .Values.frontend.ingress.tls }}
+  tls:
+    {{- range .Values.frontend.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.letsencrypt.enabled }}
+  tls:
+    - {{ .Values.letsencrypt.domain }}:
+      secretName: {{ include "mayan.tlsUniqueName" . }}
+      hosts: [{{ .Values.letsencrypt.domain }}]
+  {{- end }}
+  rules:
+    {{- range .Values.frontend.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ . }}
+            pathType: {{ $servicePathType }}
+            backend:
+              service:
+                name: {{ $fullName }}-frontend
+                port:
+                  number: {{ $svcPort }}
+          {{- end }}
+    {{- end }}
+
+{{- end }}

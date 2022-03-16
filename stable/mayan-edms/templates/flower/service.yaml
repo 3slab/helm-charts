@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "mayan.fullname" . }}-flower
+  labels:
+    {{- include "mayan.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flower
+spec:
+  ports:
+    - name: http
+      port: 5555
+      protocol: TCP
+  selector:
+    {{- include "mayan.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: flower
+

@@ -1,0 +1,501 @@
+###########
+# Globals #
+###########
+
+global:
+  image:
+    repository: mayanedms/mayanedms
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    # tag: 3
+  # namespace: mayan-edms
+  # storageClass:
+
+imagePullSecrets: []
+# nameOverride: ""
+# fullnameOverride: ""
+
+
+###################
+# Service account #
+###################
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+
+################
+# Pod security #
+################
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+
+#################
+# Configuration #
+#################
+
+configuration:
+  MAYAN_LOCK_MANAGER_BACKEND: mayan.apps.lock_manager.backends.redis_lock.RedisLock
+  MAYAN_COMMON_PROJECT_TITLE: "Mayan EDMS (Helm)"
+
+
+###########
+# Secrets #
+###########
+
+secrets: {}
+
+
+###########
+# Storage #
+###########
+
+persistence:
+  # This controls the /mayan/media mount.
+  # This mount point is shared among all pods.
+  core:
+    annotations:
+      # How to persist a resource after uninstall:
+      # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource
+      helm.sh/resource-policy: "keep"
+    enabled: true
+    size: 500Mi
+    volume:
+      # Create a persistent volume
+      # Default: false - Delegate to the storage provisioner.
+      create: false
+  documentsFileStorage:
+    # backend is the actual value for MAYAN_DOCUMENTS_FILE_STORAGE_BACKEND when "custom" is selected.
+    # backend:
+    # argument string to pass to the backend.
+    # argument: ""
+    # map used to compose a quoted YAML dictionary as the backend argument.
+    # argumentMap: {}
+    type: default
+    # type options: default, objectLocal, objectExternal, custom
+    # default: filesystem backend
+    # objectLocal: object storage from the local Minio service
+    # objectExternal: object storage from an external or custom service
+  documentsFilePageImageCacheStorage:
+    # backend is the actual value for DOCUMENTS_FILE_PAGE_IMAGE_CACHE_STORAGE_BACKEND when "custom" is selected.
+    # backend:
+    # argument string to pass to the backend.
+    # argument: ""
+    # map used to compose a quoted YAML dictionary as the backend argument.
+    # argumentMap: {}
+    type: default
+    # type options: default, objectLocal, objectExternal, custom
+    # default: filesystem backend
+    # objectLocal: object storage from the local Minio service
+    # objectExternal: object storage from an external or custom service
+  documentsVersionPageImageCacheStorage:
+    # backend is the actual value for DOCUMENTS_VERSION_PAGE_IMAGE_CACHE_STORAGE_BACKEND when "custom" is selected.
+    # backend:
+    # argument string to pass to the backend.
+    # argument: ""
+    # map used to compose a quoted YAML dictionary as the backend argument.
+    # argumentMap: {}
+    type: default
+    # type options: default, objectLocal, objectExternal, custom
+    # default: filesystem backend
+    # objectLocal: object storage from the local Minio service
+    # objectExternal: object storage from an external or custom service
+
+
+#####################
+# Top level ingress #
+#####################
+
+ingress:
+  annotations: {}
+  enabled: false
+  host: mayan.minikube
+  paths:
+    /:
+      serviceName: frontend
+      servicePort: 8000
+    /flower:
+      serviceName: flower
+      servicePort: 5555
+  #tls:
+  #  - secretName:
+  #    hosts:
+  #      - mayan.minikube
+
+
+############
+# Frontend #
+############
+
+frontend:
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  # nameOverride: frontend
+  # chartNameSuffix: frontend
+  ingress:
+    annotations: {}
+      # Enable the following annotation to disable NGINX request size limit
+      # and allow large documents to be uploaded.
+      # nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    enabled: enabled
+    hosts:
+      - host: mayan.minikube
+        paths: [/]
+    tls: []
+    #  - secretName: mayan-tls
+    #    hosts:
+    #      - mayan.minikube
+  replicaCount: 2
+  resources:
+    limits: {}
+      # cpu: "750m"
+      # memory: "750Mi"
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+    # fsGroup: 999
+  service:
+    type: ClusterIP
+    port: 8000
+    pathType: Prefix
+
+
+###########
+# Workers #
+###########
+
+workers:
+  worker-a:
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
+    # nameOverride: frontend
+    extraArguments: []
+    internalName: worker_a
+    nameSuffix: worker-a
+    replicaCount: 2
+    resources:
+      limits: {}
+        # cpu: "500m"
+        # memory: "1.5Gi"
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+      # fsGroup: 999
+  worker-b:
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
+    # nameOverride: frontend
+    extraArguments: []
+    internalName: worker_b
+    nameSuffix: worker-b
+    replicaCount: 2
+    resources:
+      limits: {}
+        # cpu: "500m"
+        # memory: "1Gi"
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+      # fsGroup: 999
+  worker-c:
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
+    # nameOverride: frontend
+    extraArguments: []
+    internalName: worker_c
+    nameSuffix: worker-c
+    replicaCount: 2
+    resources:
+      limits: {}
+        # cpu: "125m"
+        # memory: "1.25Gi"
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+      # fsGroup: 999
+  worker-d:
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
+    # nameOverride: frontend
+    extraArguments: []
+    internalName: worker_d
+    nameSuffix: worker-d
+    replicaCount: 1
+    resources:
+      limits: {}
+        # cpu: "125m"
+        # memory: "1.25Gi"
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+      # fsGroup: 999
+
+
+extraContainers:
+  worker-importer:
+    args:
+      - run_worker
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
+    # nameOverride: frontend
+    enabled: false
+    environment:
+      - name: MAYAN_QUEUE_LIST
+        value: "queue_name"
+    nameSuffix: worker-importer
+    replicaCount: 1
+    resources:
+      limits: {}
+      #  cpu: "125m"
+      #  memory: "1.25Gi"
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+      # fsGroup: 999
+
+
+###############
+# Celery beat #
+###############
+
+beat:
+  resources:
+    limits: {}
+      #cpu: "125m"
+      #memory: "500Mi"
+
+
+#################
+# Celery Flower #
+#################
+
+flower:
+  auth:
+    enabled: false
+    accounts:
+      - admin: floweradmin
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  # nameOverride: frontend
+  # chartNameSuffix: frontend
+  ingress:
+    enabled: enabled
+    annotations: {}
+    hosts:
+      - host: flower.mayan.minikube
+        paths: [/]
+    tls: []
+    #  - secretName: mayan-tls
+    #    hosts:
+    #      - flower.mayan.minikube
+  replicaCount: 1
+  resources:
+    requests: {}
+      #cpu: "125m"
+      #memory: "128Mi"
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+    # fsGroup: 999
+  service:
+    type: ClusterIP
+    port: 5555
+    pathType: Prefix
+  # urlPrefix must match the path of the main ingress mapped to Flower
+  # urlPrefix: flower
+
+
+################################
+# 3rd pary services in cluster #
+################################
+
+minio:
+  defaultBuckets: mayan
+  enabled: false
+  accessKey:
+    password: minioAccessKey
+  secretKey:
+    password: minioSecretKey
+  ingress:
+    enabled: true
+    hosts:
+      - name: minio.mayan.minikube
+  persistence:
+    size: 500Mi
+  # volumePermissions:
+  #   enabled: false
+
+postgresql:
+  enabled: true
+  # nameOverride: postgresql
+  postgresqlDatabase: mayan
+  postgresqlUsername: mayan
+  postgresqlPassword: mayandbpass
+  postgresqlPostgresPassword: mayandbpass
+  persistence:
+    size: 500Mi
+  # livenessProbe:
+  #   enabled: false
+  # readinessProbe:
+  #   enabled: false
+  # volumePermissions:
+  #   enabled: false
+
+rabbitmq:
+  auth:
+    username: mayan
+    password: mayanrabbitmqpassword
+  enabled: true
+  ingress:
+    enabled: false
+    hostname: rabbit.mayan.minikube
+  # livenessProbe:
+  #  enabled: false
+  persistence:
+    size: 500Mi
+  # readinessProbe:
+    #  enabled: false
+  # service:
+  #   port: 5671
+  # volumePermissions:
+  #   enabled: false
+
+redis:
+  enabled: true
+  password: mayanredispassword
+  master:
+    persistence:
+      size: 500Mi
+  slave:
+    persistence:
+      size: 500Mi
+  # volumePermissions:
+  #   enabled: true
+
+
+##########
+# Health #
+##########
+
+livenessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+readinessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+startupProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 27
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+
+#######
+# SSL #
+#######
+
+# cert-manager must be installed before enabling letsencrypt
+
+letsencrypt:
+  domain: example.com
+  email: roberto.rosario@mayan-edms.com
+  enabled: false
+  production: false
+  issuerHTTPSolverIngressClass: nginx
