@@ -22,6 +22,7 @@ service:
   type: ClusterIP
   port: 80
   secureport: 443
+  pathType: ImplementationSpecific
 
 ingress:
   enabled: false
