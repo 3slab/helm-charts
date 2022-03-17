@@ -1,6 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "mailcatcher.fullname" . -}}
 {{- $ingressPath := .Values.ingress.path -}}
+{{- $servicePathType := .Values.service.pathType | default "ImplementationSpecific" -}}
 apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -30,9 +31,12 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - path: {{ $ingressPath }}
+          - path: /
+            pathType: {{ $servicePathType }}
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
   {{- end }}
 {{- end }}

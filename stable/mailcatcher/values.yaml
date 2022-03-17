@@ -16,6 +16,7 @@ service:
   type: ClusterIP
   port: 1080
   smtpPort: 1025
+  pathType: ImplementationSpecific
 
 ingress:
   enabled: false
