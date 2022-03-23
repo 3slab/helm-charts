@@ -77,9 +77,11 @@ Return the appropriate apiVersion for deployment.
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "ingress.apiVersion" -}}
-{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+{{- if semverCompare "<1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- print "extensions/v1beta1" -}}
+{{- else if semverCompare "<1.19-0" .Capabilities.KubeVersion.GitVersion -}}
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- else -}}
-{{- print "extensions/v1beta1" -}}
+{{- print "networking.k8s.io/v1" -}}
 {{- end -}}
 {{- end -}}

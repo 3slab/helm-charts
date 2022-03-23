@@ -15,6 +15,7 @@ service:
   targetPort: http
   # targetPort: 4181 To be used with a proxy extraContainer
   portName: http
+  pathType: ImplementationSpecific
 
   ## Specify the nodePort value for the service types.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport

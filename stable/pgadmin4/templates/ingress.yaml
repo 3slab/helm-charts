@@ -1,5 +1,6 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "pgadmin.fullname" . -}}
+{{- $servicePathType := .Values.service.pathType | default "ImplementationSpecific" -}}
 apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -28,9 +29,12 @@ spec:
         paths:
         {{- range .paths }}
           - path: {{ . }}
+            pathType: {{ $servicePathType }}
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
+              service:
+                name: {{ $fullName }}
+                port:
+                  name: http
         {{- end }}
   {{- end }}
 {{- end }}
