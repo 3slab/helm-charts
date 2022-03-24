@@ -35,6 +35,17 @@ ingress:
     # - secretName: chart-example-tls
     #   hosts:
     #     - chart-example.local
+  # example:
+  additionalPathes: []
+#  additionalPathes:
+#    - backend:
+#      service:
+#        name: global-portal-api-symfony
+#        port:
+#          number: 80
+#      path: /api/signal.geojson
+#      pathType: ImplementationSpecific
+
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

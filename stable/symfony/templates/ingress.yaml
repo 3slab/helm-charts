@@ -2,6 +2,7 @@
 {{- $serviceName := include "fullname" . -}}
 {{- $servicePort := .Values.service.externalPort -}}
 {{- $servicePathType := .Values.service.pathType | default "ImplementationSpecific" -}}
+{{- $additionalPathes := .Values.ingress.additionalPathes -}}
 apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -28,6 +29,9 @@ spec:
                 name: {{ $serviceName }}
                 port:
                   number: {{ $servicePort }}
+          {{- if $additionalPathes }}
+{{ toYaml $additionalPathes | indent 10 }}
+          {{- end -}}
     {{- end -}}
   {{- if .Values.ingress.tls }}
   tls:
