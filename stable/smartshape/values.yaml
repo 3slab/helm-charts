@@ -331,6 +331,7 @@ gateway:
             serviceName: chart-example.local
             servicePort: 80
   tls: []
+  pathType: ImplementationSpecific
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
