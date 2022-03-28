@@ -36,6 +36,7 @@ repository:
         location ~ ^(/.*/wcs/api/solr/.*)$ {return 403;}
     tls: []
     path: /alfresco
+    pathType: ImplementationSpecific
   environment:
     JAVA_OPTS: " -Dsolr.base.url=/solr
       -Dsolr.secureComms=none
@@ -120,6 +121,7 @@ share:
         location ~ ^(/.*/-default-/proxy/alfresco/api/.*)$ {return 403;}
     tls: []
     path: /share
+    pathType: ImplementationSpecific
   resources:
     requests:
       memory: "2000Mi"
