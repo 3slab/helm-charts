@@ -7,7 +7,7 @@ Self-service-password is used to catch mail in dev environment or preprod.
 ## TL;DR;
 
 ```bash
-$ helm install suez/self-service-password --version=1.0.0 --dry-run --debug
+$ helm install suez/self-service-password --version=1.3.0 --dry-run --debug
 ```
 
 ## Introduction
@@ -24,7 +24,7 @@ This chart self-service-password a [Self-service-password](https://github.com/Su
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install --name=my-release suez/self-service-password --version=1.0.0 --dry-run --debug
+$ helm install --name=my-release suez/self-service-password --version=1.3.0 --dry-run --debug
 ```
 
 The command deploys Self-service-password on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
