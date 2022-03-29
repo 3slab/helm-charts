@@ -35,6 +35,7 @@ service:
   port: 8082
   targetPort: 8082
   protocol: TCP
+  pathType: ImplementationSpecific
 
 ingress:
   enabled: false

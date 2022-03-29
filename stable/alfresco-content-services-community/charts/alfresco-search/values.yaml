@@ -24,6 +24,7 @@ service:
   name: solr
   type: ClusterIP
   externalPort: 80
+  pathType: ImplementationSpecific
 ingress:
   enabled: true
   path: /solr

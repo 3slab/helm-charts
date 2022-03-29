@@ -2,6 +2,7 @@
 {{- $fullName := include "kafka-rest.fullname" . -}}
 {{- $name := include "kafka-rest.name" . -}}
 {{- $servicePort := .Values.service.port -}}
+{{- $servicePathType := .Values.service.pathType | default "ImplementationSpecific" -}}
 apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -22,9 +23,12 @@ spec:
       http:
         paths:
           - path: /
+            pathType: {{ $servicePathType }}
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $servicePort }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $servicePort }}
     {{- end -}}
   {{- if .Values.ingress.tls }}
   tls:

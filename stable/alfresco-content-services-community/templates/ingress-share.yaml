@@ -1,4 +1,5 @@
 {{- if not .Values.mellon.enabled -}}
+{{- $servicePathType := .Values.share.ingress.pathType | default "ImplementationSpecific" -}}
 # Defines the ingress for the alfresco share app
 apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
@@ -21,9 +22,12 @@ spec:
   {{- end }}
       paths:
       - path: {{ .Values.share.ingress.path }}
+        pathType: {{ $servicePathType }}
         backend:
-          serviceName: {{ template "content-services.shortname" . }}-share
-          servicePort: {{ .Values.share.service.externalPort }}
+          service:
+            name: {{ template "content-services.shortname" . }}-share
+            port:
+              number: {{ .Values.share.service.externalPort }}
   {{- if .Values.share.ingress.tls }}
   tls:
 {{ toYaml .Values.share.ingress.tls | indent 4 }}

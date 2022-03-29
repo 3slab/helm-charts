@@ -1,4 +1,5 @@
 {{- if not .Values.mellon.enabled -}}
+{{- $servicePathType := .Values.repository.ingress.pathType | default "ImplementationSpecific" -}}
 # Defines the ingress for the alfresco content repository
 apiVersion: {{ template "ingress.apiVersion" . }}
 kind: Ingress
@@ -21,13 +22,19 @@ spec:
   {{- end }}
       paths:
       - path: {{ .Values.repository.ingress.path }}
+        pathType: {{ $servicePathType }}
         backend:
-          serviceName: {{ template "content-services.shortname" . }}-repository
-          servicePort: {{ .Values.repository.service.externalPort }}
+          service:
+            name: {{ template "content-services.shortname" . }}-repository
+            port:
+              number: {{ .Values.repository.service.externalPort }}
       - path: {{ .Values.apiexplorer.ingress.path }}
+        pathType: {{ $servicePathType }}
         backend:
-          serviceName: {{ template "content-services.shortname" . }}-repository
-          servicePort: {{ .Values.repository.service.externalPort }}
+          service:
+            name: {{ template "content-services.shortname" . }}-repository
+            port:
+              number: {{ .Values.repository.service.externalPort }}
   {{- if .Values.repository.ingress.tls }}
   tls:
 {{ toYaml .Values.repository.ingress.tls | indent 4 }}
