@@ -7,7 +7,7 @@ We use simplesamlphp to log user with an LDAP.
 ## TL;DR;
 
 ```bash
-$ helm install suez/simplesamlphp --version=1.0.0 --dry-run --debug
+$ helm install suez/simplesamlphp --version=1.3.0 --dry-run --debug
 ```
 
 ## Introduction
@@ -24,7 +24,7 @@ This chart simplesamlphp a [Simplesamlphp](https://simplesamlphp.org/) deploymen
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install --name=my-release suez/simplesamlphp --version=1.0.0 --dry-run --debug
+$ helm install --name=my-release suez/simplesamlphp --version=1.3.0 --dry-run --debug
 ```
 
 The command deploys Simplesamlphp on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
