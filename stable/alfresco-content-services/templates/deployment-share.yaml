@@ -41,12 +41,24 @@ spec:
             - containerPort: {{ .Values.share.image.internalPort }}
           resources:
 {{ toYaml .Values.share.resources | indent 12 }}
+          
           envFrom:
           - configMapRef:
               name: {{ template "content-services.shortname" . }}-share-configmap
-          {{- if .Values.share.extraVolumeMounts }}
+          {{- if or .Values.share.extraVolumeMounts .Values.mellon.enabled }}
           volumeMounts:
+          {{- if .Values.share.extraVolumeMounts  }}
 {{ toYaml .Values.share.extraVolumeMounts | indent 10 }}
+          {{- end }}
+          {{ if .Values.mellon.enabled }}
+          - mountPath: /opt/share-config-custom.xml
+            name: share-custom
+            subPath: share-config-custom.xml
+          command:
+            - /bin/bash
+            - -c
+            - 'cat /opt/share-config-custom.xml > /usr/local/tomcat/shared/classes/alfresco/web-extension/share-config-custom.xml && /usr/local/tomcat/shared/classes/alfresco/substituter.sh "catalina.sh run"'
+          {{ end }}
           {{- end }}
           readinessProbe:
             httpGet:
@@ -71,7 +83,14 @@ spec:
       initContainers:
 {{ tpl .Values.share.extraInitContainers . | indent 8 }}
       {{- end }}
-      {{- if .Values.share.extraVolumes }}
+      {{- if or .Values.share.extraVolumes .Values.mellon.enabled }}
       volumes:
+      {{- if .Values.share.extraVolumes}}
 {{ toYaml .Values.share.extraVolumes | indent 6 }}
+      {{- end }}
+      {{ if .Values.mellon.enabled }}
+      - name: share-custom
+        configMap:
+          name: {{ template "content-services.shortname" . }}-share-config
+      {{ end }}
       {{- end }}
