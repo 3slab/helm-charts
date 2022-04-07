@@ -2,7 +2,6 @@
 {{- $serviceName := include "kibana.fullname" . -}}
 {{- $servicePort := .Values.service.externalPort -}}
 apiVersion: networking.k8s.io/v1
-{{- end }}
 kind: Ingress
 metadata:
   labels:
