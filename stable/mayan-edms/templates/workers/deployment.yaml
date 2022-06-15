@@ -34,7 +34,11 @@ spec:
           args:
             - run_worker
             - {{ $workerData.internalName }}
+            {{- if $workerData.quotedArgument }}
+            - {{ $workerData.quotedArgument | quote }}{{ else }}
+            - --prefetch-multiplier=1
             {{- if $workerData.extraArguments }}{{- toYaml $workerData.extraArguments | nindent 12 }}{{- end }}
+            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ include "mayan.secretsName" $ }}
@@ -65,7 +69,7 @@ metadata:
   name: {{ include "mayan.fullname" . }}-beat
   labels:
     {{- include "mayan.labels" $ | nindent 4 }}
-    app.kubernetes.io/component: celery-beat    
+    app.kubernetes.io/component: celery-beat
 spec:
   replicas: 1
   strategy:
@@ -81,6 +85,10 @@ spec:
       labels:
         {{- include "mayan.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
