@@ -1,15 +1,18 @@
 dependencies:
+- name: elasticsearch
+  repository: https://charts.bitnami.com/bitnami
+  version: 17.7.2
 - name: minio
   repository: https://charts.bitnami.com/bitnami
-  version: 3.6.2
+  version: 11.7.3
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 9.1.1
+  version: 11.6.5
 - name: rabbitmq
   repository: https://charts.bitnami.com/bitnami
-  version: 7.5.6
+  version: 10.1.6
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 10.6.2
-digest: sha256:e940b79ed399a5ff814387855aa6b4d838a5798bc58c4ab294e45a3b8ce8fbba
-generated: "2020-08-24T01:13:06.083562062-04:00"
+  version: 16.12.0
+digest: sha256:cd3eac0c6e09791ac3b2e3b86e92fd374c30561a8e411d02521175b1e14b22bc
+generated: "2022-06-15T13:44:49.275281787+02:00"

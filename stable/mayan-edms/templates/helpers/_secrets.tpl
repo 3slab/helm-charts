@@ -13,7 +13,7 @@
 Generate extra secrets, not managed by the _helpers
 */}}
 {{- define "mayan.secrets.unmanaged" -}}
-{{- $managedKeys := list "MAYAN_CELERY_BROKER_URL" "MAYAN_CELERY_RESULT_BACKEND" "MAYAN_DATABASES" "MAYAN_DOCUMENTS_FILE_STORAGE_BACKEND_ARGUMENTS" "DOCUMENTS_FILE_PAGE_IMAGE_CACHE_STORAGE_BACKEND_ARGUMENTS" "DOCUMENTS_VERSION_PAGE_IMAGE_CACHE_STORAGE_BACKEND_ARGUMENTS" "MAYAN_LOCK_MANAGER_BACKEND_ARGUMENTS" -}}
+{{- $managedKeys := list "MAYAN_CELERY_BROKER_URL" "MAYAN_CELERY_RESULT_BACKEND" "MAYAN_DATABASES" "MAYAN_DOCUMENTS_FILE_STORAGE_BACKEND_ARGUMENTS" "DOCUMENTS_FILE_PAGE_IMAGE_CACHE_STORAGE_BACKEND_ARGUMENTS" "DOCUMENTS_VERSION_PAGE_IMAGE_CACHE_STORAGE_BACKEND_ARGUMENTS" "MAYAN_LOCK_MANAGER_BACKEND_ARGUMENTS" "MAYAN_SEARCH_BACKEND_ARGUMENTS" -}}
 {{- range $key, $val := .Values.secrets -}}
 {{- $keyFound := has $key $managedKeys -}}
 {{- if not $keyFound -}}
@@ -31,6 +31,7 @@ Generate extra secrets, not managed by the _helpers
 {{ include "mayan.secrets.documentsFilePageImageCacheStorageBackendArguments" . }}
 {{ include "mayan.secrets.documentsVersionPageImageCacheStorageBackendArguments" . }}
 {{ include "mayan.secrets.lockManagerBackendArguments" . }}
+{{ include "mayan.secrets.searchBackendArguments" . }}
 {{- end -}}
 
 {{/*
@@ -81,6 +82,17 @@ Generate the MAYAN_DATABASES environment variable
 MAYAN_DATABASES: "{'default':{'ENGINE':'django.db.backends.postgresql','NAME':'{{ .Values.postgresql.postgresqlDatabase }}','PASSWORD':'{{ .Values.postgresql.postgresqlPassword }}','USER':'{{ .Values.postgresql.postgresqlUsername }}','HOST':'{{ template "mayan.postgresql.fullname" . }}'}}"
 {{- else -}}
 MAYAN_DATABASES: "{{ .Values.secrets.MAYAN_DATABASES }}"
+{{- end -}}
+{{- end -}}
+
+{{/*
+Generate the MAYAN_SEARCH_BACKEND_ARGUMENTS environment variable
+*/}}
+{{- define "mayan.secrets.searchBackendArguments" -}}
+{{- if .Values.elasticsearch.enabled -}}
+MAYAN_SEARCH_BACKEND_ARGUMENTS: "{'client_host':'{{ template "mayan.elasticsearch.fullname" . }}'}"
+{{- else -}}
+MAYAN_SEARCH_BACKEND_ARGUMENTS: "{{ .Values.secrets.MAYAN_SEARCH_BACKEND_ARGUMENTS }}"
 {{- end -}}
 {{- end -}}
 
@@ -180,7 +192,7 @@ Generate the MAYAN_LOCK_MANAGER_BACKEND_ARGUMENTS environment variable
 */}}
 {{- define "mayan.secrets.lockManagerBackendArguments" -}}
 {{- if .Values.redis.enabled -}}
-MAYAN_LOCK_MANAGER_BACKEND_ARGUMENTS: "{'redis_url': 'redis://:{{ .Values.redis.password }}@{{ template "mayan.redis.host" . }}:{{ .Values.redis.redisPort }}/1'}"
+MAYAN_LOCK_MANAGER_BACKEND_ARGUMENTS: "{'redis_url':'redis://:{{ .Values.redis.password }}@{{ template "mayan.redis.host" . }}:{{ .Values.redis.redisPort }}/1'}"
 {{- else -}}
 MAYAN_LOCK_MANAGER_BACKEND_ARGUMENTS: "{{ .Values.secrets.MAYAN_LOCK_MANAGER_BACKEND_ARGUMENTS }}"
 {{- end -}}

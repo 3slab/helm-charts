@@ -176,7 +176,6 @@ frontend:
   service:
     type: ClusterIP
     port: 8000
-    pathType: Prefix
 
 
 ###########
@@ -382,7 +381,6 @@ flower:
   service:
     type: ClusterIP
     port: 5555
-    pathType: Prefix
   # urlPrefix must match the path of the main ingress mapped to Flower
   # urlPrefix: flower
 
