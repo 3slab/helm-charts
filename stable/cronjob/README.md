@@ -5,7 +5,7 @@ Cron is used to automatically execute script.
 ## TL;DR;
 
 ```bash
-$ helm install suez/cronjob --version=1.0.0 --dry-run --debug
+$ helm install suez/cronjob --version=1.3.0 --dry-run --debug
 ```
 
 ## Introduction
@@ -22,7 +22,7 @@ This chart allow to create a cronjob on a [Kubernetes](http://kubernetes.io) clu
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install --name=my-release suez/cronjob --version=1.0.0 --dry-run --debug
+$ helm install --name=my-release suez/cronjob --version=1.3.0 --dry-run --debug
 ```
 
 The command deploys the cronjob on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
@@ -77,7 +77,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 ```bash
 $ helm install --name my-release \
   --set image.tag=my-tag,nameOverride=cronjob \
-    suez/cronjob --version=1.0.0 --dry-run --debug
+    suez/cronjob --version=1.3.0 --dry-run --debug
 ```
 
 The above command creates a cronjob with the image tag named `my-tag`. Additionally it override name of the chart `cronjob`.
@@ -85,7 +85,7 @@ The above command creates a cronjob with the image tag named `my-tag`. Additiona
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
-$ helm install --name my-release -f values.yaml suez/cronjob --version=1.0.0 --dry-run --debug
+$ helm install --name my-release -f values.yaml suez/cronjob --version=1.3.0 --dry-run --debug
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
