@@ -1103,6 +1103,22 @@ entries:
     urls:
     - mongobi-0.1.0.tgz
     version: 0.1.0
+  nifi-registry:
+  - apiVersion: v2
+    appVersion: 0.8.0
+    created: "2022-07-22T14:18:42.698629521+02:00"
+    description: A subproject of Apache NiFi to store and manage shared resources.
+    digest: 3f84cf32f42a0473d2090d35cc6730f059ad3470e94105b7d050000293d22b6b
+    home: https://github.com/dysnix/charts/tree/master/dysnix/nifi-registry
+    icon: https://svn.apache.org/repos/asf/nifi/site/trunk/images/niFi-logo-horizontal-scaled.png
+    maintainers:
+    - email: daniel@dysnix.com
+      name: daniel-yavorovich
+    name: nifi-registry
+    type: application
+    urls:
+    - nifi-registry-1.1.0.tgz
+    version: 1.1.0
   node:
   - apiVersion: v1
     appVersion: 11.2.0
