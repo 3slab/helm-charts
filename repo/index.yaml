@@ -2,7 +2,48 @@ apiVersion: v1
 entries:
   alfresco-content-services:
   - apiVersion: v2
-    created: "2022-08-30T10:26:01.2222429+02:00"
+    created: "2022-12-22T17:41:31.7569255+01:00"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.13.9
+    - alias: postgresql-syncservice
+      condition: alfresco-sync-service.syncservice.enabled,postgresql-syncservice.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.13.9
+    - alias: alfresco-digital-workspace
+      condition: alfresco-content-services.alfresco-digital-workspace.enabled,alfresco-digital-workspace.enabled
+      name: common
+      repository: https://activiti.github.io/activiti-cloud-helm-charts
+      version: 7.1.0-M16
+    - name: activemq
+      repository: ""
+      version: 2.0.0
+    - name: alfresco-search
+      repository: ""
+      version: 1.0.4
+    - name: alfresco-sync-service
+      repository: ""
+      version: 3.0.9
+    description: A Helm chart for deploying Alfresco Content Services
+    digest: fac8aafd13ce08478b3d28e3f6bf5bb5ed4c668efaa893e078041ea2aeaa9761
+    home: https://www.alfresco.com
+    icon: https://avatars0.githubusercontent.com/u/391127?s=200&v=4
+    keywords:
+    - content
+    - content services
+    - alfresco
+    - alfresco content services
+    name: alfresco-content-services
+    sources:
+    - https://github.com/Alfresco/acs-deployment
+    urls:
+    - alfresco-content-services-5.2.0-M1-3slab-RC4.tgz
+    version: 5.2.0-M1-3slab-RC4
+  - apiVersion: v2
+    created: "2022-12-22T17:41:31.7466873+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -43,7 +84,7 @@ entries:
     - alfresco-content-services-5.2.0-M1-3slab-RC3.tgz
     version: 5.2.0-M1-3slab-RC3
   - apiVersion: v2
-    created: "2022-08-30T10:26:01.2123675+02:00"
+    created: "2022-12-22T17:41:31.7380864+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -84,7 +125,7 @@ entries:
     - alfresco-content-services-5.2.0-M1-3slab-RC2.tgz
     version: 5.2.0-M1-3slab-RC2
   - apiVersion: v2
-    created: "2022-08-30T10:26:01.2018536+02:00"
+    created: "2022-12-22T17:41:31.7282923+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -127,7 +168,7 @@ entries:
   alfresco-content-services-community:
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.3272978+02:00"
+    created: "2022-12-22T17:41:31.848063+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -160,7 +201,7 @@ entries:
     version: 4.2.0
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.3202461+02:00"
+    created: "2022-12-22T17:41:31.8420056+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -193,7 +234,7 @@ entries:
     version: 4.1.3
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.3111002+02:00"
+    created: "2022-12-22T17:41:31.8339741+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -226,7 +267,7 @@ entries:
     version: 4.1.2
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.3028536+02:00"
+    created: "2022-12-22T17:41:31.8255751+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -259,7 +300,7 @@ entries:
     version: 4.1.1
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2928396+02:00"
+    created: "2022-12-22T17:41:31.8176154+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -292,7 +333,7 @@ entries:
     version: 4.1.0
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2837836+02:00"
+    created: "2022-12-22T17:41:31.8091926+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -325,7 +366,7 @@ entries:
     version: 4.0.8
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2773661+02:00"
+    created: "2022-12-22T17:41:31.8032971+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -358,7 +399,7 @@ entries:
     version: 4.0.7
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2703101+02:00"
+    created: "2022-12-22T17:41:31.7969789+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -391,7 +432,7 @@ entries:
     version: 4.0.6
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2631489+02:00"
+    created: "2022-12-22T17:41:31.7922028+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -424,7 +465,7 @@ entries:
     version: 4.0.5
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2567024+02:00"
+    created: "2022-12-22T17:41:31.7866107+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -457,7 +498,7 @@ entries:
     version: 4.0.4
   - apiVersion: v2
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2490856+02:00"
+    created: "2022-12-22T17:41:31.7817964+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -490,7 +531,7 @@ entries:
     version: 4.0.3
   - apiVersion: v1
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2428897+02:00"
+    created: "2022-12-22T17:41:31.7756791+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -523,7 +564,7 @@ entries:
     version: 4.0.2
   - apiVersion: v1
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2354859+02:00"
+    created: "2022-12-22T17:41:31.7698405+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -556,7 +597,7 @@ entries:
     version: 4.0.1
   - apiVersion: v1
     appVersion: 6.2.1-ea
-    created: "2022-08-30T10:26:01.2285931+02:00"
+    created: "2022-12-22T17:41:31.763831+01:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -589,7 +630,7 @@ entries:
     version: 4.0.0
   alfresco-infrastructure:
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.3328635+02:00"
+    created: "2022-12-22T17:41:31.8524136+01:00"
     dependencies:
     - condition: alfresco-infrastructure.activemq.enabled
       name: activemq
@@ -614,7 +655,7 @@ entries:
     version: 4.1.1
   alfresco-search:
   - apiVersion: v2
-    created: "2022-08-30T10:26:01.3379408+02:00"
+    created: "2022-12-22T17:41:31.853748+01:00"
     dependencies:
     - condition: alfresco-insight-zeppelin.enabled
       name: alfresco-insight-zeppelin
@@ -638,7 +679,7 @@ entries:
     - alfresco-search-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.3355307+02:00"
+    created: "2022-12-22T17:41:31.85309+01:00"
     dependencies:
     - condition: alfresco-insight-zeppelin.enabled
       name: alfresco-insight-zeppelin
@@ -663,7 +704,7 @@ entries:
     version: 1.0.3
   boltcms:
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.3448467+02:00"
+    created: "2022-12-22T17:41:31.8553403+01:00"
     description: A Helm chart for Bolt CMS deployment
     digest: cd19ac4aba909a78bf129b51e129ecf93326ff609fb9a31cfda7946c68f586e8
     icon: https://boltcms.io/theme/boltcms-2021/img/logo.svg
@@ -672,7 +713,7 @@ entries:
     - boltcms-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.3423875+02:00"
+    created: "2022-12-22T17:41:31.8547997+01:00"
     description: A Helm chart for Bolt CMS deployment
     digest: 055c20b46456c4b4f1703f4b14029a0023dcaeb0e4bf1913627e1a8728fa0475
     icon: https://boltcms.io/theme/boltcms-2021/img/logo.svg
@@ -681,7 +722,7 @@ entries:
     - boltcms-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.3402018+02:00"
+    created: "2022-12-22T17:41:31.8542562+01:00"
     description: A Helm chart for Bolt CMS deployment
     digest: 72aa02b6789012db41eff20e5b164aa7d72f58a96da7ad1ad8526a4441f5afbb
     icon: https://boltcms.io/theme/boltcms-2021/img/logo.svg
@@ -692,7 +733,7 @@ entries:
   cronjob:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3535946+02:00"
+    created: "2022-12-22T17:41:31.8564777+01:00"
     description: A Helm chart for Kubernetes
     digest: 0078d3a2f26ddf326451a60603693e40f09be668e1b7af88e2a04751ab02eff1
     name: cronjob
@@ -701,7 +742,7 @@ entries:
     version: 1.3.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3515421+02:00"
+    created: "2022-12-22T17:41:31.8561829+01:00"
     description: A Helm chart for Kubernetes
     digest: 755803fcbfaf1cc077d6ffb91f99a81ebc1525ebed4837d77de02719d3e221b4
     name: cronjob
@@ -710,7 +751,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3492746+02:00"
+    created: "2022-12-22T17:41:31.8559076+01:00"
     description: A Helm chart for Kubernetes
     digest: 9b3388a93c17bd270857fe3d8dadd645d0e7a5b606aa8f1ae564f9b97503a02a
     name: cronjob
@@ -719,7 +760,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3469375+02:00"
+    created: "2022-12-22T17:41:31.8556367+01:00"
     description: A Helm chart for Kubernetes
     digest: 0e27aac604ff63dfef67855d79215e5f6db282ece83df4f4df33eb379eb1a834
     name: cronjob
@@ -729,7 +770,7 @@ entries:
   curator-cron:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3595442+02:00"
+    created: "2022-12-22T17:41:31.8574157+01:00"
     description: A Helm chart for Kubernetes
     digest: 1b0782b321cf9e43cca016f489c30d9c9738092af19a93054ddaae4cc5ed54d5
     name: curator-cron
@@ -738,7 +779,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3574336+02:00"
+    created: "2022-12-22T17:41:31.8568291+01:00"
     description: A Helm chart for Kubernetes
     digest: 9b5e5ae23c2700a5eeaef9e5350f0f1a03a84992563064c5f6138e562ce92870
     name: curator-cron
@@ -746,7 +787,7 @@ entries:
     - curator-cron-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.3554572+02:00"
+    created: "2022-12-22T17:41:31.85665+01:00"
     description: A Helm chart for Kubernetes
     digest: a91f540dd262e7c0bd4abbdee566782f655251b9ef9e292f1f347ef9dfc2b4f2
     name: curator-cron
@@ -756,7 +797,7 @@ entries:
   elasticsearch:
   - apiVersion: v1
     appVersion: 6.8.6
-    created: "2022-08-30T10:26:01.3635777+02:00"
+    created: "2022-12-22T17:41:31.8588579+01:00"
     deprecated: true
     description: DEPRECATED Flexible and powerful open source, distributed real-time
       search and analytics engine.
@@ -777,7 +818,7 @@ entries:
   influxdb:
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2022-08-30T10:26:01.37492+02:00"
+    created: "2022-12-22T17:41:31.8614809+01:00"
     description: A Helm chart for Kubernetes
     digest: e633151bbc727e4aa2ccc01c22ffbc66091143c0e16f60e5d2637e1b546fdf4a
     name: influxdb
@@ -786,7 +827,7 @@ entries:
     version: 1.3.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2022-08-30T10:26:01.3728045+02:00"
+    created: "2022-12-22T17:41:31.861013+01:00"
     description: A Helm chart for Kubernetes
     digest: 7038209c383f651bcd5cca015e8ebbf1a1f80036a5d228052ad1373052cbd0d6
     name: influxdb
@@ -795,7 +836,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2022-08-30T10:26:01.3706956+02:00"
+    created: "2022-12-22T17:41:31.8604078+01:00"
     description: A Helm chart for Kubernetes
     digest: ee1b50dc097166aa97d507129fc30cb870f142aedac6bf2b3b261d1ce76bb180
     name: influxdb
@@ -804,7 +845,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2022-08-30T10:26:01.368475+02:00"
+    created: "2022-12-22T17:41:31.8599656+01:00"
     description: A Helm chart for Kubernetes
     digest: 6147797befa379a4791284df10be979bb618dbeaee9c315b566b8eea276ac6b3
     name: influxdb
@@ -813,7 +854,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: "1.4"
-    created: "2022-08-30T10:26:01.366027+02:00"
+    created: "2022-12-22T17:41:31.8595758+01:00"
     description: Scalable datastore for metrics, events, and real-time analytics.
     digest: 23eb530ed9d898d97d65c7101541ed4340ce97e24f3b8ad9575f55e9bd4ca26c
     home: https://www.influxdata.com/time-series-platform/influxdb/
@@ -833,7 +874,7 @@ entries:
   influxdb-relay:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3839057+02:00"
+    created: "2022-12-22T17:41:31.8626535+01:00"
     description: A Helm chart for Kubernetes
     digest: e1ea4f4ae638feba354c0beb9d302982061dfa782bf7f968f93bbc4c721bada4
     name: influxdb-relay
@@ -842,7 +883,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3814293+02:00"
+    created: "2022-12-22T17:41:31.862338+01:00"
     description: A Helm chart for Kubernetes
     digest: 2b199caf8e8adb68e4a68358650eea55d2ad7b5743e0125d0eaf619fa7d4f59e
     name: influxdb-relay
@@ -851,7 +892,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3792868+02:00"
+    created: "2022-12-22T17:41:31.8620691+01:00"
     description: A Helm chart for Kubernetes
     digest: e2d5c142fde8586f251fe4def63a468ffe2b6347706266eac3aeba3a0eb76fbe
     name: influxdb-relay
@@ -860,7 +901,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3769816+02:00"
+    created: "2022-12-22T17:41:31.8617949+01:00"
     description: A Helm chart for Kubernetes
     digest: d0d40f8325f542a631e8f057a1b7de26584aa814b7d8c3284a3250a81024083e
     name: influxdb-relay
@@ -870,7 +911,7 @@ entries:
   kafka-rest:
   - apiVersion: v1
     appVersion: 5.3.1
-    created: "2022-08-30T10:26:01.4027843+02:00"
+    created: "2022-12-22T17:41:31.8656854+01:00"
     description: A Helm chart for Kubernetes
     digest: 9da4840095056cc26bb80131520ba7999a0866848c56f26f5f82c79982ee5089
     name: kafka-rest
@@ -879,7 +920,7 @@ entries:
     version: 1.4.0
   - apiVersion: v1
     appVersion: 5.3.1
-    created: "2022-08-30T10:26:01.4007168+02:00"
+    created: "2022-12-22T17:41:31.8654263+01:00"
     description: A Helm chart for Kubernetes
     digest: 5729b205a5689ca8eec9307a0ae8f347fea6098e0fe8acbb8871a9d434209e86
     name: kafka-rest
@@ -888,7 +929,7 @@ entries:
     version: 1.3.1
   - apiVersion: v1
     appVersion: 5.3.1
-    created: "2022-08-30T10:26:01.3980646+02:00"
+    created: "2022-12-22T17:41:31.86517+01:00"
     description: A Helm chart for Kubernetes
     digest: 5835121d7a30109918d2c44f516e26edf7704bde44dbc0e23b6ed97ea407d3f9
     name: kafka-rest
@@ -897,7 +938,7 @@ entries:
     version: 1.3.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3960019+02:00"
+    created: "2022-12-22T17:41:31.8649329+01:00"
     description: A Helm chart for Kubernetes
     digest: a9fc2d0adb6bc171ad26969f7323ea7dca505078adfcd7c589ed5ae5a3ec938d
     name: kafka-rest
@@ -906,7 +947,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3940289+02:00"
+    created: "2022-12-22T17:41:31.864595+01:00"
     description: A Helm chart for Kubernetes
     digest: dd5566916428f221a6851389186eaf304673d5ea6a068816b2fc8007724b604d
     name: kafka-rest
@@ -915,7 +956,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3919102+02:00"
+    created: "2022-12-22T17:41:31.8638185+01:00"
     description: A Helm chart for Kubernetes
     digest: 0d78303c90f02b7de25505f29881b26fd4fb97187b956749b843c0691df10de4
     name: kafka-rest
@@ -924,7 +965,7 @@ entries:
     version: 1.0.3
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3899333+02:00"
+    created: "2022-12-22T17:41:31.8633663+01:00"
     description: A Helm chart for Kubernetes
     digest: ba4449f1cbaa66145dcbb6d899527c1c909bc406f43397e20e83bf6e1a2c0152
     name: kafka-rest
@@ -933,7 +974,7 @@ entries:
     version: 1.0.2
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3879405+02:00"
+    created: "2022-12-22T17:41:31.8631275+01:00"
     description: A Helm chart for Kubernetes
     digest: bf1351396a3acf5a79081b2fca4f4b65bbb0b42b1e21c6734e2d5adfea2d6f80
     name: kafka-rest
@@ -942,7 +983,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.3859756+02:00"
+    created: "2022-12-22T17:41:31.8628873+01:00"
     description: A Helm chart for Kubernetes
     digest: cd94c20ec40e1091cde4775aad679043daa5631f8d36af9f23c50595bd4d5b49
     name: kafka-rest
@@ -952,7 +993,7 @@ entries:
   kibana:
   - apiVersion: v1
     appVersion: 6.7.0
-    created: "2022-08-30T10:26:01.4054986+02:00"
+    created: "2022-12-22T17:41:31.8663937+01:00"
     deprecated: true
     description: DEPRECATED - Kibana is an open source data visualization plugin for
       Elasticsearch
@@ -971,7 +1012,7 @@ entries:
   mailcatcher:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.4121945+02:00"
+    created: "2022-12-22T17:41:31.8671984+01:00"
     description: A Helm chart for Kubernetes
     digest: 016629085f790532d9a04a5af8604de1d490d80f4cc379fc405e6125c3baf9c8
     name: mailcatcher
@@ -980,7 +1021,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.4100235+02:00"
+    created: "2022-12-22T17:41:31.8669472+01:00"
     description: A Helm chart for Kubernetes
     digest: 7a28e4650ac07613fc2b41f585a8af026b9b2259b3b562ec6144c3a7e8217a31
     name: mailcatcher
@@ -989,7 +1030,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.4077129+02:00"
+    created: "2022-12-22T17:41:31.866695+01:00"
     description: A Helm chart for Kubernetes
     digest: bb825508f391e371bd55936c6c9091aece9db2d26fb51de1ef77d27735950e86
     name: mailcatcher
@@ -1001,7 +1042,7 @@ entries:
       category: Database
     apiVersion: v1
     appVersion: 10.5.7
-    created: "2022-08-30T10:26:01.4160436+02:00"
+    created: "2022-12-22T17:41:31.8693258+01:00"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -1035,7 +1076,7 @@ entries:
   mayanedms:
   - apiVersion: v2
     appVersion: s4.2
-    created: "2022-08-30T10:26:01.4463477+02:00"
+    created: "2022-12-22T17:41:31.8988868+01:00"
     dependencies:
     - condition: elasticsearch.enabled
       name: elasticsearch
@@ -1080,7 +1121,7 @@ entries:
     version: 4.2-1
   - apiVersion: v2
     appVersion: s4.0
-    created: "2022-08-30T10:26:01.4254914+02:00"
+    created: "2022-12-22T17:41:31.8780346+01:00"
     dependencies:
     - condition: minio.enabled
       name: minio
@@ -1122,7 +1163,7 @@ entries:
   metabase:
   - apiVersion: v1
     appVersion: v0.36.3
-    created: "2022-08-30T10:26:01.4498942+02:00"
+    created: "2022-12-22T17:41:31.8993541+01:00"
     deprecated: true
     description: DEPRECATED - The easy, open source way for everyone in your company
       to ask questions and learn from data.
@@ -1137,7 +1178,7 @@ entries:
     version: 0.14.0
   mongobi:
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.4526484+02:00"
+    created: "2022-12-22T17:41:31.8996746+01:00"
     description: A Helm chart for a mongo bi connector
     digest: 4fbc2c0b7d3af266b59c8c2a38fbcc9139afdc92fcd1b521527813d2bd768113
     name: mongobi
@@ -1147,7 +1188,7 @@ entries:
   mongodb:
   - apiVersion: v1
     appVersion: 4.0.14
-    created: "2022-08-30T10:26:01.4557181+02:00"
+    created: "2022-12-22T17:41:31.9009257+01:00"
     description: NoSQL document-oriented database that stores JSON-like documents
       with dynamic schemas, simplifying the integration of data in content-driven
       applications.
@@ -1173,7 +1214,7 @@ entries:
   nifi-registry:
   - apiVersion: v2
     appVersion: 0.8.0
-    created: "2022-08-30T10:26:01.4590602+02:00"
+    created: "2022-12-22T17:41:31.9020391+01:00"
     description: A subproject of Apache NiFi to store and manage shared resources.
     digest: a5c4ca8c7876857dc993a3c854a1e7a5a6742d99b5d04c669e7fcaba9a7692e1
     home: https://github.com/dysnix/charts/tree/master/dysnix/nifi-registry
@@ -1189,7 +1230,7 @@ entries:
   node:
   - apiVersion: v1
     appVersion: 11.2.0
-    created: "2022-08-30T10:26:01.467603+02:00"
+    created: "2022-12-22T17:41:31.9034813+01:00"
     description: Event-driven I/O server-side JavaScript environment based on V8
     digest: 1af3c60b88c7a5a591e985e0b008681e076f4f03b4aae684cafc7f48766d77a8
     home: http://nodejs.org/
@@ -1204,7 +1245,7 @@ entries:
     version: 1.2.1
   - apiVersion: v1
     appVersion: 11.2.0
-    created: "2022-08-30T10:26:01.4650918+02:00"
+    created: "2022-12-22T17:41:31.9031109+01:00"
     description: Event-driven I/O server-side JavaScript environment based on V8
     digest: c25272491e129f7fa18a6b1a52bfbef4440387b754a3e57b2e8c3b762213f5bb
     home: http://nodejs.org/
@@ -1219,7 +1260,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: 11.2.0
-    created: "2022-08-30T10:26:01.4630567+02:00"
+    created: "2022-12-22T17:41:31.9027622+01:00"
     description: Event-driven I/O server-side JavaScript environment based on V8
     digest: 69d4983a90a1972d02df45a9876fd3b19d3da1b12c6473507599820edb841294
     home: http://nodejs.org/
@@ -1234,7 +1275,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 11.2.0
-    created: "2022-08-30T10:26:01.4610608+02:00"
+    created: "2022-12-22T17:41:31.9023781+01:00"
     description: Event-driven I/O server-side JavaScript environment based on V8
     digest: 574c62a3060659a4e2589038e433c57da93224a6ef0891ba8305ebe54beb9336
     home: http://nodejs.org/
@@ -1249,7 +1290,7 @@ entries:
     version: 1.0.0
   nodered:
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.4913044+02:00"
+    created: "2022-12-22T17:41:31.9074039+01:00"
     description: A Helm chart for Kubernetes
     digest: 822d28a7a127b9b80ba29c01c30c68022cd43465d0272b0c296b3cbc52d23cc0
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -1258,7 +1299,7 @@ entries:
     - nodered-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.489077+02:00"
+    created: "2022-12-22T17:41:31.906949+01:00"
     description: A Helm chart for Kubernetes
     digest: de08cf65970a257ccee76aa84975b93072f1257b1f0cbe4bcf5dd54164eb4e68
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -1267,7 +1308,7 @@ entries:
     - nodered-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.4859953+02:00"
+    created: "2022-12-22T17:41:31.9064832+01:00"
     description: A Helm chart for Kubernetes
     digest: 2336324f4cdff1415636980887eb73cff0423db4c859a9af902b51a46cf0bc9a
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -1276,7 +1317,7 @@ entries:
     - nodered-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.4829195+02:00"
+    created: "2022-12-22T17:41:31.9060164+01:00"
     description: A Helm chart for Kubernetes
     digest: 01af0c82533967c335597e093d09ea72f5357f7444d9e40faa7e40687601acf4
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -1285,7 +1326,7 @@ entries:
     - nodered-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.480466+02:00"
+    created: "2022-12-22T17:41:31.9055502+01:00"
     description: A Helm chart for Kubernetes
     digest: 7a8af28fe378ed05275b14cec24f31694412a9c4b30d51e1c23be758b4f7603f
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -1294,7 +1335,7 @@ entries:
     - nodered-0.4.1.tgz
     version: 0.4.1
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.4776365+02:00"
+    created: "2022-12-22T17:41:31.9050436+01:00"
     description: A Helm chart for Kubernetes
     digest: e67abc204b674ed88563399f17b9106d38d1bbb63d273811549a0c2d1584a7da
     icon: https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png
@@ -1303,7 +1344,7 @@ entries:
     - nodered-0.4.0.tgz
     version: 0.4.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.4747062+02:00"
+    created: "2022-12-22T17:41:31.9045753+01:00"
     description: A Helm chart for Kubernetes
     digest: 57c958516103eb92060ed25fb88bc418011951eda84ac02382528bf7474163e2
     name: nodered
@@ -1311,7 +1352,7 @@ entries:
     - nodered-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.4716124+02:00"
+    created: "2022-12-22T17:41:31.9040387+01:00"
     description: A Helm chart for Kubernetes
     digest: 5766ed47948d2be347e261eb43f2eb5e1d22284fa2f32502868de1573c6dd417
     name: nodered
@@ -1319,7 +1360,7 @@ entries:
     - nodered-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.4696501+02:00"
+    created: "2022-12-22T17:41:31.903739+01:00"
     description: A Helm chart for Kubernetes
     digest: fde2e9b34cc8505079e33c47a32a1d477a5b420aa78cf84238ebc4ee6bafcecf
     name: nodered
@@ -1329,7 +1370,7 @@ entries:
   openssh-server:
   - apiVersion: v1
     appVersion: "8.1"
-    created: "2022-08-30T10:26:01.4953317+02:00"
+    created: "2022-12-22T17:41:31.9080195+01:00"
     description: A Helm chart for Kubernetes
     digest: 7dbe2fed03fe9772c7963bff3e456170211bceb7e2d3e58e873e857b423cb8fa
     name: openssh-server
@@ -1338,7 +1379,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "8.1"
-    created: "2022-08-30T10:26:01.4933297+02:00"
+    created: "2022-12-22T17:41:31.9077124+01:00"
     description: A Helm chart for Kubernetes
     digest: 564271438b84da2591704e77fbfeca421138ec28a339e61bf64fdfe7b828c5e9
     name: openssh-server
@@ -1348,7 +1389,7 @@ entries:
   pentaho-server-ce:
   - apiVersion: v1
     appVersion: 9.0.0-423
-    created: "2022-08-30T10:26:01.5015323+02:00"
+    created: "2022-12-22T17:41:31.9090151+01:00"
     description: A Helm chart for Kubernetes
     digest: 94118b955426cfbeb2a78a07492fbcbe9d7e13818d4252f25a90bee974c8b7dc
     name: pentaho-server-ce
@@ -1357,7 +1398,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: 9.0.0-423
-    created: "2022-08-30T10:26:01.4993488+02:00"
+    created: "2022-12-22T17:41:31.9087024+01:00"
     description: A Helm chart for Kubernetes
     digest: 766c45fd423708f152971930ac71cf30266d63c02a503cb7a7a891e5083bfcd1
     name: pentaho-server-ce
@@ -1366,7 +1407,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 9.0.0-423
-    created: "2022-08-30T10:26:01.4972724+02:00"
+    created: "2022-12-22T17:41:31.9083154+01:00"
     description: A Helm chart for Kubernetes
     digest: 52ec9c73b9a2fa424686857e6c89ae650e7c90ea6b475cffec1154f6d3a6e218
     name: pentaho-server-ce
@@ -1376,7 +1417,7 @@ entries:
   pgadmin4:
   - apiVersion: v1
     appVersion: 4.20.0
-    created: "2022-08-30T10:26:01.5082406+02:00"
+    created: "2022-12-22T17:41:31.9111492+01:00"
     description: pgAdmin4 is a web based administration tool for PostgreSQL database
     digest: ba21c3be27e5baad512ccb9239b496d5bd3f18291809d4b1729cd65e48cdf3e3
     home: https://www.pgadmin.org/
@@ -1386,7 +1427,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: 4.20.0
-    created: "2022-08-30T10:26:01.5060399+02:00"
+    created: "2022-12-22T17:41:31.9103026+01:00"
     description: pgAdmin4 is a web based administration tool for PostgreSQL database
     digest: 5b158f0001d040350996bdbf30004964f43639783231d7e8d6a7cd0e53f3e422
     home: https://www.pgadmin.org/
@@ -1396,7 +1437,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 4.20.0
-    created: "2022-08-30T10:26:01.5037831+02:00"
+    created: "2022-12-22T17:41:31.9093924+01:00"
     description: pgAdmin4 is a web based administration tool for PostgreSQL database
     digest: 8bafd773122974c126cc15b30a2b375cad6fc4c7ef1a37ea0816faa32ea3f457
     home: https://www.pgadmin.org/
@@ -1407,7 +1448,7 @@ entries:
   phpbu:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5122705+02:00"
+    created: "2022-12-22T17:41:31.9117235+01:00"
     description: A Helm chart for Kubernetes
     digest: 0234081ff9a13eed1259a2ef638ef64a034cde6d76dfef424e468a188ff2d859
     name: phpbu
@@ -1416,7 +1457,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5102094+02:00"
+    created: "2022-12-22T17:41:31.9113901+01:00"
     description: A Helm chart for Kubernetes
     digest: cb46c1286dd4c8e6fc4e5b761d06c7cec59d417afa895ffcdd8316f71d893d7e
     name: phpbu
@@ -1426,7 +1467,7 @@ entries:
   phpldapadmin:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5201068+02:00"
+    created: "2022-12-22T17:41:31.9129969+01:00"
     description: A Helm chart for Kubernetes
     digest: a19b46d5dc9538a49e105b449a4021e7c53336a9c8af55c56b6c9f141c3244d3
     name: phpldapadmin
@@ -1435,7 +1476,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5181774+02:00"
+    created: "2022-12-22T17:41:31.9126741+01:00"
     description: A Helm chart for Kubernetes
     digest: 3fb978d16d098facc6a204122d87cb6b440b41ab26e6bb797061bc7b3b8bb30f
     name: phpldapadmin
@@ -1444,7 +1485,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5161743+02:00"
+    created: "2022-12-22T17:41:31.912348+01:00"
     description: A Helm chart for Kubernetes
     digest: 60b9f2a9b5a0dfdae30a2c01aa7ce1400c2ce1e0f69483b8bd4e1fffd9d6d615
     name: phpldapadmin
@@ -1453,7 +1494,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5142536+02:00"
+    created: "2022-12-22T17:41:31.9120272+01:00"
     description: A Helm chart for Kubernetes
     digest: 7f54b0d3d4fc9de1f086a98010b7ad5975d73c30b6206fcf7207e8cc2274e280
     name: phpldapadmin
@@ -1463,7 +1504,7 @@ entries:
   pygisapi:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5268896+02:00"
+    created: "2022-12-22T17:41:31.9138259+01:00"
     description: A Helm chart for Kubernetes
     digest: a0fd81b444f5db89257300515a3ae707d9de5d5bb4fab761601949b46413a4a0
     name: pygisapi
@@ -1472,7 +1513,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5247777+02:00"
+    created: "2022-12-22T17:41:31.9135504+01:00"
     description: A Helm chart for Kubernetes
     digest: 96143a0c2918cebdcb7910334f11e845653ba693269ad875f797d6f1a25dfe2c
     name: pygisapi
@@ -1481,7 +1522,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5226187+02:00"
+    created: "2022-12-22T17:41:31.9132559+01:00"
     description: A Helm chart for Kubernetes
     digest: 0782f0d6265336a10a118882297bfba370709105b67d50e1ff0877903e314262
     name: pygisapi
@@ -1491,7 +1532,7 @@ entries:
   self-service-password:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.538561+02:00"
+    created: "2022-12-22T17:41:31.9159563+01:00"
     description: A Helm chart for Kubernetes
     digest: 773bdb2d6bf0f30947b0f4c18589ca1387d7b6ac9ba88b7c479f9e3a006d82ab
     name: self-service-password
@@ -1500,7 +1541,7 @@ entries:
     version: 1.3.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5360772+02:00"
+    created: "2022-12-22T17:41:31.9155027+01:00"
     description: A Helm chart for Kubernetes
     digest: 34bb50875e736c62635abd5c0a47b1af2d79fff9dc601eb9204865d07614f885
     name: self-service-password
@@ -1509,7 +1550,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5334866+02:00"
+    created: "2022-12-22T17:41:31.9150489+01:00"
     description: A Helm chart for Kubernetes
     digest: 4b2bc6339270ec2bf3dc357e5ab107d6e63bcc1f2f9a8db8f063e5c436a2a70b
     name: self-service-password
@@ -1518,7 +1559,7 @@ entries:
     version: 1.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5313404+02:00"
+    created: "2022-12-22T17:41:31.9145969+01:00"
     description: A Helm chart for Kubernetes
     digest: 882b026e8bb078af8e04258bc5f052415c8584e7fea93ba859d6d9cde77e25a7
     name: self-service-password
@@ -1527,7 +1568,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5290077+02:00"
+    created: "2022-12-22T17:41:31.9141485+01:00"
     description: A Helm chart for Kubernetes
     digest: 85fc68e9ac0c59f64db88f7477311aafdfbe5264a20c95b94dcacb8c23fbd14f
     name: self-service-password
@@ -1537,7 +1578,7 @@ entries:
   sftp:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5455524+02:00"
+    created: "2022-12-22T17:41:31.9177407+01:00"
     description: A Helm chart for Kubernetes
     digest: 387653176b090ad2b8c2e8f3f1a0de6379b490b54162783724aeeb7579f3487f
     name: sftp
@@ -1546,7 +1587,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5433785+02:00"
+    created: "2022-12-22T17:41:31.9173661+01:00"
     description: A Helm chart for Kubernetes
     digest: e3b468c8b49cbac203b08c10c061d040b118490daf871e574961e773ecd0e5f5
     name: sftp
@@ -1555,7 +1596,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5410468+02:00"
+    created: "2022-12-22T17:41:31.9169888+01:00"
     description: A Helm chart for Kubernetes
     digest: 7ab8d9598e7a44241101d26cdb66914b5d7ee1d7aeff3ce15865c13e7884dc91
     name: sftp
@@ -1564,7 +1605,7 @@ entries:
     version: 1.0.0
   simple:
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5476957+02:00"
+    created: "2022-12-22T17:41:31.9181271+01:00"
     description: A Helm chart for a simple application deployment
     digest: da13caca83bd0903021dd9b034418fbbf46bf4df7df009a3596cc6fb08afaa4d
     name: simple
@@ -1574,7 +1615,7 @@ entries:
   simplesamlphp:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5602657+02:00"
+    created: "2022-12-22T17:41:31.9199558+01:00"
     description: A Helm chart for Kubernetes
     digest: 5f6e21347f8e091f291cf3dfa7fc9d53e6a989cfc1f19bf4f8075ade7b7e61c7
     name: simplesamlphp
@@ -1583,7 +1624,7 @@ entries:
     version: 1.3.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5581477+02:00"
+    created: "2022-12-22T17:41:31.9195924+01:00"
     description: A Helm chart for Kubernetes
     digest: b1ffa304ba30129006c4bbc53e4c58a588d31f313c11ea153f74694e47cfd615
     name: simplesamlphp
@@ -1592,7 +1633,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5552605+02:00"
+    created: "2022-12-22T17:41:31.9192063+01:00"
     description: A Helm chart for Kubernetes
     digest: 12400fc71fb3c866aa963e8106f79f319614d0acb7b261a9af6607429714d9e1
     name: simplesamlphp
@@ -1601,7 +1642,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5527713+02:00"
+    created: "2022-12-22T17:41:31.9188497+01:00"
     description: A Helm chart for Kubernetes
     digest: e6a52e09da87818183ffe5f8f7c57db19a0a6bdf2a03604f2c8c46dac73d4d82
     name: simplesamlphp
@@ -1610,7 +1651,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-08-30T10:26:01.5498484+02:00"
+    created: "2022-12-22T17:41:31.9184968+01:00"
     description: A Helm chart for Kubernetes
     digest: 8d26be35ca2f2b476dd0ba5091f35031c9b3f1df145964c525f61e7dc5ad78a1
     name: simplesamlphp
@@ -1620,7 +1661,7 @@ entries:
   smartshape:
   - apiVersion: v2
     appVersion: 10.18.0
-    created: "2022-08-30T10:26:01.564936+02:00"
+    created: "2022-12-22T17:41:31.9211063+01:00"
     description: A Helm chart for Smartshape application
     digest: 9ffa3b06d45d5fb4510c51a1b4c82ea6aea9d6155a5676aec7979580fbeecd2f
     name: smartshape
@@ -1630,7 +1671,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 10.18.0
-    created: "2022-08-30T10:26:01.5625997+02:00"
+    created: "2022-12-22T17:41:31.9205577+01:00"
     description: A Helm chart for Smartshape application
     digest: dee744f3c3a5d4e5e1e8081c346d592455a4d2b4d1e71bef245fdf5a604dccac
     name: smartshape
@@ -1641,7 +1682,7 @@ entries:
   superset:
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2022-08-30T10:26:01.5717917+02:00"
+    created: "2022-12-22T17:41:31.9220311+01:00"
     description: A Helm chart for Kubernetes
     digest: 5622486935bafa8e92ef05a20c22b9aa4e862a4b113235ae6df918e3b7851144
     name: superset
@@ -1650,7 +1691,7 @@ entries:
     version: 0.3.0
   - apiVersion: v1
     appVersion: 0.36.0rc1
-    created: "2022-08-30T10:26:01.5697336+02:00"
+    created: "2022-12-22T17:41:31.921719+01:00"
     description: A Helm chart for Kubernetes
     digest: 89ae7d685f93b53dad05e542998c445771a2c7a87e2cadd7efbfebc8d8e84a3d
     name: superset
@@ -1659,7 +1700,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: 0.36.0rc1
-    created: "2022-08-30T10:26:01.5671054+02:00"
+    created: "2022-12-22T17:41:31.9213622+01:00"
     description: A Helm chart for Kubernetes
     digest: ec8cdcb7ae4628cab56406d9c6aa405f9774ad2f46b856d2ff45a231fbc83326
     name: superset
@@ -1668,7 +1709,7 @@ entries:
     version: 0.1.0
   symfony:
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6345231+02:00"
+    created: "2022-12-22T17:41:31.9336934+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 8f442eaef1371e8b0f0a1a6a165add2122d6be9a835cd8249a3bf4d10242cc1c
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1677,7 +1718,7 @@ entries:
     - symfony-1.8.0.tgz
     version: 1.8.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6320828+02:00"
+    created: "2022-12-22T17:41:31.9332117+01:00"
     description: A Helm chart for Symfony application deployment
     digest: f92db971591d689734728acd6f392c2b32eefe935435d7cb28f102792e0b49b0
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1686,7 +1727,7 @@ entries:
     - symfony-1.7.1.tgz
     version: 1.7.1
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6299346+02:00"
+    created: "2022-12-22T17:41:31.9327725+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 343b387174df0c75e3f2d3f8e87e75965e58a95725e454498304c49d365a4deb
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1695,7 +1736,7 @@ entries:
     - symfony-1.7.0.tgz
     version: 1.7.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6270811+02:00"
+    created: "2022-12-22T17:41:31.932328+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 63845cc8b4705b212b9609f0779242326a3a3df75c5031c645d317f809c461a3
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1704,7 +1745,7 @@ entries:
     - symfony-1.6.7.tgz
     version: 1.6.7
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.624925+02:00"
+    created: "2022-12-22T17:41:31.9319025+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 5b6b08cfedbc327aa7f4e0bf06fb86d565a1042735d20bec247d57479f9a985c
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1713,7 +1754,7 @@ entries:
     - symfony-1.6.6.tgz
     version: 1.6.6
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6227711+02:00"
+    created: "2022-12-22T17:41:31.9314683+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 2a14c6792a0b17d75042cbcd77c1df53493595157775337d548338c52502e5f0
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1722,7 +1763,7 @@ entries:
     - symfony-1.6.5.tgz
     version: 1.6.5
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6206218+02:00"
+    created: "2022-12-22T17:41:31.9310787+01:00"
     description: A Helm chart for Symfony application deployment
     digest: d26edb66d86ea7d107bf38094a921225046dd24e90c7cc323325122fc1ead02a
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1731,7 +1772,7 @@ entries:
     - symfony-1.6.4.tgz
     version: 1.6.4
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6184669+02:00"
+    created: "2022-12-22T17:41:31.9306783+01:00"
     description: A Helm chart for Symfony application deployment
     digest: b6902542f871fe9ece1fb97a037c4e78d7574a6c49d86a8d3eff5d5fe29e21d1
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1740,7 +1781,7 @@ entries:
     - symfony-1.6.3.tgz
     version: 1.6.3
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6159007+02:00"
+    created: "2022-12-22T17:41:31.9301677+01:00"
     description: A Helm chart for Symfony application deployment
     digest: c3aea7b471a2cf2426e108ff42e449182b3d1b48e17b294e132be27f66ad7f41
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1749,7 +1790,7 @@ entries:
     - symfony-1.6.2.tgz
     version: 1.6.2
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6137358+02:00"
+    created: "2022-12-22T17:41:31.9297446+01:00"
     description: A Helm chart for Symfony application deployment
     digest: b6e656d7c8bd59c33f4e37a408c25f753920cb4064ecdf13dc4ae0b70ecb8bca
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1758,7 +1799,7 @@ entries:
     - symfony-1.6.1.tgz
     version: 1.6.1
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6113976+02:00"
+    created: "2022-12-22T17:41:31.9286343+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 7ac18ed7eba453e13faf46ecce9bb9eb6d46c830182bd37f46a3d99529ebf270
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1767,7 +1808,7 @@ entries:
     - symfony-1.6.0.tgz
     version: 1.6.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6092405+02:00"
+    created: "2022-12-22T17:41:31.9281742+01:00"
     description: A Helm chart for Symfony application deployment
     digest: c8a866603f067cfdba3a84b31e6b439a1a55835cf01b8efb19ead8f220f78f2f
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1776,7 +1817,7 @@ entries:
     - symfony-1.5.0.tgz
     version: 1.5.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6069753+02:00"
+    created: "2022-12-22T17:41:31.9278134+01:00"
     description: A Helm chart for Symfony application deployment
     digest: ba4bb7974d5973f0a465e190f1598685a187fcd9070957f941eee2df59df4233
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1785,7 +1826,7 @@ entries:
     - symfony-1.4.1.tgz
     version: 1.4.1
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6048584+02:00"
+    created: "2022-12-22T17:41:31.9274389+01:00"
     description: A Helm chart for Symfony application deployment
     digest: c5cda97a3fc05c3ca1374d796e2d7b6456abde3de32e8af7881636988e016938
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1794,7 +1835,7 @@ entries:
     - symfony-1.4.0.tgz
     version: 1.4.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.6026917+02:00"
+    created: "2022-12-22T17:41:31.9270778+01:00"
     description: A Helm chart for Symfony application deployment
     digest: d8b10fb7a0adf253a95ccd817a40856d506e605327249cc4cbb377e21de44298
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1803,7 +1844,7 @@ entries:
     - symfony-1.3.1.tgz
     version: 1.3.1
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.600134+02:00"
+    created: "2022-12-22T17:41:31.9267294+01:00"
     description: A Helm chart for Symfony application deployment
     digest: aa3fcb53d2dc5be8a48a9b54f4e2e261284f886c3b675d708c44887311c43402
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1812,7 +1853,7 @@ entries:
     - symfony-1.3.0.tgz
     version: 1.3.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5979002+02:00"
+    created: "2022-12-22T17:41:31.926369+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 51917745e4148866266098dc6e4e6aec837b10abd008ccc5c5e702b18047fea4
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1821,7 +1862,7 @@ entries:
     - symfony-1.2.6.tgz
     version: 1.2.6
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5957422+02:00"
+    created: "2022-12-22T17:41:31.9260204+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 3ea7fc754f4eb9b63cd184550b687e93d05144dc09d1ffdddd9c91b812fe83be
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1830,7 +1871,7 @@ entries:
     - symfony-1.2.5.tgz
     version: 1.2.5
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5928191+02:00"
+    created: "2022-12-22T17:41:31.9256971+01:00"
     description: A Helm chart for Symfony application deployment
     digest: dad6222d7a1ae19d220f08875e87b9fe29d7a3d25441931a81adf2a75c4efd60
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1839,7 +1880,7 @@ entries:
     - symfony-1.2.4.tgz
     version: 1.2.4
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5905705+02:00"
+    created: "2022-12-22T17:41:31.925352+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 86522ea70205a3df34fcacfe0f7d016524bc4cee3333e1f8ac3c87f20673a726
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1848,7 +1889,7 @@ entries:
     - symfony-1.2.3.tgz
     version: 1.2.3
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5883315+02:00"
+    created: "2022-12-22T17:41:31.9250078+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 88931c9e1159cd9dfeb7b9d3924cfb85a9e37b349b65f22adf9aa67b964701d5
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1857,7 +1898,7 @@ entries:
     - symfony-1.2.2.tgz
     version: 1.2.2
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5860763+02:00"
+    created: "2022-12-22T17:41:31.9246929+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 5ec5b2f0b4932a874b3a6c6d7280e0659dec21a541400443d9d1fa8b55c05d0c
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1866,7 +1907,7 @@ entries:
     - symfony-1.2.1.tgz
     version: 1.2.1
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5833413+02:00"
+    created: "2022-12-22T17:41:31.9243544+01:00"
     description: A Helm chart for Symfony application deployment
     digest: a7c3e516260ada21c13a1e6cacf0cd8fc3afd7d70c55ef0a5029e6c71a4ca965
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1875,7 +1916,7 @@ entries:
     - symfony-1.1.1.tgz
     version: 1.1.1
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5808494+02:00"
+    created: "2022-12-22T17:41:31.9240385+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 12b81c347892968ee5be58d6320ade8a98f01311bdd4bbac3ea7baa94bc3e643
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1884,7 +1925,7 @@ entries:
     - symfony-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5786682+02:00"
+    created: "2022-12-22T17:41:31.9236138+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 2d2e1b400e2bbcaff27c5f727af8298a6935c5973081d0d7d9086adb2021da60
     icon: https://symfony.com/images/v5/pictos/home-main-illu.svg
@@ -1893,7 +1934,7 @@ entries:
     - symfony-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.5760374+02:00"
+    created: "2022-12-22T17:41:31.9232424+01:00"
     description: A Helm chart for Symfony application deployment
     digest: 00873cec2f80b94a804dde0a092f49ba70348c768557aab30f448ecbae9972cc
     name: symfony
@@ -1901,11 +1942,11 @@ entries:
     - symfony-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v1
-    created: "2022-08-30T10:26:01.573862+02:00"
+    created: "2022-12-22T17:41:31.9225835+01:00"
     description: A Helm chart for Symfony application deployment
     digest: ca51b9d93fdc4279213785d7d4c5c03bcfe06142129f9b7049b8028af50d05e4
     name: symfony
     urls:
     - symfony-0.1.1.tgz
     version: 0.1.1
-generated: "2022-08-30T10:26:01.1910547+02:00"
+generated: "2022-12-22T17:41:31.7189678+01:00"
