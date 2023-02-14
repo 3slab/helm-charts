@@ -53,7 +53,6 @@ configuration:
 
 secrets: {}
 
-
 ###########
 # Storage #
 ###########
@@ -72,43 +71,6 @@ persistence:
       # Create a persistent volume
       # Default: false - Delegate to the storage provisioner.
       create: false
-  documentsFileStorage:
-    # backend is the actual value for MAYAN_DOCUMENTS_FILE_STORAGE_BACKEND when "custom" is selected.
-    # backend:
-    # argument string to pass to the backend.
-    # argument: ""
-    # map used to compose a quoted YAML dictionary as the backend argument.
-    # argumentMap: {}
-    type: default
-    # type options: default, objectLocal, objectExternal, custom
-    # default: filesystem backend
-    # objectLocal: object storage from the local Minio service
-    # objectExternal: object storage from an external or custom service
-  documentsFilePageImageCacheStorage:
-    # backend is the actual value for DOCUMENTS_FILE_PAGE_IMAGE_CACHE_STORAGE_BACKEND when "custom" is selected.
-    # backend:
-    # argument string to pass to the backend.
-    # argument: ""
-    # map used to compose a quoted YAML dictionary as the backend argument.
-    # argumentMap: {}
-    type: default
-    # type options: default, objectLocal, objectExternal, custom
-    # default: filesystem backend
-    # objectLocal: object storage from the local Minio service
-    # objectExternal: object storage from an external or custom service
-  documentsVersionPageImageCacheStorage:
-    # backend is the actual value for DOCUMENTS_VERSION_PAGE_IMAGE_CACHE_STORAGE_BACKEND when "custom" is selected.
-    # backend:
-    # argument string to pass to the backend.
-    # argument: ""
-    # map used to compose a quoted YAML dictionary as the backend argument.
-    # argumentMap: {}
-    type: default
-    # type options: default, objectLocal, objectExternal, custom
-    # default: filesystem backend
-    # objectLocal: object storage from the local Minio service
-    # objectExternal: object storage from an external or custom service
-
 
 #####################
 # Top level ingress #
@@ -122,9 +84,6 @@ ingress:
     /:
       serviceName: frontend
       servicePort: 8000
-    /flower:
-      serviceName: flower
-      servicePort: 5555
   #tls:
   #  - secretName:
   #    hosts:
@@ -157,14 +116,14 @@ frontend:
     #  - secretName: mayan-tls
     #    hosts:
     #      - mayan.minikube
-  replicaCount: 2
+  replicaCount: 1
   resources:
-    limits: {}
-      # cpu: "750m"
-      # memory: "750Mi"
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+    limits:
+      cpu: 1000m
+      memory: 1200Mi
+    requests:
+      cpu: 200m
+      memory: 512Mi
   securityContext: {}
     # capabilities:
     #   drop:
@@ -194,14 +153,14 @@ workers:
     extraArguments: []
     internalName: worker_a
     nameSuffix: worker-a
-    replicaCount: 2
+    replicaCount: 1
     resources:
-      limits: {}
-        # cpu: "500m"
-        # memory: "1.5Gi"
-      # requests:
-      #   cpu: 100m
-      #   memory: 128Mi
+      limits:
+        cpu: 1800m
+        memory: 1800Mi
+      requests:
+        cpu: 400m
+        memory: 1000Mi
     securityContext: {}
       # capabilities:
       #   drop:
@@ -221,14 +180,14 @@ workers:
     extraArguments: []
     internalName: worker_b
     nameSuffix: worker-b
-    replicaCount: 2
+    replicaCount: 1
     resources:
-      limits: {}
-        # cpu: "500m"
-        # memory: "1Gi"
-      # requests:
-      #   cpu: 100m
-      #   memory: 128Mi
+      limits:
+        cpu: 1800m
+        memory: 1800Mi
+      requests:
+        cpu: 500m
+        memory: 1000Mi
     securityContext: {}
       # capabilities:
       #   drop:
@@ -248,14 +207,14 @@ workers:
     extraArguments: []
     internalName: worker_c
     nameSuffix: worker-c
-    replicaCount: 2
+    replicaCount: 1
     resources:
-      limits: {}
-        # cpu: "125m"
-        # memory: "1.25Gi"
-      # requests:
-      #   cpu: 100m
-      #   memory: 128Mi
+      limits:
+        cpu: 1800m
+        memory: 1800Mi
+      requests:
+        cpu: 700m
+        memory: 1000Mi
     securityContext: {}
       # capabilities:
       #   drop:
@@ -277,12 +236,12 @@ workers:
     nameSuffix: worker-d
     replicaCount: 1
     resources:
-      limits: {}
-        # cpu: "125m"
-        # memory: "1.25Gi"
-      # requests:
-      #   cpu: 100m
-      #   memory: 128Mi
+      limits:
+        cpu: 1800m
+        memory: 1800Mi
+      requests:
+        cpu: 700m
+        memory: 768Mi
     securityContext: {}
       # capabilities:
       #   drop:
@@ -336,121 +295,6 @@ beat:
     limits: {}
       #cpu: "125m"
       #memory: "500Mi"
-
-
-#################
-# Celery Flower #
-#################
-
-flower:
-  auth:
-    enabled: false
-    accounts:
-      - admin: floweradmin
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-  # nameOverride: frontend
-  # chartNameSuffix: frontend
-  ingress:
-    enabled: enabled
-    annotations: {}
-    hosts:
-      - host: flower.mayan.minikube
-        paths: [/]
-    tls: []
-    #  - secretName: mayan-tls
-    #    hosts:
-    #      - flower.mayan.minikube
-  replicaCount: 1
-  resources:
-    requests: {}
-      #cpu: "125m"
-      #memory: "128Mi"
-  securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-    # fsGroup: 999
-  service:
-    type: ClusterIP
-    port: 5555
-  # urlPrefix must match the path of the main ingress mapped to Flower
-  # urlPrefix: flower
-
-
-################################
-# 3rd pary services in cluster #
-################################
-
-minio:
-  defaultBuckets: mayan
-  enabled: false
-  accessKey:
-    password: minioAccessKey
-  secretKey:
-    password: minioSecretKey
-  ingress:
-    enabled: true
-    hosts:
-      - name: minio.mayan.minikube
-  persistence:
-    size: 500Mi
-  # volumePermissions:
-  #   enabled: false
-
-postgresql:
-  enabled: true
-  # nameOverride: postgresql
-  postgresqlDatabase: mayan
-  postgresqlUsername: mayan
-  postgresqlPassword: mayandbpass
-  postgresqlPostgresPassword: mayandbpass
-  persistence:
-    size: 500Mi
-  # livenessProbe:
-  #   enabled: false
-  # readinessProbe:
-  #   enabled: false
-  # volumePermissions:
-  #   enabled: false
-
-rabbitmq:
-  auth:
-    username: mayan
-    password: mayanrabbitmqpassword
-  enabled: true
-  ingress:
-    enabled: false
-    hostname: rabbit.mayan.minikube
-  # livenessProbe:
-  #  enabled: false
-  persistence:
-    size: 500Mi
-  # readinessProbe:
-    #  enabled: false
-  # service:
-  #   port: 5671
-  # volumePermissions:
-  #   enabled: false
-
-redis:
-  enabled: true
-  password: mayanredispassword
-  master:
-    persistence:
-      size: 500Mi
-  slave:
-    persistence:
-      size: 500Mi
-  # volumePermissions:
-  #   enabled: true
 
 
 ##########

@@ -3,5 +3,4 @@ kind: ConfigMap
 metadata:
   name: {{ include "mayan.configMapName" . }}
 data:
-{{- include "mayan.configuration.managed" . | nindent 2 -}}
 {{- include "mayan.configuration.unmanaged" . | nindent 2 -}}

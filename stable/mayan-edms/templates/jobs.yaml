@@ -22,31 +22,35 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
-      {{- with $.Values.imagePullSecrets }}
-      imagePullSecrets:
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
-      restartPolicy: Never
       containers:
       - name: {{ .Chart.Name }}-initialsetup
         image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         args:
-          - run_initialsetup
+          - run_initial_setup
         envFrom:
           - secretRef:
               name: {{ include "mayan.secretsName" . }}
           - configMapRef:
               name: {{ include "mayan.configMapName" . }}
         volumeMounts:
+        {{- if $.Values.persistence.core.enabled }}
           - name: mayan-media
             mountPath: /var/lib/mayan
+        {{- end }}
           - name: mayan-tmp
             mountPath: /tmp
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
       volumes:
+        {{- if $.Values.persistence.core.enabled }}
         - name: mayan-media
           persistentVolumeClaim:
             claimName: {{ include "mayan.persistentVolumeClaimName" . }}
+        {{- end }}
         - name: mayan-tmp
           emptyDir: {}
 ---
@@ -74,30 +78,34 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
-      {{- with $.Values.imagePullSecrets }}
-      imagePullSecrets:
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
-      restartPolicy: Never
       containers:
       - name: {{ .Chart.Name }}-performupgrade
         image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         args:
-          - run_performupgrade
+          - run_perform_upgrade
         envFrom:
           - secretRef:
               name: {{ include "mayan.secretsName" . }}
           - configMapRef:
               name: {{ include "mayan.configMapName" . }}
         volumeMounts:
+        {{- if $.Values.persistence.core.enabled }}
           - name: mayan-media
             mountPath: /var/lib/mayan
+        {{- end }}
           - name: mayan-tmp
             mountPath: /tmp
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
       volumes:
+        {{- if $.Values.persistence.core.enabled }}
         - name: mayan-media
           persistentVolumeClaim:
             claimName: {{ include "mayan.persistentVolumeClaimName" . }}
+        {{- end }}
         - name: mayan-tmp
           emptyDir: {}

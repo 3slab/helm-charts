@@ -8,32 +8,6 @@ app.kubernetes.io/name: {{ include "mayan.name" .root }}-{{- printf "%s" .nameSu
 {{ printf "\n" }}app.kubernetes.io/instance: {{- printf " %s" .root.Release.Name -}}
 {{- end }}
 
-{{- define "mayan.elasticsearch.fullname" -}}
-{{- if .Values.elasticsearch.fullnameOverride -}}
-{{- .Values.elasticsearch.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default "elasticsearch-master" .Values.elasticsearch.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "mayan.postgresql.fullname" -}}
-{{- if .Values.postgresql.fullnameOverride -}}
-{{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "mayan.persistentVolumeClaimName" -}}
 {{- printf "%s-%s" .Release.Name "mayan-media" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
