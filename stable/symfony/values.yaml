@@ -160,6 +160,7 @@ readinessProbe: {}
 
 persistence:
   enabled: false
+  alreadyExist: true
   annotations: {}
   accessMode: ReadWriteOnce
   size: 50Gi
