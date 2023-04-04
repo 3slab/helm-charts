@@ -1,9 +1,11 @@
+{{ $subApiName := "live-api" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "smartshape.server.fullname" . }}
+  name: {{ include "smartshape.server.fullname" . }}-{{ $subApiName }}
   labels:
     {{- include "smartshape.server.labels" . | nindent 4 }}
+    smartshape/api: smartshape-{{ $subApiName }}
 spec:
   {{- if not .Values.server.autoscaling.enabled }}
   replicas: {{ .Values.server.replicaCount }}
@@ -19,6 +21,7 @@ spec:
       {{- end }}
       labels:
         {{- include "smartshape.server.selectorLabels" . | nindent 8 }}
+        smartshape/api: smartshape-{{ $subApiName }}
     spec:
       {{- with .Values.server.imagePullSecrets }}
       imagePullSecrets:
@@ -28,14 +31,17 @@ spec:
       securityContext:
         {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}-live-api
+          command: 
+            - /usr/bin/node 
+            - /opt/smartshape-server/roles/live-api/dist/index.js
           securityContext:
             {{- toYaml .Values.server.securityContext | nindent 12 }}
           image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.server.image.pullPolicy }}
           ports:
             - name: {{ .Values.server.service.name | default "http" }}
-              containerPort: {{ .Values.server.service.port | default "80" }}
+              containerPort: {{ .Values.server.service.port | default "8080" }}
               protocol: {{ .Values.server.service.protocol | default "TCP" }}
           {{- if .Values.server.livenessProbe }}
           livenessProbe:
@@ -51,6 +57,17 @@ spec:
           volumeMounts:
           {{- toYaml . | nindent 12 }}
           {{- end }}
+          env:
+            {{- with (index .Values.gateway.hosts 0) }}
+            - name: VIRTUAL_HOST
+              value: {{ .host | quote }}
+            - name: VIRTUAL_PATH
+              value:  '/live/'
+            - name: VIRTUAL_PORT
+              value:  '443'
+            - name: VIRTUAL_PROTO
+              value:  'https'
+            {{- end }}
       {{- with .Values.server.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}

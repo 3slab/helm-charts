@@ -1,0 +1,86 @@
+{{ $subApiName := "update-api" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "smartshape.server.fullname" . }}-{{ $subApiName }}
+  labels:
+    {{- include "smartshape.server.labels" . | nindent 4 }}
+    smartshape/api: smartshape-{{ $subApiName }}
+spec:
+  {{- if not .Values.server.autoscaling.enabled }}
+  replicas: {{ .Values.server.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "smartshape.server.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.server.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "smartshape.server.selectorLabels" . | nindent 8 }}
+        smartshape/api: smartshape-{{ $subApiName }}
+    spec:
+      {{- with .Values.server.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "smartshape.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-update-api
+          command: 
+            - /usr/bin/node 
+            - /opt/smartshape-server/roles/update-api/dist/index.js
+          securityContext:
+            {{- toYaml .Values.server.securityContext | nindent 12 }}
+          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.server.image.pullPolicy }}
+          ports:
+            - name: {{ .Values.server.service.name | default "http" }}
+              containerPort: {{ .Values.server.service.port | default "8080" }}
+              protocol: {{ .Values.server.service.protocol | default "TCP" }}
+          {{- if .Values.server.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.server.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.server.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.server.readinessProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.server.resources | nindent 12 }}
+          {{- with .Values.server.volumeMounts }}
+          volumeMounts:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            {{- with (index .Values.gateway.hosts 0) }}
+            - name: VIRTUAL_HOST
+              value: {{ .host | quote }}
+            - name: VIRTUAL_PATH
+              value:  '/update/'
+            - name: VIRTUAL_PORT
+              value:  '443'
+            - name: VIRTUAL_PROTO
+              value:  'https'
+            {{- end }}
+      {{- with .Values.server.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
