@@ -51,8 +51,14 @@ spec:
           readinessProbe:
             {{- toYaml .Values.server.readinessProbe | nindent 12 }}
           {{- end }}
+          {{- if (index .Values $subApiName).resources }}
+          # specifique resource for {{ $subApiName }}
+          resources:
+              {{- toYaml (index .Values $subApiName).resources | nindent 12 }}
+          {{- else }}             
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
+          {{- end }} 
           {{- with .Values.server.volumeMounts }}
           volumeMounts:
           {{- toYaml . | nindent 12 }}
