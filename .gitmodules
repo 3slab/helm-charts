@@ -1,0 +1,4 @@
+[submodule "elasticsearch-stable"]
+	path = elasticsearch-stable
+	url = https://github.com/Suezenv/elasticsearch-helm-charts.git
+	branch = 6.8
