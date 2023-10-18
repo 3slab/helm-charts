@@ -1,0 +1,11 @@
+
+users: |-
+  fred:$1$UtAMOfak$G4eSR7DNv9ZmP.JUxFY.g.:1004:100
+
+#  DISABLED IN INT
+#  user2:passwd:1002:100
+#  user3:passwd:1003:100
+
+publicipnameclusterlb: d2b8e635-5cfd-47f7-9346-b17a2598dade
+publicipclusterlb: 40.88.211.6
+ressourceGroupipclusterlb: mc_pockubernetes_testfms_eastus
