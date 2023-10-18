@@ -8,14 +8,16 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
-    {{- if .Values.ressourceGroupipclusterlb }}
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.ressourceGroupipclusterlb }}
+    {{- if .Values.AzureLoadBalancerExternal.enable }}
+    {{- if .Values.AzureLoadBalancerExternal.ressourceGroupIpLoadBalancer }}
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.AzureLoadBalancerExternal.ressourceGroupIpLoadBalancer }}
     {{- end }}
-    {{- if .Values.publicipclusterlb }}
-    service.beta.kubernetes.io/azure-load-balancer-ipv4: {{ .Values.publicipclusterlb}}
+    {{- if .Values.AzureLoadBalancerExternal.ipLoadBalancer}}
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: {{ .Values.AzureLoadBalancerExternal.ipLoadBalancer}}
     {{- end }}
-    {{- if .Values.publicipnameclusterlb }}
-    service.beta.kubernetes.io/azure-pip-name: {{.Values.publicipnameclusterlb }}
+    {{- if .Values.AzureLoadBalancerExternal.ipNameLoadBalancer }}
+    service.beta.kubernetes.io/azure-pip-name: {{.Values.AzureLoadBalancerExternal.ipNameLoadBalancer }}
+    {{- end }}
     {{- end }}
 spec:
   {{- if .Values.externalTrafficPolicy}}

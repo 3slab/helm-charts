@@ -70,6 +70,24 @@ persistence:
       storageClass: default
       mountPath: /home
 
+## Specific deployment of a load balancer service AKS on an existing  target static IP of the load balancer Azure
+## https://learn.microsoft.com/en-us/azure/aks/static-ip
+## The goal is to not provide any addionnal public ip on the existing load balancer , when we deploy a new load balancer service
+## ex: getting Default IP of AKS cluster
+### az network public-ip show --resource-group <node resource group> --name myAKSPublicIP --query ipAddress --output tsv
+
+AzureLoadBalancerExternal:
+  enable: false
+  ipNameLoadBalancer: ""
+  ipLoadBalancer: ""
+  ressourceGroupIpLoadBalancer: ""
+
+## If you include fail2ban in your image (ex: yakworks/sftp), it's the default recommanded value for the cluster-ip service associated with load balancer service: IP public preservation for fail2ban, kube-proxy routes
+## pacquets locally. the isolation is made par the load balancer associated with AKS
+## Other value: Cluster witch is the default value in AKS for cluster-ip service
+
+externalTrafficPolicy: Local
+
 bindMountFile: |-
   #!/bin/bash
   # File mounted as: /etc/sftp.d/bindmount.sh
