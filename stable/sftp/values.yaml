@@ -12,16 +12,30 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
+
 nameOverride: ""
 fullnameOverride: ""
 
 imagePullSecrets: []
   # - name: regcred
 
+
 service:
   type: ClusterIP
   port: 22
   loadBalancerIp: ~
+
+azureLoadBalancerExternal:
+  enable: false
+  ipNameLoadBalancer: ""
+  # Check loadBalancerIp of IP
+  ressourceGroupIpLoadBalancer: ""
+
+## If you include fail2ban in your image (ex: yakworks/sftp), it's the default recommanded value for the cluster-ip service associated with load balancer service: IP public preservation for fail2ban, kube-proxy routes
+## pacquets locally. the isolation is made par the load balancer associated with AKS
+## Other value: Cluster witch is the default value in AKS for cluster-ip service
+
+externalTrafficPolicy: Local
 
 env: []
 #  - name: SFTP_USERS
@@ -76,17 +90,9 @@ persistence:
 ## ex: getting Default IP of AKS cluster
 ### az network public-ip show --resource-group <node resource group> --name myAKSPublicIP --query ipAddress --output tsv
 
-AzureLoadBalancerExternal:
-  enable: false
-  ipNameLoadBalancer: ""
-  ipLoadBalancer: ""
-  ressourceGroupIpLoadBalancer: ""
 
-## If you include fail2ban in your image (ex: yakworks/sftp), it's the default recommanded value for the cluster-ip service associated with load balancer service: IP public preservation for fail2ban, kube-proxy routes
-## pacquets locally. the isolation is made par the load balancer associated with AKS
-## Other value: Cluster witch is the default value in AKS for cluster-ip service
 
-externalTrafficPolicy: Local
+
 
 bindMountFile: |-
   #!/bin/bash

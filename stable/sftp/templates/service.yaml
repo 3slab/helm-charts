@@ -8,19 +8,22 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
-    {{- if .Values.AzureLoadBalancerExternal.enable }}
-    {{- if .Values.AzureLoadBalancerExternal.ressourceGroupIpLoadBalancer }}
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.AzureLoadBalancerExternal.ressourceGroupIpLoadBalancer }}
-    {{- end }}
-    {{- if .Values.AzureLoadBalancerExternal.ipLoadBalancer}}
-    service.beta.kubernetes.io/azure-load-balancer-ipv4: {{ .Values.AzureLoadBalancerExternal.ipLoadBalancer}}
-    {{- end }}
-    {{- if .Values.AzureLoadBalancerExternal.ipNameLoadBalancer }}
-    service.beta.kubernetes.io/azure-pip-name: {{.Values.AzureLoadBalancerExternal.ipNameLoadBalancer }}
-    {{- end }}
+    {{- if .Values.azureLoadBalancerExternal.enable }}
+      {{- if .Values.azureLoadBalancerExternal.ressourceGroupIpLoadBalancer }}
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.azureLoadBalancerExternal.ressourceGroupIpLoadBalancer }}
+      {{- end }}
+      {{- if and .Values.service.loadBalancerIp (eq .Values.service.type "LoadBalancer") }}
+      service.beta.kubernetes.io/azure-load-balancer-ipv4: {{ .Values.service.loadBalancerIp}}
+      {{- end }}  
+
+#      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+
+      {{- if .Values.azureLoadBalancerExternal.ipNameLoadBalancer }}
+      service.beta.kubernetes.io/azure-pip-name: {{.Values.azureLoadBalancerExternal.ipNameLoadBalancer }}
+      {{- end }}
     {{- end }}
 spec:
-  {{- if .Values.externalTrafficPolicy}}
+  {{- if ne .Values.service.type "ClusterIP" }}
   externalTrafficPolicy: {{ .Values.externalTrafficPolicy}}
   {{- end }} 
   {{- if and .Values.service.loadBalancerIp (eq .Values.service.type "LoadBalancer") }}
