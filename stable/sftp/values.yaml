@@ -25,8 +25,9 @@ service:
   port: 22
   loadBalancerIp: ~
 
-azureLoadBalancerExternal:
+azureLoadBalancer:
   enable: false
+  isexternal : false
   ipNameLoadBalancer: ""
   # Check loadBalancerIp of IP
   ressourceGroupIpLoadBalancer: ""
