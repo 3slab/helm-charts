@@ -33,6 +33,10 @@ spec:
             - name: {{ template "cronjob.fullname" . }}
               image: {{ template "cronjob.image" . }}
               imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+              {{- with .Values.resources }}
+              resources:
+{{ toYaml . | indent 16 }}
+              {{- end }}
               {{- with .Values.env }}
               env:
 {{ toYaml . | indent 16 }}
