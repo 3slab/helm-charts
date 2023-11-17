@@ -11,5 +11,10 @@ map multiple single keys from vault "{{ $targetSecrets.keyVaultSource }}" to sec
 map multiple key value from vault "{{ $targetSecrets.keyVaultSource }}" to secrets "{{ $targetSecrets.secretNameTarget}}",
 for object name "{{ $targetSecrets.multiKeyValue}}" with contentType "{{ $targetSecrets.contentType }}" 
 {{- end }}
+
+you can see data with comand :
+
+kubectl --namespace {{ $.Release.Namespace }} get secrets {{ $targetSecrets.secretNameTarget}} -o yaml
+
 {{- end }} 
 ---
