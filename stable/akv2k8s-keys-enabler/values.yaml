@@ -9,6 +9,7 @@ targetSecrets: []
     #   mappedKeys: 
     #     user: user-login # object name in key vault mapped to key in secret
     #     password: password
+    #   secretType: Opaque # Opaque or ...
     # ================
     # To map multiple keys from a single secret, use the 'multiKeyValue' property
     # ================
@@ -16,4 +17,10 @@ targetSecrets: []
     #   secretNameTarget: my-secret-multi
     #   multiKeyValue: db-values # object name in key vault
     #   contentType: 'application/x-json' # 'application/x-json' or 'application/x-yaml'
-             
+    #   secretType: Opaque # Opaque or ...
+    # ================
+    # To map certificat, use the 'fromKeyVaultCertificate' property
+    # ================
+    # - keyVaultSource: my-keyvault 
+    #   secretNameTarget: my-secret-multi
+    #   fromKeyVaultCertificate: my-certificate # object name in key vault

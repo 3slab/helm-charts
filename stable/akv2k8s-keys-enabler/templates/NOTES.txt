@@ -11,6 +11,14 @@ map multiple single keys from vault "{{ $targetSecrets.keyVaultSource }}" to sec
 map multiple key value from vault "{{ $targetSecrets.keyVaultSource }}" to secrets "{{ $targetSecrets.secretNameTarget}}",
 for object name "{{ $targetSecrets.multiKeyValue}}" with contentType "{{ $targetSecrets.contentType }}" 
 {{- end }}
+{{ if $targetSecrets.fromKeyVaultCertificate }}
+---
+map certificat "{{ $targetSecrets.fromKeyVaultCertificate}}" from vault "{{ $targetSecrets.keyVaultSource }}" to secrets "{{ $targetSecrets.secretNameTarget}}",
+{{- end }}
+{{ if $targetSecrets.secretType }}
+Specified type: {{ $targetSecrets.secretType }} 
+{{- end }}
+
 
 you can see data with comand :
 
