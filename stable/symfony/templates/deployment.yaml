@@ -102,6 +102,7 @@ spec:
               value: {{ $env.value | quote }}
             {{- end }}
             {{- end }}
+            {{- if .Values.extraEnv }}
             {{- range $env := .Values.extraEnv }}
             - name: {{ $env.name }}
              {{ if $env.typeSecret }}
@@ -111,6 +112,7 @@ spec:
                   key: {{ $env.secretKeyRef.key }}
             {{ else }}
               value: {{ $env.value | quote }}
+            {{- end }}
             {{- end }}
             {{- end }}
           {{- end }}
