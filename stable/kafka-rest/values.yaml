@@ -29,6 +29,7 @@ image:
 
 nameOverride: ""
 fullnameOverride: ""
+command: []
 
 service:
   type: ClusterIP
@@ -59,6 +60,15 @@ ingress:
 
 # Schema registry url
 # kafkaRestSchemaRegistryUrl: http://kafka-schema-registry-service:8081
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: kafka-liveness
+readinessProbe:
+  httpGet:
+    path: /
+    port: kafka-readiness
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

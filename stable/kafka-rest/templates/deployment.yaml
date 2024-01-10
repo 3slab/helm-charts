@@ -28,6 +28,10 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
+          {{- with .Values.command }}
+          command:
+{{ toYaml . | indent 12 }}
+          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
@@ -42,14 +46,14 @@ spec:
             - name: {{ $fullName }}-web
               containerPort: {{ .Values.service.port }}
               protocol: {{ .Values.service.protocol }}
+          {{- if .Values.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: {{ $fullName }}-web
+{{ toYaml .Values.livenessProbe | indent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: {{ $fullName }}-web
+{{ toYaml .Values.readinessProbe | indent 12 }}
+          {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
