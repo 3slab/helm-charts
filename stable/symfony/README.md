@@ -5,54 +5,63 @@ This chart bootstraps a Symfony application deployment on a [Kubernetes](http://
 
 
 ## Prerequisites
-  - Kubernetes 1.4+ with Beta APIs enabled
+  - Kubernetes 1.25+ with Beta APIs enabled
 
 
 ## Configuration
 
 The following table lists the configurable parameters of the chart and their default values.
 
-Parameter                  | Description                                                              | Default
--------------------------- | ------------------------------------------------------------------------ | -------
-`image.repository`         | container image repository                                               | `nginx`
-`image.tag`                | container image tag                                                      | `stable`
-`image.pullPolicy`         | container image pull policy                                              | `IfNotPresent`
-`image.pullSecrets`        | container image pull secrets                                             |
-`service.enabled`          | enable the creation of the service resource                              | `true`
-`service.name`             | name of the service                                                      | `nginx`
-`service.type`             | type of the service                                                      | `ClusterIp`
-`service.externalPort`     | external port of the service                                             | `80`
-`service.internalPort`     | internal port of the service                                             | `80`
-`service.annotations`      | Service annotation configuration                                         | `{}`
-`livenessProbe`            | liveness probe (YAML)                                                    | `{}`
-`readinessProbe`           | readiness probe (YAML)                                                   | `{}`
-`resources`                | resource requests and limits (YAML)                                      | `{}`
-`nodeSelector`             | node labels for pod assignment                                           |
-`ingress.enabled`          | Either or not the ingress is enabled                                     | `false`
-`ingress.hosts`            | Hosts to reach the application                                           | `false`
-`ingress.annotations`      | Ingress annotation configuration                                         | `false`
-`ingress.tls`              | TLS support                                                              | `false`
-`nginx.enabled`            | Enable the creation of the configmap resource for nginx                  | `true`
-`nginx.sourcesPath`        | Path where the Symfony application is located                            | `/var/www/symfony`
-`nginx.sourcesDir`         | Directory in sourcesPath where the Symfony application is located        | `public`
-`nginx.mainControllerName` | Directory in sourcesPath where the Symfony application is located        | `index`
-`nginx.accessLogPath`      | Path where Nginx access_log is located                                   | `/var/log/nginx/access.log`
-`nginx.errorLogPath`       | Path where Nginx error_log is located                                    | `/var/log/nginx/error.log`
-`nginx.locationParams`     | List of params added to location block in nginx config file              | `[]`
-`env.container`            | Environment variables that are passed to the container and the webserver |
-`env.initContainer`        | Environment variables that are passed to each initContainer              |
-`extraEnv`                 | Add specific environment variable to the container                       | `[]`
-`initContainers`           | Allow to configure initContainers for the deployment (YAML)              |
-`secrets`                  | Allow to configure secrets (mounted only for now)                        |
-`configMap.dollar.enabled` | Allow to pass variable with $ in value                                   | `false`
-`job.enabled`              | Enables a pre-update job                                                 | `false`
-`job.activeDeadlineSeconds`| Pod activeDeadlineSeconds parameter                                      | `60`
-`job.restartPolicy`        | Pod restartPolicy parameter                                              | `Never`
-`job.name`                 | Pod suffixe name (Release.Name+this parameter)                           | `job`
-`job.cmd`                  | Command to run                                                           | `[]`
-`job.args`                 | Command arguments                                                        | `[]`
-`job.annotations`          | Defines the hooks to use and their delete                                | `{}`
-`strategy`                 | Defines deployment strategy                                              | `{type: 'Recreate'}`
+ Parameter                         | Description                                                                                    | Default                     
+-----------------------------------|------------------------------------------------------------------------------------------------|-----------------------------
+ `image.repository`                | container image repository                                                                     | `nginx`                     
+ `image.tag`                       | container image tag                                                                            | `stable`                    
+ `image.pullPolicy`                | container image pull policy                                                                    | `IfNotPresent`              
+ `image.pullSecrets`               | container image pull secrets                                                                   |
+ `service.enabled`                 | enable the creation of the service resource                                                    | `true`                      
+ `service.name`                    | name of the service                                                                            | `nginx`                     
+ `service.type`                    | type of the service                                                                            | `ClusterIp`                 
+ `service.externalPort`            | external port of the service                                                                   | `80`                        
+ `service.internalPort`            | internal port of the service                                                                   | `80`                        
+ `service.annotations`             | Service annotation configuration                                                               | `{}`                        
+ `livenessProbe`                   | liveness probe (YAML)                                                                          | `{}`                        
+ `readinessProbe`                  | readiness probe (YAML)                                                                         | `{}`                        
+ `resources`                       | resource requests and limits (YAML)                                                            | `{}`                        
+ `nodeSelector`                    | node labels for pod assignment                                                                 |
+ `ingress.enabled`                 | Either or not the ingress is enabled                                                           | `false`                     
+ `ingress.hosts`                   | Hosts to reach the application                                                                 | `false`                     
+ `ingress.annotations`             | Ingress annotation configuration                                                               | `false`                     
+ `ingress.tls`                     | TLS support                                                                                    | `false`                     
+ `nginx.enabled`                   | Enable the creation of the configmap resource for nginx                                        | `true`                      
+ `nginx.sourcesPath`               | Path where the Symfony application is located                                                  | `/var/www/symfony`          
+ `nginx.sourcesDir`                | Directory in sourcesPath where the Symfony application is located                              | `public`                    
+ `nginx.mainControllerName`        | Directory in sourcesPath where the Symfony application is located                              | `index`                     
+ `nginx.accessLogPath`             | Path where Nginx access_log is located                                                         | `/var/log/nginx/access.log` 
+ `nginx.errorLogPath`              | Path where Nginx error_log is located                                                          | `/var/log/nginx/error.log`  
+ `nginx.locationParams`            | List of params added to location block in nginx config file                                    | `[]`                        
+ `env.container`                   | Environment variables that are passed to the container and the webserver                       |
+ `env.initContainer`               | Environment variables that are passed to each initContainer                                    |
+ `extraEnv`                        | Add specific environment variable to the container                                             | `[]`                        
+ `initContainers`                  | Allow to configure initContainers for the deployment (YAML)                                    |
+ `secrets`                         | Allow to configure secrets (mounted only for now)                                              |
+ `configMap.dollar.enabled`        | Allow to pass variable with $ in value                                                         | `false`                     
+ `job.enabled`                     | Enables a pre-update job                                                                       | `false`                     
+ `job.activeDeadlineSeconds`       | Pod activeDeadlineSeconds parameter                                                            | `60`                        
+ `job.restartPolicy`               | Pod restartPolicy parameter                                                                    | `Never`                     
+ `job.name`                        | Pod suffixe name (Release.Name+this parameter)                                                 | `job`                       
+ `job.cmd`                         | Command to run                                                                                 | `[]`                        
+ `job.args`                        | Command arguments                                                                              | `[]`                        
+ `job.annotations`                 | Defines the hooks to use and their delete                                                      | `{}`                        
+ `cronjob.enabled`                 | Enables a pre-update cronjob                                                                   | `false`                     
+ `cronjob.schedule`                | Cronjob schedule, defaults to "0 0 * * *"                                                      | `0 0 * * *`                 
+ `cronjob.ttlSecondsAfterFinished` | Specify this field, so that a Job can be cleaned up automatically some time after it finishes. | 172800 #48 hours                 
+ `cronjob.activeDeadlineSeconds`   | Pod activeDeadlineSeconds parameter                                                            | `60`                        
+ `cronjob.restartPolicy`           | Pod restartPolicy parameter                                                                    | `Never`                     
+ `cronjob.name`                    | Pod suffixe name (Release.Name+this parameter)                                                 | `job`                       
+ `cronjob.command`                 | Command to run                                                                                 | `[]`                        
+ `cronjob.args`                    | Command arguments                                                                              | `[]`                        
+ `cronjob.annotations`             | Defines the hooks to use and their delete                                                      | `{}`                        
+ `strategy`                        | Defines deployment strategy                                                                    | `{type: 'Recreate'}`        
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 

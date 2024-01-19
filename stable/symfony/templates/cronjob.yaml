@@ -1,0 +1,85 @@
+{{- if .Values.cronjob.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ template "cronjobFullname" . }}
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+{{ .Values.cronjob.annotations | toYaml | indent 4 }}
+spec:
+  schedule: "{{ .Values.cronjob.schedule }}"
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.cronjob.ttlSecondsAfterFinished }}
+      template:
+        spec:
+          {{- if .Values.image.pullSecrets }}
+          imagePullSecrets:
+            {{- range $secret := .Values.image.pullSecrets }}
+            - name: {{ $secret }}
+            {{- end }}
+          {{- end }}
+          restartPolicy: {{ .Values.cronjob.restartPolicy }}
+          containers:
+            - name: {{ template "cronjobFullname" . }}
+              image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+              imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+              {{- with .Values.resources }}
+              resources:
+{{ toYaml . | indent 16 }}
+              {{- end }}
+              {{ if .Values.env }}
+              env:
+                {{- range $env := .Values.env.container }}
+                - name: {{ $env.name }}
+                 {{ if $env.typeSecret }}
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $env.secretKeyRef.name }}
+                      key: {{ $env.secretKeyRef.key }}
+                {{ else }}
+                  value: {{ $env.value | quote }}
+                {{- end }}
+                {{- end }}
+                {{- if .Values.extraEnv }}
+                {{- range $env := .Values.extraEnv }}
+                - name: {{ $env.name }}
+                 {{ if $env.typeSecret }}
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $env.secretKeyRef.name }}
+                      key: {{ $env.secretKeyRef.key }}
+                {{ else }}
+                  value: {{ $env.value | quote }}
+                {{- end }}
+                {{- end }}
+                {{- end }}
+              {{- end }}
+              {{- with .Values.cronjob.command }}
+              command:
+{{ toYaml . | indent 16 }}
+              {{- end }}
+              {{- with .Values.cronjob.args }}
+              args:
+{{ toYaml . | indent 16 }}
+              {{- end }}
+              {{- with .Values.volumeMounts }}
+              volumeMounts:
+{{ toYaml . | indent 16 }}
+              {{- end }}
+          {{- with .Values.volumes }}
+          volumes:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+{{- end }}
