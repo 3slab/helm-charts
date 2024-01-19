@@ -184,3 +184,14 @@ job:
   cmd: []
   args: []
   annotations: {}
+
+cronjob:
+  enabled: false
+  schedule: "0 0 * * *"
+  ttlSecondsAfterFinished: 172800 #48 hours
+  activeDeadlineSeconds: 60
+  restartPolicy: Never
+  name: cronjob
+  command: []
+  args: []
+  annotations: {}
