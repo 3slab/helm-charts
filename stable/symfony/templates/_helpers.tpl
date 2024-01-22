@@ -49,3 +49,14 @@ Return custom name for job or release-job
 {{- printf "%s-%s" .Release.Name .Values.job.name -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return custom name for cronjob
+*/}}
+{{- define "cronjobFullname" -}}
+{{- if .Values.cronjob.nameOverride -}}
+{{- print .Values.cronjob.nameOverride -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name .Values.cronjob.name -}}
+{{- end -}}
+{{- end -}}
