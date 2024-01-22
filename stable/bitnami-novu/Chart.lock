@@ -1,0 +1,15 @@
+dependencies:
+- name: redis
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 17.17.1
+- name: mongodb
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 13.18.5
+- name: common
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 2.14.1
+- name: localstack
+  repository: https://localstack.github.io/helm-charts
+  version: 0.4.3
+digest: sha256:579ca132578460663ff56b857cb2b8bf506a568446e086c201d7e93edb10a5f6
+generated: "2024-01-15T10:43:36.693371977+01:00"
