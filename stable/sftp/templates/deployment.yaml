@@ -61,8 +61,9 @@ spec:
               subPath: {{ .scriptName }}
             {{- end}}
 
-            # == special mode for image yakworks/sftp ==
+            
             {{- if eq .Values.image.repository "yakworks/sftp" }}
+            # == special mode for image yakworks/sftp ==
             {{- if or .Values.sshHostKeys.ed25519 }}
             - mountPath: /etc/sftp/host_keys.d/ssh_host_ed25519_key
               name: sftp-hostkey-vol
@@ -73,8 +74,8 @@ spec:
               name: sftp-hostkey-vol
               subPath: ssh_host_rsa_key
             {{- end }}
-            # == default mode for image atmoz/sftp ==
             {{ else }}
+            # == default mode for image atmoz/sftp ==
             {{- if or .Values.sshHostKeys.ed25519 }}
             - mountPath: /etc/ssh/ssh_host_ed25519_key
               name: sftp-hostkey-vol

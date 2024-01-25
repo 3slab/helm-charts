@@ -9,6 +9,7 @@ strategy: {}
 
 image:
   repository: atmoz/sftp
+  # repository: yakworks/sftp
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -31,6 +32,7 @@ azureLoadBalancer:
   ipNameLoadBalancer: ""
   # Check loadBalancerIp of IP
   ressourceGroupIpLoadBalancer: ""
+
 
 ## If you include fail2ban in your image (ex: yakworks/sftp), it's the default recommanded value for the cluster-ip service associated with load balancer service: IP public preservation for fail2ban, kube-proxy routes
 ## pacquets locally. the isolation is made par the load balancer associated with AKS
