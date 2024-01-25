@@ -9,6 +9,7 @@ strategy: {}
 
 image:
   repository: atmoz/sftp
+  # to use Secure FTP Server with fail2ban, use the following image: yakworks/sftp
   # repository: yakworks/sftp
   tag: latest
   pullPolicy: IfNotPresent
