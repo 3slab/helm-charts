@@ -7,7 +7,30 @@ metadata:
     helm.sh/chart: {{ include "sftp.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    {{- if .Values.azureLoadBalancer.enable }}
+    
+      {{- if .Values.azureLoadBalancer.isexternal }}
+        
+        service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.azureLoadBalancer.ressourceGroupIpLoadBalancer }}
+      
+          
+
+  #      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+
+        service.beta.kubernetes.io/azure-pip-name: {{.Values.azureLoadBalancer.ipNameLoadBalancer }}
+      {{- else }}
+        service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+      {{- end }} 
+
+      {{- if and .Values.service.loadBalancerIp (eq .Values.service.type "LoadBalancer") }}
+        service.beta.kubernetes.io/azure-load-balancer-ipv4: {{ .Values.service.loadBalancerIp}}
+      {{- end }}
+    {{- end }}    
 spec:
+  {{- if ne .Values.service.type "ClusterIP" }}
+  externalTrafficPolicy: {{ .Values.externalTrafficPolicy}}
+  {{- end }} 
   {{- if and .Values.service.loadBalancerIp (eq .Values.service.type "LoadBalancer") }}
   loadBalancerIP: {{ .Values.service.loadBalancerIp }}
   {{- end }}

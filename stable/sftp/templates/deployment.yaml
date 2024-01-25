@@ -60,6 +60,22 @@ spec:
               name: sftp-bindmount-vol
               subPath: {{ .scriptName }}
             {{- end}}
+
+            
+            {{- if eq .Values.image.repository "yakworks/sftp" }}
+            # == special mode for image yakworks/sftp ==
+            {{- if or .Values.sshHostKeys.ed25519 }}
+            - mountPath: /etc/sftp/host_keys.d/ssh_host_ed25519_key
+              name: sftp-hostkey-vol
+              subPath: ssh_host_ed25519_key
+            {{- end }}
+            {{- if or .Values.sshHostKeys.rsa }}
+            - mountPath: /etc/sftp/host_keys.d/ssh_host_rsa_key
+              name: sftp-hostkey-vol
+              subPath: ssh_host_rsa_key
+            {{- end }}
+            {{ else }}
+            # == default mode for image atmoz/sftp ==
             {{- if or .Values.sshHostKeys.ed25519 }}
             - mountPath: /etc/ssh/ssh_host_ed25519_key
               name: sftp-hostkey-vol
@@ -70,6 +86,10 @@ spec:
               name: sftp-hostkey-vol
               subPath: ssh_host_rsa_key
             {{- end }}
+            {{- end }}
+
+
+
             {{- if .Values.publicKeys }}
             {{- range .Values.publicKeys }}
             - mountPath: /home/{{ .username }}/.ssh/keys/id_rsa.pub
