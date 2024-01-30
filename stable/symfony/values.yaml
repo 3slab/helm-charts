@@ -185,13 +185,25 @@ job:
   args: []
   annotations: {}
 
-cronjob:
-  enabled: false
-  schedule: "0 0 * * *"
-  ttlSecondsAfterFinished: 172800 #48 hours
-  activeDeadlineSeconds: 60
-  restartPolicy: Never
-  name: cronjob
-  command: []
-  args: []
-  annotations: {}
+# Define multiple cronjobs
+#
+#cronjobs:
+#  - name: cronjob
+#    enabled: false
+#    schedule: "0 0 * * *"
+#    ttlSecondsAfterFinished: 172800 #48 hours
+#    activeDeadlineSeconds: 60
+#    restartPolicy: Never
+#    command: []
+#    args: []
+#    annotations: {}
+#  - name: cronjob2
+#    enabled: false
+#    schedule: "0 0 * * *"
+#    ttlSecondsAfterFinished: 172800 #48 hours
+#    activeDeadlineSeconds: 60
+#    restartPolicy: Never
+#    command: []
+#    args: []
+#    annotations: {}
+cronjobs: []
