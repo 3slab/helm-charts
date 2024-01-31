@@ -206,4 +206,4 @@ job:
 #    command: []
 #    args: []
 #    annotations: {}
-cronjobs: []
+cronjobs: {}
