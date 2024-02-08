@@ -207,3 +207,39 @@ job:
 #    args: []
 #    annotations: {}
 cronjobs: {}
+
+# Add one or multiple workers
+#workers:
+#  - name: worker-1
+#    enabled: false
+#    replicaCount: 1
+#    command:
+#      - /bin/sh
+#      - -c
+#    args:
+#      - php -r "sleep(3600);"
+#    volumeMounts:
+#      - mountPath: /data
+#        name: data-vol
+#    volumes:
+#      - name: data-vol
+#        persistentVolumeClaim:
+#          claimName: existing-claim
+#    annotations: {}
+#  - name: worker-2
+#    enabled: false
+#    replicaCount: 1
+#    command:
+#      - /bin/sh
+#      - -c
+#    args:
+#      - php -r "sleep(3600);"
+#    volumeMounts:
+#      - mountPath: /data
+#        name: data-vol
+#    volumes:
+#      - name: data-vol
+#        persistentVolumeClaim:
+#          claimName: existing-claim
+#    annotations: {}
+workers: {}
