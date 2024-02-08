@@ -1,0 +1,88 @@
+{{- range $worker := $.Values.workers }}
+{{- if $worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{- $.Release.Name -}}-{{- $worker.name -}}"
+  labels:
+    app: "{{- $.Release.Name -}}-{{- $worker.name -}}"
+    release: {{ $.Release.Name | quote }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+  annotations:
+{{ $worker.annotations | toYaml | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: "{{- $.Release.Name -}}-{{- $worker.name -}}"
+      release: {{ $.Release.Name | quote }}
+  replicas: {{ $worker.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: "{{- $.Release.Name -}}-{{- $worker.name -}}"
+        release: {{ $.Release.Name | quote }}
+        app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+        app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+        helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+    spec:
+      {{- if $.Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range $secret := $.Values.image.pullSecrets }}
+        - name: {{ $secret }}
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: "{{- $.Release.Name -}}-{{- $worker.name -}}"
+          image: {{ $.Values.image.repository }}:{{ $.Values.image.tag }}
+          imagePullPolicy: {{ $.Values.image.pullPolicy | quote }}
+          {{- with $.Values.resources }}
+          resources:
+{{ toYaml . | indent 16 }}
+          {{- end }}
+          {{ if $.Values.env }}
+          env:
+            {{- range $env := $.Values.env.container }}
+            - name: {{ $env.name }}
+             {{ if $env.typeSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.secretKeyRef.name }}
+                  key: {{ $env.secretKeyRef.key }}
+            {{ else }}
+              value: {{ $env.value | quote }}
+            {{- end }}
+            {{- end }}
+            {{- if $.Values.extraEnv }}
+            {{- range $env := $.Values.extraEnv }}
+            - name: {{ $env.name }}
+             {{ if $env.typeSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.secretKeyRef.name }}
+                  key: {{ $env.secretKeyRef.key }}
+            {{ else }}
+              value: {{ $env.value | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- with $worker.command }}
+          command:
+{{ toYaml . | indent 16 }}
+          {{- end }}
+          {{- with $worker.args }}
+          args:
+{{ toYaml . | indent 16 }}
+          {{- end }}
+          {{- with $worker.volumeMounts }}
+          volumeMounts:
+{{ toYaml . | indent 16 }}
+          {{- end }}
+      {{- with $worker.volumes }}
+      volumes:
+{{ toYaml . | indent 12 }}
+      {{- end }}
+{{- end }}
+{{- end }}

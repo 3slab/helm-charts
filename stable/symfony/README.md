@@ -1,12 +1,12 @@
 Symfony chart
 =============
 
-This chart bootstraps a Symfony application deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
+This chart bootstraps a Symfony application deployment on a [Kubernetes](http://kubernetes.io) cluster using
+the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
-  - Kubernetes 1.25+ with Beta APIs enabled
 
+- Kubernetes 1.25+ with Beta APIs enabled
 
 ## Configuration
 
@@ -52,19 +52,28 @@ The following table lists the configurable parameters of the chart and their def
  `job.cmd`                         | Command to run                                                                                 | `[]`                        
  `job.args`                        | Command arguments                                                                              | `[]`                        
  `job.annotations`                 | Defines the hooks to use and their delete                                                      | `{}`                        
- `cronjob.enabled`                 | Enables a pre-update cronjob                                                                   | `false`                     
+ `cronjobs`                        | Defines one or multiple cronjobs                                                               | `{}`                        
+ `cronjob.enabled`                 | Enables a  cronjob                                                                             | `false`                     
  `cronjob.schedule`                | Cronjob schedule, defaults to "0 0 * * *"                                                      | `0 0 * * *`                 
- `cronjob.ttlSecondsAfterFinished` | Specify this field, so that a Job can be cleaned up automatically some time after it finishes. | 172800 #48 hours                 
+ `cronjob.ttlSecondsAfterFinished` | Specify this field, so that a Job can be cleaned up automatically some time after it finishes. | 172800 #48 hours            
  `cronjob.activeDeadlineSeconds`   | Pod activeDeadlineSeconds parameter                                                            | `60`                        
  `cronjob.restartPolicy`           | Pod restartPolicy parameter                                                                    | `Never`                     
- `cronjob.name`                    | Pod suffixe name (Release.Name+this parameter)                                                 | `job`                       
+ `cronjob.name`                    | Pod suffixe name (Release.Name+this parameter)                                                 | ``                       
  `cronjob.command`                 | Command to run                                                                                 | `[]`                        
  `cronjob.args`                    | Command arguments                                                                              | `[]`                        
  `cronjob.annotations`             | Defines the hooks to use and their delete                                                      | `{}`                        
+ `workers`                         | Defines one or multiple workers to run long-term tasks                                         | `{}`                        
+ `worker.enabled`                  | Enables a  worker                                                                              | `false`                     
+ `worker.replicaCount`             | worker deployment replicaCount parameter                                                       | `1`                         
+ `worker.name`                     | worker pod suffixe name (Release.Name+this parameter)                                          | ``                          
+ `worker.command`                  | Command to run                                                                                 | `[]`                        
+ `worker.args`                     | Command arguments                                                                              | `[]`                        
+ `worker.volumeMounts`             | worker volume mounts arguments                                                                 | `[]`                        
+ `worker.volumes`                  | worker volumes arguments                                                                       | `[]`                        
+ `worker.annotations`              | Defines the hooks to use and their delete                                                      | `{}`                        
  `strategy`                        | Defines deployment strategy                                                                    | `{type: 'Recreate'}`        
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
-
 
 ## Installation
 
@@ -80,14 +89,14 @@ $ helm install --name my-release \
     suez/symfony
 ```
 
-Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
+Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For
+example,
 
 ```console
 $ helm install --name my-release -f values.yaml suez/kube-lego
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
-
 
 ## Uninstalling the Chart
 
