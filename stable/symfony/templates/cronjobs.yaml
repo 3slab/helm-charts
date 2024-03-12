@@ -1,13 +1,14 @@
 {{- if $.Values.cronjobs }}
 {{- range $cronjob := $.Values.cronjobs }}
 {{- if $cronjob.enabled }}
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: "{{- $.Release.Name -}}-{{- $cronjob.name -}}"
   labels:
     app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
-    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    app.kubernetes.io/instance: "{{- $.Release.Name -}}-{{- $cronjob.name -}}"
     helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
   annotations:
 {{ $cronjob.annotations | toYaml | indent 4 }}
@@ -20,7 +21,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
-        app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+        app.kubernetes.io/instance: "{{- $.Release.Name -}}-{{- $cronjob.name -}}"
         helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
     spec:
       ttlSecondsAfterFinished: {{ $cronjob.ttlSecondsAfterFinished }}
@@ -84,6 +85,7 @@ spec:
           volumes:
 {{ toYaml . | indent 12 }}
           {{- end }}
+...
 {{- end }}
 {{- end }}
 {{- end }}

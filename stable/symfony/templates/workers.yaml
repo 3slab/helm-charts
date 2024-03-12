@@ -1,5 +1,6 @@
 {{- range $worker := $.Values.workers }}
 {{- if $worker.enabled }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8,7 +9,7 @@ metadata:
     app: "{{- $.Release.Name -}}-{{- $worker.name -}}"
     release: {{ $.Release.Name | quote }}
     app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
-    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    app.kubernetes.io/instance: "{{- $.Release.Name -}}-{{- $worker.name -}}"
     helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
   annotations:
 {{ $worker.annotations | toYaml | indent 4 }}
@@ -24,7 +25,7 @@ spec:
         app: "{{- $.Release.Name -}}-{{- $worker.name -}}"
         release: {{ $.Release.Name | quote }}
         app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
-        app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+        app.kubernetes.io/instance: "{{- $.Release.Name -}}-{{- $worker.name -}}"
         helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
     spec:
       {{- if $.Values.image.pullSecrets }}
@@ -84,5 +85,6 @@ spec:
       volumes:
 {{ toYaml . | indent 12 }}
       {{- end }}
+...
 {{- end }}
 {{- end }}
