@@ -1,6 +1,7 @@
 {{- if $.Values.cronjobs }}
 {{- range $cronjob := $.Values.cronjobs }}
 {{- if $cronjob.enabled }}
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -84,6 +85,7 @@ spec:
           volumes:
 {{ toYaml . | indent 12 }}
           {{- end }}
+...
 {{- end }}
 {{- end }}
 {{- end }}

@@ -1,5 +1,6 @@
 {{- range $worker := $.Values.workers }}
 {{- if $worker.enabled }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -84,5 +85,6 @@ spec:
       volumes:
 {{ toYaml . | indent 12 }}
       {{- end }}
+...
 {{- end }}
 {{- end }}
