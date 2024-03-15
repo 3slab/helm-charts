@@ -516,21 +516,25 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ### External mongoDB database configuration
 
-| Name                        | Description                                 | Value           |
-| --------------------------- | ------------------------------------------- | --------------- |
-| `externalDatabase.host`     | Host for external mongoDB database          | `mongodb.local` |
-| `externalDatabase.port`     | Port for external mongoDB database          | `27017`         |
-| `externalDatabase.username` | Username for external mongoDB database      | `novu`          |
-| `externalDatabase.password` | Password for external mongoDB database      | `""`            |
-| `externalDatabase.database` | Database name for external mongoDB database | `novu-db`       |
+| Name                                    | Description                                 | Value                   |
+|-----------------------------------------|---------------------------------------------|-------------------------|
+| `externalDatabase.host`                 | Host for external mongoDB database          | `mongodb.local`         |
+| `externalDatabase.port`                 | Port for external mongoDB database          | `27017`                 |
+| `externalDatabase.username`             | Username for external mongoDB database      | `novu`                  |
+| `externalDatabase.password`             | Password for external mongoDB database      | `""`                    |
+| `externalDatabase.database`             | Database name for external mongoDB database | `novu-db`               |
+| `externalDatabase.existingSecret`       | Database existing url secret                | `vmongodb-novu-secrets` |
+| `externalDatabase.existingSecretUrlKey` | Database existing url key secret            | `mongodb-uri`           |
 
 ### External redis configuration
 
-| Name                     | Description                          | Value   |
-| ------------------------ | ------------------------------------ | ------- |
-| `externalRedis.host`     | Host for external Redis database     | `redis` |
-| `externalRedis.port`     | Port for external Redis database     | `6379`  |
-| `externalRedis.password` | Password for external Redis database | `""`    |
+| Name                           | Description                            | Value              |
+|--------------------------------|----------------------------------------|--------------------|
+| `externalRedis.host`           | Host for external Redis database       | `redis`            |
+| `externalRedis.port`           | Port for external Redis database       | `6379`             |
+| `externalRedis.password`       | Password for external Redis database   | `""`               |
+| `externalRedis.existingSecret` | Redis existing secret                  | `"redis"`          |
+| `externalRedis.passwordKey`    | Redis secret key                       | `"redis-password"` |
 
 ### External s3 configuration
 

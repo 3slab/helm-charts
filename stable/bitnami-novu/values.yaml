@@ -1771,6 +1771,8 @@ externalDatabase:
   username: 'novu'
   password: ''
   database: novu-db
+#  existingSecret:
+#  existingSecretUrlKey
 
 ## @section External redis configuration
 ##
@@ -1782,6 +1784,7 @@ externalRedis:
   host: redis
   port: 6379
   password: ''
+#  existingSecret: "redis"
 
 ## @section External s3 configuration
 ##

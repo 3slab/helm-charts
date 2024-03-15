@@ -112,7 +112,7 @@ spec:
               valueFrom :
                 secretKeyRef:
                   name: {{ include "novu.mongodb.secretName" .}}
-                  key: mongoUrl
+                  key: {{ include "novu.mongodb.urlKey" .}}
             - name: JWT_SECRET
               valueFrom :
                secretKeyRef:

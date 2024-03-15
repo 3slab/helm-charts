@@ -129,7 +129,7 @@ spec:
               valueFrom :
                 secretKeyRef:
                   name: {{ include "novu.mongodb.secretName" .}}
-                  key: mongoUrl
+                  key: {{ include "novu.mongodb.urlKey" .}}
             - name: S3_BUCKET_NAME
               valueFrom :
                 secretKeyRef:

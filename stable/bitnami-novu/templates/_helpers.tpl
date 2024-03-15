@@ -256,6 +256,26 @@ Return mongodb secretName
 
 
 {{/*
+Return mongodb urlKey
+*/}}
+{{- define "novu.mongodb.urlKey" -}}
+{{- if .Values.mongodb.enabled -}}
+    {{- print "mongoUrl" -}}
+{{- else -}}
+    {{- if .Values.externalDatabase.existingSecret -}}
+        {{- if .Values.externalDatabase.existingSecretUrlKey -}}
+            {{- printf "%s" .Values.externalDatabase.existingSecretUrlKey -}}
+        {{- else -}}
+            {{- print "mongoUrl" -}}
+        {{- end -}}
+    {{- else -}}
+        {{- print "mongoUrl" -}}
+    {{- end -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
 Return s3 fullname
 */}}
 {{- define "novu.s3.fullname" -}}
