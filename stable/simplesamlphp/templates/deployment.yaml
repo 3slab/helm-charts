@@ -32,6 +32,14 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 12 }}
+          {{- end }}
           {{- with .Values.env }}
           env:
 {{ toYaml . | indent 12 }}
