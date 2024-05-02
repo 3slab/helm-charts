@@ -1,24 +1,21 @@
-{{- if .Values.frontend.ingress.enabled -}}
+{{- if .Values.ingress.enabled -}}
 {{- $fullName := include "mayan.fullname" . -}}
-{{- $svcPort := .Values.frontend.service.port -}}
+{{- $servicePortNumber := .Values.frontend.service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}-frontend-ingress
+  name: {{ $fullName }}-frontend
   labels:
     {{- include "mayan.labels" . | nindent 4 }}
     app.kubernetes.io/component: frontend
-  {{- with .Values.frontend.ingress.annotations }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if .Values.letsencrypt.enabled }}
-    cert-manager.io/issuer: {{ include "mayan.tlsUniqueName" . }}
-  {{- end }}
 spec:
-  {{- if .Values.frontend.ingress.tls }}
+  {{- if .Values.ingress.tls }}
   tls:
-    {{- range .Values.frontend.ingress.tls }}
+    {{- range .Values.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -26,14 +23,8 @@ spec:
       secretName: {{ .secretName }}
     {{- end }}
   {{- end }}
-  {{- if .Values.letsencrypt.enabled }}
-  tls:
-    - {{ .Values.letsencrypt.domain }}:
-      secretName: {{ include "mayan.tlsUniqueName" . }}
-      hosts: [{{ .Values.letsencrypt.domain }}]
-  {{- end }}
   rules:
-    {{- range .Values.frontend.ingress.hosts }}
+    {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -44,7 +35,7 @@ spec:
               service:
                 name: {{ $fullName }}-frontend
                 port:
-                  number: {{ $svcPort }}
+                  number: {{ $servicePortNumber }}
           {{- end }}
     {{- end }}
 

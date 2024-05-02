@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app.kubernetes.io/component: frontend
   name: {{ include "mayan.fullname" . }}-frontend
 spec:
 {{- if not .Values.frontend.autoscaling.enabled }}
@@ -21,17 +23,19 @@ spec:
         {{- include "mayan.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: frontend
     spec:
+      {{- include "deployments.affinity" (dict "root" $ "local" $.Values.frontend) | indent 6 }}
       containers:
-        - name: {{ .Chart.Name }}-frontend
-          image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
-          args:
+        - args:
             - run_frontend
+          {{- include "containers.env" . | indent 10 }}
           envFrom:
             - secretRef:
                 name: {{ include "mayan.secretsName" . }}
             - configMapRef:
                 name: {{ include "mayan.configMapName" . }}
+          {{- include "containers.image" . | nindent 10 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Chart.Name }}-frontend
           ports:
             - name: http
               containerPort: 8000
@@ -47,15 +51,12 @@ spec:
             {{- end }}
             - name: mayan-tmp
               mountPath: /tmp
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "containers.imagePullSecrets" . | indent 6 }}
       volumes:
         {{- if $.Values.persistence.core.enabled }}
         - name: mayan-media
           persistentVolumeClaim:
-            claimName: {{ include "mayan.persistentVolumeClaimName" . }}
+            claimName: {{ include "pvcs.persistentVolumeClaimName" . }}
         {{- end }}
         - name: mayan-tmp
           emptyDir: {}

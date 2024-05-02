@@ -1,24 +1,35 @@
-###########
-# Globals #
-###########
-
 global:
-  image:
-    repository: mayanedms/mayanedms
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    # tag: 3
+  # -- Stack container imagePullSecrets
+  # imagePullSecrets: []
+  # -- Stack wide pullPolicy
+  # imageRegistry: ""
   # namespace: mayan-edms
-  # storageClass:
+  # storageClass: ""
 
-imagePullSecrets: []
-# nameOverride: ""
+
+image:
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+  # registry: ""
+  repository: mayanedms/mayanedms
+  # -- Defautls to Chart.AppVersion.
+  # tag: ""
+
+
+# -- Affinity for all of Mayan EDMS deployments.
+affinity: {}
+
 # fullnameOverride: ""
 
 
-###################
-# Service account #
-###################
+# nameOverride: ""
+
+
+# nodeSelector: {}
+
+
+# tolerations: []
+
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -30,32 +41,12 @@ serviceAccount:
   name:
 
 
-################
-# Pod security #
-################
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-
-#################
-# Configuration #
-#################
-
 configuration:
   MAYAN_LOCK_MANAGER_BACKEND: mayan.apps.lock_manager.backends.redis_lock.RedisLock
-  MAYAN_COMMON_PROJECT_TITLE: "Mayan EDMS (Helm)"
 
-
-###########
-# Secrets #
-###########
 
 secrets: {}
 
-###########
-# Storage #
-###########
 
 persistence:
   # This controls the /mayan/media mount.
@@ -66,61 +57,55 @@ persistence:
       # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource
       helm.sh/resource-policy: "keep"
     enabled: true
-    size: 500Mi
+    size: 1Gi
     volume:
       # Create a persistent volume
       # Default: false - Delegate to the storage provisioner.
       create: false
 
-#####################
-# Top level ingress #
-#####################
 
 ingress:
   annotations: {}
+    # Enable the following annotation to disable NGINX request size limit
+    # and allow large documents to be uploaded.
+    # nginx.ingress.kubernetes.io/proxy-body-size: "0"
   enabled: false
-  host: mayan.minikube
-  paths:
-    /:
-      serviceName: frontend
-      servicePort: 8000
-  #tls:
-  #  - secretName:
+  hosts:
+    - host: mayan.home.arpa
+      paths: [/]
+  tls: []
+  #  - secretName: mayan-tls
   #    hosts:
-  #      - mayan.minikube
+  #      - mayan.home.arpa
 
-
-############
-# Frontend #
-############
 
 frontend:
+  # -- Frontend specific affinity.
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/component
+              operator: In
+              values:
+              - frontend
+          topologyKey: kubernetes.io/hostname
+        weight: 100
   autoscaling:
     enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
+    # minReplicas: 1
+    # maxReplicas: 100
+    # targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
   # nameOverride: frontend
   # chartNameSuffix: frontend
-  ingress:
-    annotations: {}
-      # Enable the following annotation to disable NGINX request size limit
-      # and allow large documents to be uploaded.
-      # nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    enabled: enabled
-    hosts:
-      - host: mayan.minikube
-        paths: [/]
-    tls: []
-    #  - secretName: mayan-tls
-    #    hosts:
-    #      - mayan.minikube
-  replicaCount: 1
+  replicaCount: 2
   resources:
     limits:
-      cpu: 1000m
-      memory: 1200Mi
+      cpu: 3000m
+      memory: 3000Mi
     requests:
       cpu: 200m
       memory: 512Mi
@@ -137,29 +122,46 @@ frontend:
     port: 8000
 
 
-###########
-# Workers #
-###########
+workerDefaults:
+  # -- Affinity for all worker deployments.
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/component
+              operator: In
+              values:
+              - worker
+          topologyKey: kubernetes.io/hostname
+        weight: 100
+
 
 workers:
   worker-a:
+    # -- Worker specific affinity.
+    # affinity: {}
     autoscaling:
       enabled: false
-      minReplicas: 1
-      maxReplicas: 100
-      targetCPUUtilizationPercentage: 80
+      # minReplicas: 1
+      # maxReplicas: 100
+      # targetCPUUtilizationPercentage: 80
       # targetMemoryUtilizationPercentage: 80
-    # nameOverride: frontend
-    extraArguments: []
+    # nameOverride: ""
+    # -- Worker specific environment variables.
+    # extraArguments: []
+    # -- Worker specific environment variables.
+    # environment: {}
     internalName: worker_a
     nameSuffix: worker-a
-    replicaCount: 1
+    replicaCount: 2
     resources:
       limits:
-        cpu: 1800m
-        memory: 1800Mi
+        cpu: 3000m
+        memory: 3000Mi
       requests:
-        cpu: 400m
+        cpu: 1000m
         memory: 1000Mi
     securityContext: {}
       # capabilities:
@@ -172,21 +174,21 @@ workers:
   worker-b:
     autoscaling:
       enabled: false
-      minReplicas: 1
-      maxReplicas: 100
-      targetCPUUtilizationPercentage: 80
+      # minReplicas: 1
+      # maxReplicas: 100
+      # targetCPUUtilizationPercentage: 80
       # targetMemoryUtilizationPercentage: 80
-    # nameOverride: frontend
+    # nameOverride: ""
     extraArguments: []
     internalName: worker_b
     nameSuffix: worker-b
     replicaCount: 1
     resources:
       limits:
-        cpu: 1800m
-        memory: 1800Mi
+        cpu: 3000m
+        memory: 3000Mi
       requests:
-        cpu: 500m
+        cpu: 1000m
         memory: 1000Mi
     securityContext: {}
       # capabilities:
@@ -199,21 +201,21 @@ workers:
   worker-c:
     autoscaling:
       enabled: false
-      minReplicas: 1
-      maxReplicas: 100
-      targetCPUUtilizationPercentage: 80
+      # minReplicas: 1
+      # maxReplicas: 100
+      # targetCPUUtilizationPercentage: 80
       # targetMemoryUtilizationPercentage: 80
-    # nameOverride: frontend
+    # nameOverride: ""
     extraArguments: []
     internalName: worker_c
     nameSuffix: worker-c
     replicaCount: 1
     resources:
       limits:
-        cpu: 1800m
-        memory: 1800Mi
+        cpu: 3000m
+        memory: 3000Mi
       requests:
-        cpu: 700m
+        cpu: 1000m
         memory: 1000Mi
     securityContext: {}
       # capabilities:
@@ -226,22 +228,22 @@ workers:
   worker-d:
     autoscaling:
       enabled: false
-      minReplicas: 1
-      maxReplicas: 100
-      targetCPUUtilizationPercentage: 80
+      # minReplicas: 1
+      # maxReplicas: 100
+      # targetCPUUtilizationPercentage: 80
       # targetMemoryUtilizationPercentage: 80
-    # nameOverride: frontend
+    # nameOverride: ""
     extraArguments: []
     internalName: worker_d
     nameSuffix: worker-d
     replicaCount: 1
     resources:
       limits:
-        cpu: 1800m
-        memory: 1800Mi
+        cpu: 4000m
+        memory: 4000Mi
       requests:
-        cpu: 700m
-        memory: 768Mi
+        cpu: 1000m
+        memory: 1000Mi
     securityContext: {}
       # capabilities:
       #   drop:
@@ -250,32 +252,25 @@ workers:
       # runAsNonRoot: true
       # runAsUser: 1000
       # fsGroup: 999
-
-
-extraContainers:
-  worker-importer:
-    args:
-      - run_worker
+  worker-e:
     autoscaling:
       enabled: false
-      minReplicas: 1
-      maxReplicas: 100
-      targetCPUUtilizationPercentage: 80
+      # minReplicas: 1
+      # maxReplicas: 100
+      # targetCPUUtilizationPercentage: 80
       # targetMemoryUtilizationPercentage: 80
-    # nameOverride: frontend
-    enabled: false
-    environment:
-      - name: MAYAN_QUEUE_LIST
-        value: "queue_name"
-    nameSuffix: worker-importer
+    # nameOverride: ""
+    extraArguments: []
+    internalName: worker_e
+    nameSuffix: worker-e
     replicaCount: 1
     resources:
-      limits: {}
-      #  cpu: "125m"
-      #  memory: "1.25Gi"
-      # requests:
-      #   cpu: 100m
-      #   memory: 128Mi
+      limits:
+        cpu: 3000m
+        memory: 3000Mi
+      requests:
+        cpu: 1000m
+        memory: 1000Mi
     securityContext: {}
       # capabilities:
       #   drop:
@@ -285,21 +280,17 @@ extraContainers:
       # runAsUser: 1000
       # fsGroup: 999
 
-
-###############
-# Celery beat #
-###############
-
 beat:
+  # -- Affinity for the specific deployments.
+  affinity: {}
   resources:
-    limits: {}
-      #cpu: "125m"
-      #memory: "500Mi"
+    limits:
+      cpu: 1000m
+      memory: 1000Mi
+    requests:
+      cpu: 300m
+      memory: 384Mi
 
-
-##########
-# Health #
-##########
 
 livenessProbe:
   initialDelaySeconds: 5
@@ -308,6 +299,7 @@ livenessProbe:
   successThreshold: 1
   failureThreshold: 3
 
+
 readinessProbe:
   initialDelaySeconds: 5
   periodSeconds: 10
@@ -315,29 +307,10 @@ readinessProbe:
   successThreshold: 1
   failureThreshold: 3
 
+
 startupProbe:
   initialDelaySeconds: 30
   periodSeconds: 10
   timeoutSeconds: 5
   successThreshold: 1
   failureThreshold: 27
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
-
-#######
-# SSL #
-#######
-
-# cert-manager must be installed before enabling letsencrypt
-
-letsencrypt:
-  domain: example.com
-  email: roberto.rosario@mayan-edms.com
-  enabled: false
-  production: false
-  issuerHTTPSolverIngressClass: nginx

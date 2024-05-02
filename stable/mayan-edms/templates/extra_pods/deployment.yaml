@@ -1,0 +1,59 @@
+{{- range $podName, $podData := .Values.extraPods }}
+{{- if $podData.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mayan.fullname" $ }}-{{ $podName }}
+  labels:
+    {{- include "mayan.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+{{- if not $podData.autoscaling.enabled }}
+  replicas: {{ $podData.replicaCount }}
+{{- end }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "mayan.selectorLabelsWithSuffix" (dict "root" $ "nameSuffix" $podName) | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") $ | sha256sum }}
+      labels:
+        {{- include "mayan.selectorLabelsWithSuffix" (dict "root" $ "nameSuffix" $podName) | nindent 8 }}
+        app.kubernetes.io/component: worker
+    spec:
+      {{- include "deployments.affinity" (dict "root" $ "local" $podData) | indent 6 }}
+      containers:
+        - args:
+          {{- toYaml $podData.args | nindent 12 }}
+          {{- include "containers.env" . | nindent 10 }}
+          envFrom:
+            - secretRef:
+                name: {{ include "mayan.secretsName" $ }}
+            - configMapRef:
+                name: {{ include "mayan.configMapName" $ }}
+          {{- include "containers.image" $ | nindent 10 }}
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          name: {{ include "mayan.fullname" $ }}-{{ $podName }}
+          resources:
+            {{- toYaml $podData.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml $podData.securityContext | nindent 12 }}
+          volumeMounts:
+            - name: mayan-media
+              mountPath: /var/lib/mayan
+            - name: mayan-tmp
+              mountPath: /tmp
+      {{- include "containers.imagePullSecrets" $ | indent 6 }}
+      volumes:
+        - name: mayan-media
+          persistentVolumeClaim:
+            claimName: {{ include "pvcs.persistentVolumeClaimName" $ }}
+        - name: mayan-tmp
+          emptyDir: {}
+---
+{{- end }}
+{{- end }}

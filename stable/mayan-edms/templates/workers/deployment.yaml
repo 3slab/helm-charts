@@ -5,7 +5,7 @@ metadata:
   name: {{ include "mayan.fullname" $ }}-{{ $worker }}
   labels:
     {{- include "mayan.labels" $ | nindent 4 }}
-    app.kubernetes.io/component: {{ $worker }}
+    app.kubernetes.io/component: worker
 spec:
 {{- if not $workerData.autoscaling.enabled }}
   replicas: {{ $workerData.replicaCount }}
@@ -22,24 +22,26 @@ spec:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") $ | sha256sum }}
       labels:
         {{- include "mayan.selectorLabelsWithSuffix" (dict "root" $ "nameSuffix" $worker) | nindent 8 }}
+        app.kubernetes.io/component: worker
     spec:
+      {{- include "deployments.workers.affinity" (dict "root" $ "local" $workerData) | indent 6 }}
       containers:
-        - name: {{ include "mayan.fullname" $ }}-{{ $worker }}
-          image: "{{ $.Values.global.image.repository }}:{{ $.Values.global.image.tag | default $.Chart.AppVersion }}"
-          imagePullPolicy: {{ $.Values.global.image.pullPolicy }}
-          args:
+        - args:
             - run_worker
             - {{ $workerData.internalName }}
             {{- if $workerData.quotedArgument }}
             - {{ $workerData.quotedArgument | quote }}{{ else }}
-            - --prefetch-multiplier=1
             {{- if $workerData.extraArguments }}{{- toYaml $workerData.extraArguments | nindent 12 }}{{- end }}
             {{- end }}
+          {{- include "containers.env" . | indent 10 }}
           envFrom:
             - secretRef:
                 name: {{ include "mayan.secretsName" $ }}
             - configMapRef:
                 name: {{ include "mayan.configMapName" $ }}
+          {{- include "containers.image" $ | nindent 10 }}
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          name: {{ include "mayan.fullname" $ }}-{{ $worker }}
           resources:
             {{- toYaml $workerData.resources | nindent 12 }}
           securityContext:
@@ -51,15 +53,12 @@ spec:
             {{- end }}
             - name: mayan-tmp
               mountPath: /tmp
-      {{- with $.Values.imagePullSecrets }}
-      imagePullSecrets:
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "containers.imagePullSecrets" $ | indent 6 }}
       volumes:
         {{- if $.Values.persistence.core.enabled }}
         - name: mayan-media
           persistentVolumeClaim:
-            claimName: {{ include "mayan.persistentVolumeClaimName" $ }}
+            claimName: {{ include "pvcs.persistentVolumeClaimName" $ }}
         {{- end }}
         - name: mayan-tmp
           emptyDir: {}
@@ -88,19 +87,22 @@ spec:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         {{- include "mayan.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: celery-beat
     spec:
+      {{- include "deployments.affinity" (dict "root" $ "local" $.Values.beat) | indent 6 }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
-          args:
+        - args:
             - run_celery
             - "beat -l INFO --pidfile=/tmp/celerybeat.pid"
+          {{- include "containers.env" . | indent 10 }}
           envFrom:
             - secretRef:
                 name: {{ include "mayan.secretsName" . }}
             - configMapRef:
                 name: {{ include "mayan.configMapName" . }}
+          {{- include "containers.image" . | nindent 10 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Chart.Name }}
           resources:
             {{- toYaml .Values.beat.resources | nindent 12 }}
           securityContext:
@@ -112,15 +114,12 @@ spec:
             {{- end }}
             - name: mayan-tmp
               mountPath: /tmp
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "containers.imagePullSecrets" . | indent 6 }}
       volumes:
         {{- if $.Values.persistence.core.enabled }}
         - name: mayan-media
           persistentVolumeClaim:
-            claimName: {{ include "mayan.persistentVolumeClaimName" . }}
+            claimName: {{ include "pvcs.persistentVolumeClaimName" . }}
         {{- end }}
         - name: mayan-tmp
           emptyDir: {}
