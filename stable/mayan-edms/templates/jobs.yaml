@@ -14,25 +14,27 @@ metadata:
     #"helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
+  backoffLimit: 10
   template:
     metadata:
-      name: "{{ .Release.Name }}"
+      name: "{{ .Release.Name }}-initialsetup"
       labels:
-        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/component: job-initial
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
       containers:
-      - name: {{ .Chart.Name }}-initialsetup
-        image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
-        args:
+      - args:
           - run_initial_setup
         envFrom:
           - secretRef:
               name: {{ include "mayan.secretsName" . }}
           - configMapRef:
               name: {{ include "mayan.configMapName" . }}
+        {{- include "containers.image" . | nindent 8 }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ .Chart.Name }}-initialsetup
         volumeMounts:
         {{- if $.Values.persistence.core.enabled }}
           - name: mayan-media
@@ -40,16 +42,13 @@ spec:
         {{- end }}
           - name: mayan-tmp
             mountPath: /tmp
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "containers.imagePullSecrets" . | indent 6 }}
       restartPolicy: Never
       volumes:
         {{- if $.Values.persistence.core.enabled }}
         - name: mayan-media
           persistentVolumeClaim:
-            claimName: {{ include "mayan.persistentVolumeClaimName" . }}
+            claimName: {{ include "pvcs.persistentVolumeClaimName" . }}
         {{- end }}
         - name: mayan-tmp
           emptyDir: {}
@@ -70,25 +69,27 @@ metadata:
     #"helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
+  backoffLimit: 10
   template:
     metadata:
-      name: "{{ .Release.Name }}"
+      name: "{{ .Release.Name }}-performupgrade"
       labels:
-        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/component: job-upgrade
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
       containers:
-      - name: {{ .Chart.Name }}-performupgrade
-        image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
-        args:
+      - args:
           - run_perform_upgrade
         envFrom:
           - secretRef:
               name: {{ include "mayan.secretsName" . }}
           - configMapRef:
               name: {{ include "mayan.configMapName" . }}
+        {{- include "containers.image" . | nindent 8 }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ .Chart.Name }}-performupgrade
         volumeMounts:
         {{- if $.Values.persistence.core.enabled }}
           - name: mayan-media
@@ -96,16 +97,13 @@ spec:
         {{- end }}
           - name: mayan-tmp
             mountPath: /tmp
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "containers.imagePullSecrets" . | indent 6 }}
       restartPolicy: Never
       volumes:
         {{- if $.Values.persistence.core.enabled }}
         - name: mayan-media
           persistentVolumeClaim:
-            claimName: {{ include "mayan.persistentVolumeClaimName" . }}
+            claimName: {{ include "pvcs.persistentVolumeClaimName" . }}
         {{- end }}
         - name: mayan-tmp
           emptyDir: {}

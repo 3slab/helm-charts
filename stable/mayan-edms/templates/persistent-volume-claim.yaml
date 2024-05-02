@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "mayan.persistentVolumeClaimName" . }}
+  name: {{ include "pvcs.persistentVolumeClaimName" . }}
 {{- with .Values.persistence.core.annotations }}
   annotations:
   {{- range $key, $value := . }}
@@ -15,5 +15,5 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistence.core.size | quote }}
-  {{ include "mayan.storageClass" . }}
+  {{ include "pvcs.storageClass" . }}
 {{- end }}

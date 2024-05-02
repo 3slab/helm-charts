@@ -14,4 +14,3 @@ spec:
     {{- include "mayan.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: frontend
   type: {{ .Values.frontend.service.type | default "ClusterIP" }}
-
