@@ -192,6 +192,9 @@ job:
 #    enabled: false
 #    schedule: "0 0 * * *"
 #    ttlSecondsAfterFinished: 172800 #48 hours
+#    failedJobsHistoryLimit: 3
+#    successfulJobsHistoryLimit: 3
+#    concurrencyPolicy: Allow
 #    activeDeadlineSeconds: 60
 #    restartPolicy: Never
 #    command: []
@@ -201,6 +204,9 @@ job:
 #    enabled: false
 #    schedule: "0 0 * * *"
 #    ttlSecondsAfterFinished: 172800 #48 hours
+#    failedJobsHistoryLimit: 3
+#    successfulJobsHistoryLimit: 3
+#    concurrencyPolicy: Allow
 #    activeDeadlineSeconds: 60
 #    restartPolicy: Never
 #    command: []
