@@ -2,3 +2,7 @@
 	path = elastic-stable
 	url = https://github.com/Suezenv/elastic-helm-charts.git
 	branch = 6.8.22
+[submodule "simcube-helm-charts"]
+	path = simcube-helm-charts
+	url = https://github.com/3slab/simcube-helm-charts.git
+	branch = master
