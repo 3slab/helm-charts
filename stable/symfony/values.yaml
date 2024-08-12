@@ -23,6 +23,9 @@ service:
   pathType: ImplementationSpecific
 
 ingress:
+  # Used for new version of cluster. Do not use annotation kubernetes.io/ingress.class
+  # ingressClassName: "nginx"
+
   enabled: false
   # Used to create an Ingress record.
   hosts:

@@ -50,3 +50,16 @@ Return custom name for job or release-job
 {{- end -}}
 {{- end -}}
 
+
+{{/*
+Returns true if the ingressClassname field is supported
+Usage:
+include "common.ingress.supportsIngressClassname" .
+*/}}
+{{- define "common.ingress.supportsIngressClassname" -}}
+{{- if semverCompare "<1.18-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- print "false" -}}
+{{- else -}}
+{{- print "true" -}}
+{{- end -}}
+{{- end -}}
