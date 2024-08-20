@@ -67,21 +67,21 @@ spec:
             {{- end }}
 
             {{- range $env := $worker.env }}
-              - name: {{ $env.name }}
-                {{- if $env.typeSecret -}}
-                valueFrom:
+            - name: {{ $env.name }}
+                {{- if $env.typeSecret }}
+              valueFrom:
                   secretKeyRef:
                     name: {{ $env.secretKeyRef.name }}
                     key: {{ $env.secretKeyRef.key }}
             {{- else }}
-                value: {{ $env.value | quote }}
+              value: {{ $env.value | quote }}
             {{- end }}
             {{- end }}
 
             {{- if $.Values.extraEnv }}
             {{- range $env := $.Values.extraEnv }}
             - name: {{ $env.name }}
-             {{- if $env.typeSecret -}}
+             {{- if $env.typeSecret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
