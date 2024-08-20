@@ -10,6 +10,12 @@ image:
   # pullSecrets:
   #   - example-secret
 
+# override with own symfony app source path
+# nameOverride: "symfony"
+
+# used to add suffix to relase name (<realaseName>-<containerNameSuffix>-<nameOverride>)
+containerNameSuffix: ""
+
 strategy:
     type: 'Recreate'
 
@@ -83,9 +89,9 @@ nginx:
   errorLogPath: /var/log/nginx/error.log
   locationParams: []
 
-# env:
+env:
 #   # env variables passed to the container and webserver
-#   container:
+   container: []
 #     - name: APP_ENV
 #       value: prod
 #     - name: APP_SECRET
@@ -97,7 +103,7 @@ nginx:
 #           name: percona-percona
 #           key: mysql-root-password
 #   # env variables passed to each initContainer
-#   initContainer:
+   initContainer: []
 #     - name: API_NAME
 #       value: users-api
 #   # add secret in env var
@@ -107,10 +113,9 @@ nginx:
 #           name: percona-percona
 #           key: mysql-root-password
 
-# Env Variables has to be set in `env.initContainer`
-# For each initContainers, the variable SERVICE_NAME is also available
-# ...with the value equal to {{ template "fullname" . }}
-# initContainers:
+# Env Variables has to be set in `env.initContainer` for each initContainers
+
+initContainers: {}
 #   - name: kong-subscriber
 #     image: appropriate/curl
 #     imagePullPolicy: Always
@@ -121,7 +126,7 @@ nginx:
 #       - "localhost/whatever"
 
 # Secrets are volume only
-# secrets:
+secrets: []
 #   -
 #     folder: /path/tp/folder
 #     name: super-secret-name
@@ -190,7 +195,7 @@ job:
 
 # Define multiple cronjobs
 #
-#cronjobs:
+cronjobs: {}
 #  - name: cronjob
 #    enabled: false
 #    schedule: "0 0 * * *"
@@ -215,10 +220,10 @@ job:
 #    command: []
 #    args: []
 #    annotations: {}
-cronjobs: {}
+#    labels: {}
 
 # Add one or multiple workers
-#workers:
+workers: {}
 #  - name: worker-1
 #    enabled: false
 #    replicaCount: 1
@@ -235,6 +240,7 @@ cronjobs: {}
 #        persistentVolumeClaim:
 #          claimName: existing-claim
 #    annotations: {}
+#    labels: {}
 #  - name: worker-2
 #    enabled: false
 #    replicaCount: 1
@@ -251,4 +257,3 @@ cronjobs: {}
 #        persistentVolumeClaim:
 #          claimName: existing-claim
 #    annotations: {}
-workers: {}

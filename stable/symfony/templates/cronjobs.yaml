@@ -10,8 +10,14 @@ metadata:
     app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
     app.kubernetes.io/instance: {{ $.Release.Name | quote }}
     helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+    symfony.io/app: {{ template "fullname" . }}
+    {{- if $cronjob.labels }}
+{{ $cronjob.labels | toYaml | indent 4 }}
+    {{- end }}
+  {{- if $cronjob.annotations }}
   annotations:
 {{ $cronjob.annotations | toYaml | indent 4 }}
+  {{- end }}
 spec:
   schedule: "{{ $cronjob.schedule }}"
   successfulJobsHistoryLimit: {{ $cronjob.successfulJobsHistoryLimit }}
@@ -23,6 +29,10 @@ spec:
         app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
         app.kubernetes.io/instance: {{ $.Release.Name | quote }}
         helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+        symfony.io/app: {{ template "fullname" . }}
+        {{- if $cronjob.labels }}
+{{ $cronjob.labels | toYaml | indent 4 }}
+        {{- end }}
     spec:
       ttlSecondsAfterFinished: {{ $cronjob.ttlSecondsAfterFinished }}
       template:
@@ -42,28 +52,42 @@ spec:
               resources:
 {{ toYaml . | indent 16 }}
               {{- end }}
-              {{ if $.Values.env }}
+              {{- if $.Values.env }}
               env:
                 {{- range $env := $.Values.env.container }}
                 - name: {{ $env.name }}
-                 {{ if $env.typeSecret }}
+                 {{- if $env.typeSecret -}}
                   valueFrom:
                     secretKeyRef:
                       name: {{ $env.secretKeyRef.name }}
                       key: {{ $env.secretKeyRef.key }}
-                {{ else }}
+                {{- else }}
                   value: {{ $env.value | quote }}
                 {{- end }}
                 {{- end }}
-                {{- if $.Values.extraEnv }}
-                {{- range $env := $.Values.extraEnv }}
+
+                {{- range $env := $cronjob.env }}
                 - name: {{ $env.name }}
-                 {{ if $env.typeSecret }}
+                 {{- if $env.typeSecret -}}
                   valueFrom:
                     secretKeyRef:
                       name: {{ $env.secretKeyRef.name }}
                       key: {{ $env.secretKeyRef.key }}
-                {{ else }}
+                {{- else }}
+                  value: {{ $env.value | quote }}
+                {{- end }}
+                {{- end }}
+
+
+                {{- if $.Values.extraEnv }}
+                {{- range $env := $.Values.extraEnv }}
+                - name: {{ $env.name }}
+                 {{- if $env.typeSecret }}
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $env.secretKeyRef.name }}
+                      key: {{ $env.secretKeyRef.key }}
+                {{- else }}
                   value: {{ $env.value | quote }}
                 {{- end }}
                 {{- end }}

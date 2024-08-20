@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-  annotations: 
+  annotations:
 {{ .Values.job.annotations | toYaml | indent 4 }}
 spec:
   completions: 1
@@ -36,28 +36,28 @@ spec:
 {{ .Values.job.cmd | toYaml | indent 12 }}
           args:
 {{ .Values.job.args | toYaml | indent 12 }}
-          {{ if .Values.env }}
+          {{- if .Values.env }}
           env:
             {{- range $env := .Values.env.container }}
             - name: {{ $env.name }}
-             {{ if $env.typeSecret }}
+             {{- if $env.typeSecret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-            {{ else }}
+            {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
             {{- end }}
             {{- if .Values.extraEnv }}
             {{- range $env := .Values.extraEnv }}
             - name: {{ $env.name }}
-             {{ if $env.typeSecret }}
+             {{- if $env.typeSecret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-            {{ else }}
+            {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
             {{- end }}

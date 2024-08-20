@@ -7,6 +7,7 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    symfony.io/type: app
 spec:
   selector:
     matchLabels:
@@ -22,6 +23,7 @@ spec:
       labels:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
+        symfony.io/type: app
     spec:
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -35,21 +37,21 @@ spec:
       {{- range $container := .Values.initContainers }}
         -
 {{ toYaml $container | indent 10 }}
-          {{ if $.Values.env.initContainer }}
+          {{- if $.Values.env.initContainer }}
           env:
-            {{ range $env := $.Values.env.initContainer }}
+            {{- range $env := $.Values.env.initContainer }}
             - name: {{ $env.name }}
-            {{ if $env.typeSecret }}
+            {{- if $env.typeSecret -}}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-            {{ else }}
+            {{- else }}
               value: {{ $env.value | quote }}
-            {{ end }}
-            {{ end }}
-          {{ end }}
-      {{ end }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+      {{- end }}
       {{- end }}
 
       containers:
@@ -77,7 +79,7 @@ spec:
 {{- end }}
             - mountPath: {{ .Values.nginx.sourcesPath }}/var
               name: var-volume
-            {{ if .Values.nginx.enabled }}
+            {{- if .Values.nginx.enabled }}
             - mountPath: /etc/nginx/sites-enabled
               name: config-volume
             {{- end }}
@@ -89,28 +91,28 @@ spec:
 
             {{- end }}
             {{- end }}
-          {{ if .Values.env }}
+          {{- if .Values.env }}
           env:
             {{- range $env := .Values.env.container }}
             - name: {{ $env.name }}
-             {{ if $env.typeSecret }}
+             {{- if $env.typeSecret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-            {{ else }}
+            {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
             {{- end }}
             {{- if .Values.extraEnv }}
             {{- range $env := .Values.extraEnv }}
             - name: {{ $env.name }}
-             {{ if $env.typeSecret }}
+             {{- if $env.typeSecret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-            {{ else }}
+            {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
             {{- end }}
@@ -138,7 +140,7 @@ spec:
 {{- end }}
         - name: var-volume
           emptyDir: {}
-        {{ if .Values.nginx.enabled }}
+        {{- if .Values.nginx.enabled }}
         - name: config-volume
           configMap:
             name: {{ template "fullname" . }}-nginx
@@ -160,4 +162,3 @@ spec:
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
-
