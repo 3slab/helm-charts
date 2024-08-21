@@ -115,13 +115,29 @@ spec:
           args:
 {{ toYaml . | indent 16 }}
           {{- end }}
-          {{- with $worker.volumeMounts }}
+          {{- $rootVolumeMounts := and $.Values.volumeMounts $worker.mountRootVolumes }}
+          {{- if or $worker.volumeMounts $rootVolumeMounts  }}
           volumeMounts:
+            {{- with $worker.volumeMounts }}
 {{ toYaml . | indent 16 }}
-          {{- end }}
-      {{- with $worker.volumes }}
-      volumes:
+            {{- end }}
+            {{- if $worker.mountRootVolumes }}
+                {{- with $.Values.volumeMounts }}
 {{ toYaml . | indent 12 }}
+                {{- end }}
+            {{- end }}
+          {{- end }}
+      {{- $rootVolumes := and $.Values.volumes $worker.mountRootVolumes }}
+      {{- if or $worker.volumes $rootVolumes }}
+      volumes:
+        {{- with $worker.volumes }}
+{{ toYaml . | indent 12 }}
+        {{- end }}
+        {{- if $worker.mountRootVolumes }}
+          {{- with $.Values.volumes }}
+{{ toYaml . | indent 12 }}
+          {{- end }}
+        {{- end }}
       {{- end }}
 ...
 {{- end }}

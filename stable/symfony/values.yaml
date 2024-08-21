@@ -90,7 +90,7 @@ nginx:
   locationParams: []
 
 env:
-#   # env variables passed to the container and webserver
+# env variables passed to the container and webserver
    container: []
 #     - name: APP_ENV
 #       value: prod
@@ -199,6 +199,7 @@ cronjobs: {}
 #  - name: cronjob
 #    enabled: false
 #    schedule: "0 0 * * *"
+#    timeZone: "Europe/Paris"
 #    ttlSecondsAfterFinished: 172800 #48 hours
 #    failedJobsHistoryLimit: 3
 #    successfulJobsHistoryLimit: 3
@@ -208,6 +209,15 @@ cronjobs: {}
 #    command: []
 #    args: []
 #    annotations: {}
+#    mountRootVolumes: false # Mount root volumes defined above to the worker
+#    volumeMounts:
+#      - mountPath: /data
+#        name: data-vol
+#    volumes:
+#      - name: data-vol
+#        persistentVolumeClaim:
+#          claimName: existing-claim
+
 #  - name: cronjob2
 #    enabled: false
 #    schedule: "0 0 * * *"
@@ -221,10 +231,19 @@ cronjobs: {}
 #    args: []
 #    annotations: {}
 #    labels: {}
+#    mountRootVolumes: false # Mount root volumes defined above to the worker
+#    volumeMounts:
+#      - mountPath: /data
+#        name: data-vol
+#    volumes:
+#      - name: data-vol
+#        persistentVolumeClaim:
+#          claimName: existing-claim
 
 # Add one or multiple workers
 workers: {}
-#  - name: worker-1
+#  worker-1:
+#    name: worker-1
 #    enabled: false
 #    replicaCount: 1
 #    command:
@@ -232,6 +251,7 @@ workers: {}
 #      - -c
 #    args:
 #      - php -r "sleep(3600);"
+#    mountRootVolumes: false # Mount root volumes defined above to the worker
 #    volumeMounts:
 #      - mountPath: /data
 #        name: data-vol
@@ -241,7 +261,8 @@ workers: {}
 #          claimName: existing-claim
 #    annotations: {}
 #    labels: {}
-#  - name: worker-2
+#  worker-2:
+#    name: worker-2
 #    enabled: false
 #    replicaCount: 1
 #    command:
@@ -249,6 +270,7 @@ workers: {}
 #      - -c
 #    args:
 #      - php -r "sleep(3600);"
+#    mountRootVolumes: false # Mount root volumes defined above to the worker
 #    volumeMounts:
 #      - mountPath: /data
 #        name: data-vol

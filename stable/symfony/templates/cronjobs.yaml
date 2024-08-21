@@ -19,6 +19,9 @@ metadata:
   {{- end }}
 spec:
   schedule: "{{ $cronjob.schedule }}"
+  {{- if $cronjob.timeZone }}
+  timeZone: "{{ $cronjob.timeZone }}"
+  {{- end }}
   successfulJobsHistoryLimit: {{ $cronjob.successfulJobsHistoryLimit }}
   failedJobsHistoryLimit: {{ $cronjob.failedJobsHistoryLimit }}
   concurrencyPolicy: {{ $cronjob.concurrencyPolicy }}
@@ -112,13 +115,29 @@ spec:
               args:
 {{ toYaml . | indent 16 }}
               {{- end }}
-              {{- with $cronjob.volumeMounts }}
+              {{- $rootVolumeMounts := and $.Values.volumeMounts $cronjob.mountRootVolumes }}
+              {{- if or $cronjob.volumeMounts $rootVolumeMounts  }}
               volumeMounts:
+                {{- with $cronjob.volumeMounts }}
 {{ toYaml . | indent 16 }}
+                {{- end }}
+                {{- if $cronjob.mountRootVolumes }}
+                    {{- with $.Values.volumeMounts }}
+{{ toYaml . | indent 16 }}
+                    {{- end }}
+                {{- end }}
               {{- end }}
-          {{- with $cronjob.volumes }}
+          {{- $rootVolumes := and $.Values.volumes $cronjob.mountRootVolumes }}
+          {{- if or $cronjob.volumes $rootVolumes }}
           volumes:
+            {{- with $cronjob.volumes }}
 {{ toYaml . | indent 12 }}
+            {{- end }}
+            {{- if $cronjob.mountRootVolumes }}
+              {{- with $.Values.volumes }}
+{{ toYaml . | indent 12 }}
+              {{- end }}
+            {{- end }}
           {{- end }}
 ...
 {{- end }}
