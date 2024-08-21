@@ -59,6 +59,11 @@ spec:
                     secretKeyRef:
                       name: {{ $env.secretKeyRef.name }}
                       key: {{ $env.secretKeyRef.key }}
+                {{- else if $env.valueFrom }}
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $env.valueFrom.secretKeyRef.name }}
+                      key: {{ $env.valueFrom.secretKeyRef.key }}
                 {{- else }}
                   value: {{ $env.value | quote }}
                 {{- end }}
@@ -71,6 +76,11 @@ spec:
                     secretKeyRef:
                       name: {{ $env.secretKeyRef.name }}
                       key: {{ $env.secretKeyRef.key }}
+                {{- else if $env.valueFrom }}
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $env.valueFrom.secretKeyRef.name }}
+                      key: {{ $env.valueFrom.secretKeyRef.key }}
                 {{- else }}
                   value: {{ $env.value | quote }}
                 {{- end }}
@@ -83,6 +93,11 @@ spec:
                     secretKeyRef:
                       name: {{ $env.secretKeyRef.name }}
                       key: {{ $env.secretKeyRef.key }}
+                {{- else if $env.valueFrom }}
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $env.valueFrom.secretKeyRef.name }}
+                      key: {{ $env.valueFrom.secretKeyRef.key }}
                 {{- else }}
                   value: {{ $env.value | quote }}
                 {{- end }}
@@ -97,11 +112,11 @@ spec:
               args:
 {{ toYaml . | indent 16 }}
               {{- end }}
-              {{- with $.Values.volumeMounts }}
+              {{- with $cronjob.volumeMounts }}
               volumeMounts:
 {{ toYaml . | indent 16 }}
               {{- end }}
-          {{- with $.Values.volumes }}
+          {{- with $cronjob.volumes }}
           volumes:
 {{ toYaml . | indent 12 }}
           {{- end }}

@@ -41,11 +41,16 @@ spec:
           env:
             {{- range $env := $.Values.env.initContainer }}
             - name: {{ $env.name }}
-            {{- if $env.typeSecret -}}
+            {{- if $env.typeSecret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
+            {{- else if $env.valueFrom }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.valueFrom.secretKeyRef.name }}
+                  key: {{ $env.valueFrom.secretKeyRef.key }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
@@ -100,6 +105,11 @@ spec:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
+            {{- else if $env.valueFrom }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.valueFrom.secretKeyRef.name }}
+                  key: {{ $env.valueFrom.secretKeyRef.key }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
@@ -112,6 +122,11 @@ spec:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
+            {{- else if $env.valueFrom }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.valueFrom.secretKeyRef.name }}
+                  key: {{ $env.valueFrom.secretKeyRef.key }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}

@@ -56,26 +56,36 @@ spec:
           env:
             {{- range $env := $.Values.env.container }}
             - name: {{ $env.name }}
-             {{- if $env.typeSecret }}
+              {{- if $env.typeSecret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-            {{- else }}
+              {{- else if $env.valueFrom }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.valueFrom.secretKeyRef.name }}
+                  key: {{ $env.valueFrom.secretKeyRef.key }}
+              {{- else }}
               value: {{ $env.value | quote }}
-            {{- end }}
+              {{- end }}
             {{- end }}
 
             {{- range $env := $worker.env }}
             - name: {{ $env.name }}
-                {{- if $env.typeSecret }}
+              {{- if $env.typeSecret }}
               valueFrom:
                   secretKeyRef:
                     name: {{ $env.secretKeyRef.name }}
                     key: {{ $env.secretKeyRef.key }}
-            {{- else }}
+              {{- else if $env.valueFrom }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.valueFrom.secretKeyRef.name }}
+                  key: {{ $env.valueFrom.secretKeyRef.key }}
+              {{- else }}
               value: {{ $env.value | quote }}
-            {{- end }}
+              {{- end }}
             {{- end }}
 
             {{- if $.Values.extraEnv }}
@@ -86,6 +96,11 @@ spec:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
+            {{- else if $env.valueFrom }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $env.valueFrom.secretKeyRef.name }}
+                  key: {{ $env.valueFrom.secretKeyRef.key }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
