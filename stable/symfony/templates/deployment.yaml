@@ -1,3 +1,4 @@
+{{- $rootValues := . -}}
 apiVersion: {{ template "deployment.apiVersion" . }}
 kind: Deployment
 metadata:
@@ -88,13 +89,18 @@ spec:
             - mountPath: /etc/nginx/sites-enabled
               name: config-volume
             {{- end }}
+            # --- Secrets ---
             {{- if .Values.secrets }}
             {{- range $secret := .Values.secrets }}
-
             - mountPath: {{ $secret.folder }}
               name: {{ $secret.name }}-volume
-
             {{- end }}
+            {{- end }}
+            # --- configmaps ---
+            {{- range $key, $value := .Values.configmaps }}
+            - name: {{ template "fullname" $rootValues }}-{{ $key | replace "." "-" }}
+              mountPath: {{ $value.mountPath }}
+              subPath: {{ $key }}
             {{- end }}
           {{- if .Values.env }}
           env:
@@ -160,6 +166,7 @@ spec:
           configMap:
             name: {{ template "fullname" . }}-nginx
         {{- end }}
+        # --- Secrets ---
         {{- range $secret := .Values.secrets }}
         - name: {{ $secret.name }}-volume
           secret:
@@ -171,6 +178,12 @@ spec:
                 path: {{ $secretKey.path }}
               {{- end }}
             {{- end }}
+        {{- end }}
+        # --- configmaps ---
+        {{- range $key, $value := .Values.configmaps }}
+        - name: {{ template "fullname" $rootValues }}-{{ $key | replace "." "-" }}
+          configMap:
+            name: {{ template "fullname" $rootValues }}-{{ $key | replace "." "-" }}
         {{- end }}
 
     {{- if .Values.nodeSelector }}

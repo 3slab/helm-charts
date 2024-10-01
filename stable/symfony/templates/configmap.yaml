@@ -1,0 +1,17 @@
+{{- $rootValues := . -}}
+{{- range $key, $value := .Values.configmaps }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" $rootValues }}-{{ $key | replace "." "-" }}
+  labels:
+    app: {{ template "name" $rootValues }}
+    chart: {{ $rootValues.Chart.Name }}-{{ $rootValues.Chart.Version | replace "+" "_" }}
+    release: {{ $rootValues.Release.Name }}
+    heritage: {{ $rootValues.Release.Service }}
+    symfony.io/type: app
+data:
+  {{ $key }}: |
+    {{ $value.content | indent 4 }}
+---
+{{- end }}
