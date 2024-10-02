@@ -150,6 +150,13 @@ volumes: []
 #    configMap:
 #      name: sftp-data-config
 
+
+
+configmaps: {}
+#   my-file:
+#     content: |-
+#     mountPath: /data/my-file
+
 livenessProbe: {}
 #  httpGet:
 #    path: /liveness

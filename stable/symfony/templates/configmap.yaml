@@ -11,7 +11,7 @@ metadata:
     heritage: {{ $rootValues.Release.Service }}
     symfony.io/type: app
 data:
-  {{ $key }}: |
-    {{ $value.content | indent 4 }}
+  {{ $key }}: |-
+{{ $value.content | indent 4 }}
 ---
 {{- end }}
