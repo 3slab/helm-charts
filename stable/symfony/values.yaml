@@ -249,3 +249,10 @@ cronjobs: {}
 #          claimName: existing-claim
 #    annotations: {}
 workers: {}
+
+metadata:
+  labels: []
+
+template:
+  metadata:
+    labels: []

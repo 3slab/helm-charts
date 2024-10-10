@@ -7,6 +7,9 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+   {{- if .Values.metadata.labels }}
+{{ toYaml .Values.metadata.labels | indent 4 }}
+   {{- end}}
 spec:
   selector:
     matchLabels:
@@ -21,7 +24,10 @@ spec:
     metadata:
       labels:
         app: {{ template "name" . }}
-        release: {{ .Release.Name }}
+        release: {{ .Release.Name }}  
+      {{- if .Values.template.metadata.labels }}
+{{ toYaml .Values.template.metadata.labels | indent 4 }}
+      {{- end}}
     spec:
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:

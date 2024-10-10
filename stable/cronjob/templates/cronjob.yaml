@@ -5,6 +5,9 @@ metadata:
   labels:
     app: {{ template "cronjob.name" . }}
 {{ include "cronjob.labels" . | indent 4 }}
+   {{- if .Values.metadata.labels }}
+{{ toYaml .Values.metadata.labels | indent 4 }}
+   {{- end}}
 spec:
   schedule: "{{ .Values.schedule }}"
   successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
@@ -18,6 +21,9 @@ spec:
         cronjob-name: {{ template "cronjob.fullname" . }}
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
+      {{- if .Values.jobTemplate.metadata.labels }}
+{{ toYaml .Values.jobTemplate.metadata.labels | indent 4 }}
+      {{- end}}
     spec:
       backoffLimit: {{ .Values.backoffLimit }}
       template:
