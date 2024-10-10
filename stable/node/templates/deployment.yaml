@@ -6,7 +6,10 @@ metadata:
     app: {{ template "node.name" . }}
     chart: {{ template "node.chart" . }}
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    heritage: "{{ .Release.Service }}"  
+   {{- if .Values.metadata.labels }}
+{{ toYaml .Values.metadata.labels | indent 4 }}
+   {{- end}}
 spec:
   selector:
     matchLabels:
@@ -19,7 +22,10 @@ spec:
         app: {{ template "node.name" . }}
         chart: {{ template "node.chart" . }}
         release: {{ .Release.Name | quote }}
-        heritage: "{{ .Release.Service }}"
+        heritage: "{{ .Release.Service }}"     
+     {{- if .Values.template.metadata.labels }}
+{{ toYaml .Values.template.metadata.labels | indent 4 }}
+      {{- end}}
     spec:
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
