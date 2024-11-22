@@ -16,6 +16,12 @@ image:
 # used to add suffix to relase name (<realaseName>-<containerNameSuffix>-<nameOverride>)
 containerNameSuffix: ""
 
+# used to ad labels to the deployment
+labels: {}
+
+# used to add annotations to the deployment
+annotations: {}
+
 strategy:
     type: 'Recreate'
 
@@ -203,7 +209,8 @@ job:
 # Define multiple cronjobs
 #
 cronjobs: {}
-#  - name: cronjob
+#  my-cronjob: # use named key to able to override values in another file
+#    name: my-cronjob # use named key to able to override values in another file
 #    enabled: false
 #    schedule: "0 0 * * *"
 #    timeZone: "Europe/Paris"
@@ -215,7 +222,10 @@ cronjobs: {}
 #    restartPolicy: Never
 #    command: []
 #    args: []
+#    labels: {}
+#    inheritLabels: true # to inherit labels from deployment
 #    annotations: {}
+#    inheritAnnotations: true # to inherit annotations from deployment
 #    mountRootVolumes: false # Mount root volumes defined above to the worker
 #    volumeMounts:
 #      - mountPath: /data
@@ -225,7 +235,8 @@ cronjobs: {}
 #        persistentVolumeClaim:
 #          claimName: existing-claim
 
-#  - name: cronjob2
+#  my-cronjob2: # use named key to able to override values in another file
+#  - name: my-cronjob2
 #    enabled: false
 #    schedule: "0 0 * * *"
 #    ttlSecondsAfterFinished: 172800 #48 hours
@@ -236,8 +247,10 @@ cronjobs: {}
 #    restartPolicy: Never
 #    command: []
 #    args: []
-#    annotations: {}
 #    labels: {}
+#    inheritLabels: false # to inherit labels from deployment
+#    annotations: {}
+#    inheritAnnotations: false # to inherit annotations from deployment
 #    mountRootVolumes: false # Mount root volumes defined above to the worker
 #    volumeMounts:
 #      - mountPath: /data
@@ -249,7 +262,7 @@ cronjobs: {}
 
 # Add one or multiple workers
 workers: {}
-#  worker-1:
+#  worker-1: # use named key to able to override values in another file
 #    name: worker-1
 #    enabled: false
 #    replicaCount: 1
@@ -266,9 +279,13 @@ workers: {}
 #      - name: data-vol
 #        persistentVolumeClaim:
 #          claimName: existing-claim
-#    annotations: {}
 #    labels: {}
-#  worker-2:
+#    inheritLabels: false # to inherit labels from deployment
+#    annotations: {}
+#    inheritAnnotations: false # to inherit annotations from deployment
+#    mountRootVolumes: false # Mount root volumes defined above to the worker
+
+#  worker-2: # use named key to able to override values in another file
 #    name: worker-2
 #    enabled: false
 #    replicaCount: 1
@@ -285,4 +302,8 @@ workers: {}
 #      - name: data-vol
 #        persistentVolumeClaim:
 #          claimName: existing-claim
+#    labels: {}
+#    inheritLabels: false # to inherit labels from deployment
 #    annotations: {}
+#    inheritAnnotations: false # to inherit annotations from deployment
+#    mountRootVolumes: false # Mount root volumes defined above to the worker

@@ -38,7 +38,7 @@ spec:
 {{ .Values.job.args | toYaml | indent 12 }}
           {{- if .Values.env }}
           env:
-            {{- range $env := .Values.env.container }}
+            {{- range $key, $env := .Values.env.container }}
             - name: {{ $env.name }}
              {{- if $env.typeSecret }}
               valueFrom:

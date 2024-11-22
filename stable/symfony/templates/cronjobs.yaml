@@ -13,9 +13,28 @@ metadata:
     {{- if $cronjob.labels }}
 {{ $cronjob.labels | toYaml | indent 4 }}
     {{- end }}
-  {{- if $cronjob.annotations }}
+
+    {{- if $cronjob.inheritLabels }}
+    # inerting labels from deployment
+    {{- if .Values.labels}}
+{{ toYaml .Values.labels| indent 4 }}
+    {{- end }}
+    {{- end }}
+
+  {{- $activateAnnotations := or $cronjob.annotations $cronjob.inheritAnnotations }}
+  {{- if $activateAnnotations }}
   annotations:
-{{ $cronjob.annotations | toYaml | indent 4 }}
+  {{- if $cronjob.annotations }}
+{{ $cronjob.annotations | toYaml | indent 6 }}
+  {{- end }}
+
+  {{- if $cronjob.inheritAnnotations }}
+  # inerting labels from deployment
+  {{- if .Values.annotations }}
+{{ .Values.annotations | toYaml | indent 6 }}
+  {{- end }}
+  {{- end }}
+
   {{- end }}
 spec:
   schedule: "{{ $cronjob.schedule }}"
@@ -55,7 +74,7 @@ spec:
               {{- end }}
               {{- if $.Values.env }}
               env:
-                {{- range $env := $.Values.env.container }}
+                {{- range $key, $env := $.Values.env.container }}
                 - name: {{ $env.name }}
                  {{- if $env.typeSecret }}
                   valueFrom:

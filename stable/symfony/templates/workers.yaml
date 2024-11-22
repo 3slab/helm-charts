@@ -15,9 +15,27 @@ metadata:
     {{- if $worker.labels }}
 {{ $worker.labels | toYaml | indent 4 }}
     {{- end }}
-  {{- if $worker.annotations }}
+
+    {{- if $worker.inheritLabels }}
+    # inerting labels from deployment
+    {{- if $.Values.labels}}
+{{ toYaml $.Values.labels| indent 4 }}
+    {{- end }}
+    {{- end }}
+  {{- $activateAnnotations := or $worker.annotations $worker.inheritAnnotations }}
+  {{- if $activateAnnotations }}
   annotations:
-{{ $worker.annotations | toYaml | indent 4 }}
+  {{- if $worker.annotations }}
+{{ $worker.annotations | toYaml | indent 6 }}
+  {{- end }}
+
+  {{- if $worker.inheritAnnotations }}
+  # inerting labels from deployment
+  {{- if $.Values.annotations }}
+{{ $.Values.annotations | toYaml | indent 6 }}
+  {{- end }}
+  {{- end }}
+
   {{- end }}
 spec:
   selector:
@@ -54,7 +72,7 @@ spec:
           {{- end }}
           {{- if $.Values.env }}
           env:
-            {{- range $env := $.Values.env.container }}
+            {{- range $key, $env := $.Values.env.container }}
             - name: {{ $env.name }}
               {{- if $env.typeSecret }}
               valueFrom:

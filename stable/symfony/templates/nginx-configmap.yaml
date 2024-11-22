@@ -34,7 +34,7 @@ data:
         include fastcgi_params;
 
         {{- if .Values.env }}
-        {{- range $env := .Values.env.container }}
+        {{- range $key, $env := .Values.env.container }}
         fastcgi_param {{ $env.name }} {{ $env.value | quote }};
         {{- end }}
         {{- end }}
