@@ -29,7 +29,11 @@ spec:
         release: {{ .Release.Name }}
         symfony.io/type: app
       {{- if .Values.template.metadata.labels }}
-{{ toYaml .Values.template.metadata.labels | indent 4 }}
+{{ toYaml .Values.template.metadata.labels | indent 8 }}
+      {{- end}}
+    {{- if .Values.template.metadata.annotations }}
+      annotations:
+{{ toYaml .Values.template.metadata.annotations | indent 8 }}
       {{- end}}
     spec:
       {{- if .Values.image.pullSecrets }}
@@ -53,11 +57,10 @@ spec:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-            {{- else if $env.valueFrom }}
+            {{- else if $env.valueFrom.typeRef }}
               valueFrom:
-                secretKeyRef:
-                  name: {{ $env.valueFrom.secretKeyRef.name }}
-                  key: {{ $env.valueFrom.secretKeyRef.key }}
+                fieldRef:
+                  fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
@@ -116,12 +119,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
-                  key: {{ $env.secretKeyRef.key }}
+                  key: {{ $env.secretKeyRef.key }}            
             {{- else if $env.valueFrom }}
               valueFrom:
-                secretKeyRef:
-                  name: {{ $env.valueFrom.secretKeyRef.name }}
-                  key: {{ $env.valueFrom.secretKeyRef.key }}
+                fieldRef:
+                  fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
@@ -133,12 +135,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
-                  key: {{ $env.secretKeyRef.key }}
-            {{- else if $env.valueFrom }}
+                  key: {{ $env.secretKeyRef.key }}              
+            {{- else if $env.valueFrom.typeRef }}
               valueFrom:
-                secretKeyRef:
-                  name: {{ $env.valueFrom.secretKeyRef.name }}
-                  key: {{ $env.valueFrom.secretKeyRef.key }}
+                fieldRef:
+                  fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}

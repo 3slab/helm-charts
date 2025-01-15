@@ -287,8 +287,8 @@ workers: {}
 #    annotations: {}
 
 metadata:
-  labels: []
+  labels: {}
 
 template:
   metadata:
-    labels: []
+    labels: {}

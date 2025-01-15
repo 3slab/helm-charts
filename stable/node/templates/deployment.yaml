@@ -24,7 +24,11 @@ spec:
         release: {{ .Release.Name | quote }}
         heritage: "{{ .Release.Service }}"     
      {{- if .Values.template.metadata.labels }}
-{{ toYaml .Values.template.metadata.labels | indent 4 }}
+{{ toYaml .Values.template.metadata.labels | indent 8 }}
+      {{- end}}
+    {{- if .Values.template.metadata.annotations }}
+      annotations:
+{{ toYaml .Values.template.metadata.annotations | indent 8 }}
       {{- end}}
     spec:
       {{- if .Values.image.pullSecrets }}
