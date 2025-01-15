@@ -17,7 +17,7 @@ image:
 containerNameSuffix: ""
 
 strategy:
-    type: 'Recreate'
+  type: "Recreate"
 
 service:
   enabled: true
@@ -36,10 +36,12 @@ ingress:
   # Used to create an Ingress record.
   hosts:
     - chart-example.local
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  tls: []
+  tls:
+    []
     # Secrets must be manually created in the namespace.
     # - secretName: chart-example-tls
     #   hosts:
@@ -55,8 +57,8 @@ ingress:
 #      path: /api/signal.geojson
 #      pathType: ImplementationSpecific
 
-
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -79,7 +81,6 @@ args: []
 #args:
 #  - kubectl get pod -n smartcoach-int -l app=symfony,release=users-api-int -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -i kubectl -n smartcoach-int exec {}  bin/console app:subscription:import -- -v
 
-
 nginx:
   enabled: true
   sourcesPath: /var/www/symfony # override with own symfony app source path
@@ -90,20 +91,20 @@ nginx:
   locationParams: []
 
 env:
-# env variables passed to the container and webserver
-   container: []
-#     - name: APP_ENV
-#       value: prod
-#     - name: APP_SECRET
-#       value: changeit1234567890
-#   # add secret in env var
-#     - name: MYSQL_ROOT_PASSWORD
-#       typeSecret: true
-#       secretKeyRef:
-#           name: percona-percona
-#           key: mysql-root-password
-#   # env variables passed to each initContainer
-   initContainer: []
+  # env variables passed to the container and webserver
+  container: []
+  #     - name: APP_ENV
+  #       value: prod
+  #     - name: APP_SECRET
+  #       value: changeit1234567890
+  #   # add secret in env var
+  #     - name: MYSQL_ROOT_PASSWORD
+  #       typeSecret: true
+  #       secretKeyRef:
+  #           name: percona-percona
+  #           key: mysql-root-password
+  #   # env variables passed to each initContainer
+  initContainer: []
 #     - name: API_NAME
 #       value: users-api
 #   # add secret in env var
@@ -150,8 +151,6 @@ volumes: []
 #    configMap:
 #      name: sftp-data-config
 
-
-
 configmaps: {}
 #   my-file:
 #     content: |-
@@ -181,11 +180,11 @@ persistence:
   size: 50Gi
   storageClass: default
   volumes:
-   - name: nothing
-     emptyDir: {}
+    - name: nothing
+      emptyDir: {}
   mounts:
-   - mountPath: /path/to/nothing
-     name: nothing
+    - mountPath: /path/to/nothing
+      name: nothing
 
 configMap:
   dollar:
@@ -286,3 +285,10 @@ workers: {}
 #        persistentVolumeClaim:
 #          claimName: existing-claim
 #    annotations: {}
+
+metadata:
+  labels: {}
+
+template:
+  metadata:
+    labels: {}

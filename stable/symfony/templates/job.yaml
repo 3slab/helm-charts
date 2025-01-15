@@ -7,6 +7,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  {{- if .Values.metadata.labels }}
+{{ toYaml .Values.metadata.labels | indent 4 }}
+   {{- end}}
   annotations:
 {{ .Values.job.annotations | toYaml | indent 4 }}
 spec:
@@ -21,6 +24,9 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    {{- if .Values.template.metadata.labels }}
+{{ toYaml .Values.template.metadata.labels | indent 4 }}
+    {{- end}}
     spec:
       restartPolicy: {{ .Values.job.restartPolicy }}
       {{- if .Values.image.pullSecrets }}
