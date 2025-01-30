@@ -71,7 +71,7 @@ spec:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-            {{- else if $env.valueFrom.typeRef }}
+            {{- else if $env.valueFrom }}
               valueFrom:
                 fieldRef:
                   fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
@@ -150,7 +150,7 @@ spec:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-            {{- else if $env.valueFrom.typeRef }}
+            {{- else if $env.valueFrom }}
               valueFrom:
                 fieldRef:
                   fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
