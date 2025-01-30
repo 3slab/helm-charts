@@ -202,7 +202,8 @@ job:
 # Define multiple cronjobs
 #
 cronjobs: {}
-#  - name: cronjob
+#  cronjob:
+#    name: cronjob
 #    enabled: false
 #    schedule: "0 0 * * *"
 #    timeZone: "Europe/Paris"
@@ -223,8 +224,9 @@ cronjobs: {}
 #      - name: data-vol
 #        persistentVolumeClaim:
 #          claimName: existing-claim
-
-#  - name: cronjob2
+#
+#  cronjob2:
+#    name: cronjob2
 #    enabled: false
 #    schedule: "0 0 * * *"
 #    ttlSecondsAfterFinished: 172800 #48 hours
