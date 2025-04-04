@@ -15,6 +15,8 @@ fullnameOverride: ""
 ## set to `now` to get a one time job, or a cronjob schedule like `0 0 * * *`
 ## to get a cronjob.
 schedule: "0 0 * * *"
+## see https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones
+# timeZone: "Europe/Paris"
 
 # cronjob history
 successfulJobsHistoryLimit: 3

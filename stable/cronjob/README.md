@@ -43,34 +43,37 @@ The command removes all the Kubernetes components associated with the chart and 
 
 The following tables lists the configurable parameters of the Cronjob chart and their default values.
 
-| Parameter                     | Description                                                               | Default                                                    |
-| ----------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `image`                       | `cronjob` image                                                           | `cronjob`                                                  |
-| `image.registry`              | `cronjob` image registry                                                  | `docker.io`                                                |
-| `image.repository`            | `cronjob` image repository                                                | `suezenv/cronjob`                                          |
-| `image.tag`                   | `cronjob` image tag                                                       | `5.2.7`                                                    |
-| `image.pullPolicy`            | Image pull policy                                                         | `IfNotPresent`                                             |
-| `image.pullSecrets`           | container image pull secrets                                              |                                                            |
-| `nameOverride`                | Override the app name                                                     | ``                                                         |
-| `fullnameOverride`            | Override the fullname of the chart                                        | ``                                                         |
-| `schedule`                    | Schedule for the CronJob.                                                 | `0 0 * * *`                                                |
-| `successfulJobsHistoryLimit`  | Specify the number of completed Jobs to keep.                             | `nil`                                                      |
-| `failedJobsHistoryLimit`      | Specify the number of failed Jobs to keep.                                | `nil`                                                      |
-| `backoffLimit`                | Specify the number of retry.                                              | `nil`                                                      |
-| `concurrencyPolicy`           | Specify how to treat concurrent executions of a job.                      | `nil`                                                      |
-| `env`                         | Environment variables that are passed to the container and the webserver  | `[]`                                                       |
-| `command`                     | Command to execute                                                        | `[]`                                                       |
-| `args`                        | Args for the command                                                      | `[]`                                                       |
-| `volumeMounts`                | Volume mounts to configure configmap                                      | `[]`                                                       |
-| `configMap`                   | ConfigMap ressources                                                      | `nil`                                                      |
-| `configMap.enable`            | ConfigMap enable                                                          | `false`                                                    |
-| `configMap.name`              | ConfigMap name                                                            | `self-service-password-config`                             |
-| `configMap.data`              | ConfigMap data                                                            | `self-service-password-config`                             |
-| `volumes`                     | Volumes                                                                   | `[]`                                                       |
-| `resources`                   | CPU/Memory resource requests/limits                                       | ``                                                         |
-| `nodeSelector`                | Node labels for pod assignment                                            | {}                                                         |
-| `affinity`                    | Affinity settings for pod assignment                                      | {}                                                         |
-| `tolerations`                 | Toleration labels for pod assignment                                      | []                                                         |
+| Parameter                     | Description                                                              | Default                        |
+| ----------------------------- | ------------------------------------------------------------------------ | ------------------------------ |
+| `image`                       | `cronjob` image                                                          | `cronjob`                      |
+| `image.registry`              | `cronjob` image registry                                                 | `docker.io`                    |
+| `image.repository`            | `cronjob` image repository                                               | `suezenv/cronjob`              |
+| `image.tag`                   | `cronjob` image tag                                                      | `5.2.7`                        |
+| `image.pullPolicy`            | Image pull policy                                                        | `IfNotPresent`                 |
+| `image.pullSecrets`           | container image pull secrets                                             |                                |
+| `nameOverride`                | Override the app name                                                    | ``                             |
+| `fullnameOverride`            | Override the fullname of the chart                                       | ``                             |
+| `schedule`                    | Schedule for the CronJob.                                                | `0 0 * * *`                    |
+| `timeZone`                    | Specify a time zone for a CronJob.                                       | `Europe/Paris"`                |
+| `successfulJobsHistoryLimit`  | Specify the number of completed Jobs to keep.                            | `nil`                          |
+| `failedJobsHistoryLimit`      | Specify the number of failed Jobs to keep.                               | `nil`                          |
+| `backoffLimit`                | Specify the number of retry.                                             | `nil`                          |
+| `concurrencyPolicy`           | Specify how to treat concurrent executions of a job.                     | `nil`                          |
+| `env`                         | Environment variables that are passed to the container and the webserver | `[]`                           |
+| `command`                     | Command to execute                                                       | `[]`                           |
+| `args`                        | Args for the command                                                     | `[]`                           |
+| `volumeMounts`                | Volume mounts to configure configmap                                     | `[]`                           |
+| `configMap`                   | ConfigMap ressources                                                     | `nil`                          |
+| `configMap.enable`            | ConfigMap enable                                                         | `false`                        |
+| `configMap.name`              | ConfigMap name                                                           | `self-service-password-config` |
+| `configMap.data`              | ConfigMap data                                                           | `self-service-password-config` |
+| `volumes`                     | Volumes                                                                  | `[]`                           |
+| `resources`                   | CPU/Memory resource requests/limits                                      | ``                             |
+| `nodeSelector`                | Node labels for pod assignment                                           | {}                             |
+| `affinity`                    | Affinity settings for pod assignment                                     | {}                             |
+| `tolerations`                 | Toleration labels for pod assignment                                     | []                             |
+| `metadata.labels`             | Metadata labels for pod assignment                                       | []                             |
+| `jobTemplate.metadata.labels` | Metadata labels for jobTemplate assignment                               | []                             |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
