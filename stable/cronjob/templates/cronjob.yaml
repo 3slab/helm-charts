@@ -10,7 +10,7 @@ metadata:
    {{- end}}
 spec:
   schedule: "{{ .Values.schedule }}"
-  {{{- if and (semverCompare">=1.27.0" $.Capabilities.KubeVersion.Version) .Values.timeZone }}
+  {{- if and ( semverCompare ">=1.27.0" $.Capabilities.KubeVersion.Version) .Values.timeZone }}
   timeZone: {{ .Values.timeZone }}
   {{- end }}
   successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
