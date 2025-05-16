@@ -46,9 +46,19 @@ spec:
               resources:
 {{ toYaml . | indent 16 }}
               {{- end }}
-              {{- with .Values.env }}
+              {{- if .Values.env }}
               env:
-{{ toYaml . | indent 16 }}
+              {{- range .Values.env }}
+                - name: {{ .name }}
+              {{- if and .typeSecret .secretKeyRef }}
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .secretKeyRef.name }}
+                      key: {{ .secretKeyRef.key }}
+              {{- else if .value }}
+                  value: "{{ .value }}"
+              {{- end }}
+              {{- end }}
               {{- end }}
               {{- with .Values.command }}
               command:
