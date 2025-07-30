@@ -7,11 +7,13 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    symfony.io/type: job
   {{- if .Values.metadata.labels }}
 {{ toYaml .Values.metadata.labels | indent 4 }}
    {{- end}}
   annotations:
 {{ .Values.job.annotations | toYaml | indent 4 }}
+
 spec:
   completions: 1
   parallelism: 1
@@ -24,6 +26,7 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        symfony.io/type: job
     {{- if .Values.template.metadata.labels }}
 {{ toYaml .Values.template.metadata.labels | indent 4 }}
     {{- end}}
@@ -51,11 +54,18 @@ spec:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
+
             {{- else if $env.valueFrom }}
+              {{- if $env.valueFrom.secretKeyRef }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.valueFrom.secretKeyRef.name }}
                   key: {{ $env.valueFrom.secretKeyRef.key }}
+              {{- else if $env.valueFrom.fieldRef }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
+              {{- end }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
@@ -69,10 +79,16 @@ spec:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
             {{- else if $env.valueFrom }}
+              {{- if $env.valueFrom.secretKeyRef }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.valueFrom.secretKeyRef.name }}
                   key: {{ $env.valueFrom.secretKeyRef.key }}
+              {{- else if $env.valueFrom.fieldRef }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
+              {{- end }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}

@@ -79,11 +79,17 @@ spec:
                 secretKeyRef:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
-              {{- else if $env.valueFrom }}
+            {{- else if $env.valueFrom }}
+              {{- if $env.valueFrom.secretKeyRef }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.valueFrom.secretKeyRef.name }}
                   key: {{ $env.valueFrom.secretKeyRef.key }}
+              {{- else if $env.valueFrom.fieldRef }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
+              {{- end }}
               {{- else }}
               value: {{ $env.value | quote }}
               {{- end }}
@@ -96,11 +102,17 @@ spec:
                   secretKeyRef:
                     name: {{ $env.secretKeyRef.name }}
                     key: {{ $env.secretKeyRef.key }}
-              {{- else if $env.valueFrom }}
+            {{- else if $env.valueFrom }}
+              {{- if $env.valueFrom.secretKeyRef }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.valueFrom.secretKeyRef.name }}
                   key: {{ $env.valueFrom.secretKeyRef.key }}
+              {{- else if $env.valueFrom.fieldRef }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
+              {{- end }}
               {{- else }}
               value: {{ $env.value | quote }}
               {{- end }}
@@ -115,10 +127,16 @@ spec:
                   name: {{ $env.secretKeyRef.name }}
                   key: {{ $env.secretKeyRef.key }}
             {{- else if $env.valueFrom }}
+              {{- if $env.valueFrom.secretKeyRef }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $env.valueFrom.secretKeyRef.name }}
                   key: {{ $env.valueFrom.secretKeyRef.key }}
+              {{- else if $env.valueFrom.fieldRef }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: {{ $env.valueFrom.fieldRef.fieldPath }}
+              {{- end }}
             {{- else }}
               value: {{ $env.value | quote }}
             {{- end }}
