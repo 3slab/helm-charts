@@ -11,32 +11,31 @@ metadata:
     app.kubernetes.io/instance: {{ $.Release.Name | quote }}
     helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
     symfony.io/type: cronjob
-    {{- if $cronjob.labels }}
-{{ $cronjob.labels | toYaml | indent 4 }}
-    {{- end }}
-
-    {{- if $cronjob.inheritLabels }}
-    # inerting labels from deployment
-    {{- if .Values.labels}}
-{{ toYaml .Values.labels| indent 4 }}
-    {{- end }}
-    {{- end }}
+{{- if $cronjob.labels }}
+{{ $cronjob.labels | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 4 }}
+{{- end }}
+{{- if $cronjob.inheritLabels }}
+# inherit labels from deployment
+{{- if .Values.labels }}
+{{ toYaml .Values.labels | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 4 }}
+{{- end }}
+{{- end }}
 
   {{- $activateAnnotations := or $cronjob.annotations $cronjob.inheritAnnotations }}
   {{- if $activateAnnotations }}
   annotations:
-  {{- if $cronjob.annotations }}
-{{ $cronjob.annotations | toYaml | indent 6 }}
-  {{- end }}
+    tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
+{{- if $cronjob.annotations }}
+{{ $cronjob.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 4 }}
+{{- end }}
+{{- if $cronjob.inheritAnnotations }}
+# inherit annotations from deployment
+{{- if .Values.annotations }}
+{{ .Values.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 4 }}
+{{- end }}
+{{- end }}
 
-  {{- if $cronjob.inheritAnnotations }}
-  # inerting labels from deployment
-  {{- if .Values.annotations }}
-{{ .Values.annotations | toYaml | indent 6 }}
-  {{- end }}
-  {{- end }}
-
-  {{- end }}
+{{- end }}
 spec:
   schedule: "{{ $cronjob.schedule }}"
   {{- if $cronjob.timeZone }}
@@ -52,9 +51,26 @@ spec:
         app.kubernetes.io/instance: {{ $.Release.Name | quote }}
         helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
         symfony.io/type: cronjob
-        {{- if $cronjob.labels }}
-{{ $cronjob.labels | toYaml | indent 4 }}
-        {{- end }}
+{{- if $cronjob.labels }}
+{{ $cronjob.labels | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 8 }}
+{{- end }}
+{{- if $cronjob.inheritLabels }}
+# inherit annotations from deployment
+{{- if $.Values.template.labels }}
+{{ $.Values.template.labels | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 8 }}
+{{- end }}
+{{- end }}
+      annotations:
+        tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
+{{- if $cronjob.annotations }}
+{{ $cronjob.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 8 }}
+{{- end }}
+{{- if $cronjob.inheritAnnotations }}
+# inherit annotations from deployment
+{{- if $.Values.template.annotations }}
+{{ $.Values.template.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 8 }}
+{{- end }}
+{{- end }}
     spec:
       ttlSecondsAfterFinished: {{ $cronjob.ttlSecondsAfterFinished }}
       template:

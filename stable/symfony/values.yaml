@@ -22,6 +22,14 @@ labels: {}
 # used to add annotations to the deployment
 annotations: {}
 
+template:
+    # used to add labels to the deployment template
+    labels: {}
+
+    # used to add annotations to the deployment template
+    annotations: {}
+
+
 strategy:
   type: "Recreate"
 
@@ -204,11 +212,12 @@ job:
   cmd: []
   args: []
   annotations: {}
+  labels: {}
 
 # Define multiple cronjobs
 #
 cronjobs: {}
-#  my-cronjob: # use named key to able to override values in another file
+# my-cronjob: # use named key to able to override values in another file
 #    name: my-cronjob # use named key to able to override values in another file
 #    enabled: false
 #    schedule: "0 0 * * *"
@@ -235,7 +244,7 @@ cronjobs: {}
 #          claimName: existing-claim
 
 #  my-cronjob2: # use named key to able to override values in another file
-#  - name: my-cronjob2
+#    name: my-cronjob2
 #    enabled: false
 #    schedule: "0 0 * * *"
 #    ttlSecondsAfterFinished: 172800 #48 hours
@@ -279,9 +288,9 @@ workers: {}
 #        persistentVolumeClaim:
 #          claimName: existing-claim
 #    labels: {}
-#    inheritLabels: false # to inherit labels from deployment
+#    inheritLabels: false # "true" to inherit labels from deployment
 #    annotations: {}
-#    inheritAnnotations: false # to inherit annotations from deployment
+#    inheritAnnotations: false # "true" to inherit annotations from deployment
 #    mountRootVolumes: false # Mount root volumes defined above to the worker
 
 #  worker-2: # use named key to able to override values in another file
@@ -306,10 +315,3 @@ workers: {}
 #    annotations: {}
 #    inheritAnnotations: false # to inherit annotations from deployment
 #    mountRootVolumes: false # Mount root volumes defined above to the worker
-
-metadata:
-  labels: {}
-
-template:
-  metadata:
-    labels: {}

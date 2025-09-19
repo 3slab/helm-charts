@@ -8,16 +8,14 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-   {{- if .Values.metadata.labels }}
-{{ toYaml .Values.metadata.labels | indent 4 }}
-   {{- end}}
     symfony.io/type: app
 {{- if .Values.labels}}
-{{ toYaml .Values.labels| indent 4 }}
+{{ toYaml .Values.labels | replace "<CONTAINER_NAME>" .Chart.Name | indent 4 }}
 {{- end }}
-{{- if .Values.annotations }}
   annotations:
-{{ .Values.annotations | toYaml | indent 4 }}
+    tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
+{{- if .Values.annotations }}
+{{ .Values.annotations | replace "<CONTAINER_NAME>" .Chart.Name | indent 4 }}
 {{- end }}
 spec:
   selector:
@@ -36,19 +34,20 @@ spec:
         release: {{ .Release.Name }}
         symfony.io/type: app
 {{- if .Values.labels}}
-{{ toYaml .Values.labels| indent 8 }}
+{{ toYaml .Values.labels | replace "<CONTAINER_NAME>" .Chart.Name  | indent 8 }}
 {{- end }}
-{{- if .Values.annotations }}
-    annotations:
-{{ .Values.annotations | toYaml | indent 8 }}
-{{- end }}
-      {{- if .Values.template.metadata.labels }}
-{{ toYaml .Values.template.metadata.labels | indent 8 }}
-      {{- end}}
-    {{- if .Values.template.metadata.annotations }}
+{{- if .Values.template.labels }}
+{{ toYaml .Values.template.labels | replace "<CONTAINER_NAME>" .Chart.Name  | indent 8 }}
+{{- end}}
       annotations:
-{{ toYaml .Values.template.metadata.annotations | indent 8 }}
-      {{- end}}
+        tags.datadoghq.com/version: "{{ $.Values.image.tag }}"
+{{- if .Values.annotations }}
+{{ .Values.annotations | toYaml | replace "<CONTAINER_NAME>" .Chart.Name  | indent 8 }}
+{{- end }}
+{{- if .Values.template.annotations }}
+{{ toYaml .Values.template.annotations | replace "<CONTAINER_NAME>" .Chart.Name  | indent 8 }}
+{{- end}}
+
     spec:
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -85,7 +84,7 @@ spec:
 
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{  $.Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- with .Values.command }}
           command:

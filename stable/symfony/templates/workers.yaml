@@ -15,26 +15,23 @@ metadata:
     {{- if $worker.labels }}
 {{ $worker.labels | toYaml | indent 4 }}
     {{- end }}
-
     {{- if $worker.inheritLabels }}
-    # inerting labels from deployment
+    # inherit labels from deployment
     {{- if $.Values.labels}}
-{{ toYaml $.Values.labels| indent 4 }}
+{{ toYaml $.Values.labels | indent 4 }}
     {{- end }}
     {{- end }}
-  {{- $activateAnnotations := or $worker.annotations $worker.inheritAnnotations }}
-  {{- if $activateAnnotations }}
   annotations:
-  {{- if $worker.annotations }}
+    tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
+{{- if $worker.annotations }}
 {{ $worker.annotations | toYaml | indent 6 }}
-  {{- end }}
-
-  {{- if $worker.inheritAnnotations }}
-  # inerting labels from deployment
-  {{- if $.Values.annotations }}
+{{- end }}
+{{- if $worker.inheritAnnotations }}
+# inherit annotations from deployment
+{{- if $.Values.annotations }}
 {{ $.Values.annotations | toYaml | indent 6 }}
-  {{- end }}
-  {{- end }}
+{{- end }}
+
 
   {{- end }}
 spec:
@@ -52,9 +49,27 @@ spec:
         app.kubernetes.io/instance: {{ $.Release.Name | quote }}
         helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
         symfony.io/type: worker
-        {{- if $worker.labels }}
-{{ $worker.labels | toYaml | indent 4 }}
-        {{- end }}
+{{- if $worker.labels }}
+{{ $worker.labels | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $worker.name ) | indent 8 }}
+{{- end }}
+{{- if $worker.inheritLabels }}
+# inherit annotations from deployment
+{{- if $.Values.template.labels }}
+{{ $.Values.template.labels | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $worker.name ) | indent 8 }}
+{{- end }}
+{{- end }}
+      annotations:
+        tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
+{{- if $worker.annotations }}
+{{ $worker.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $worker.name ) | indent 8 }}
+{{- end }}
+{{- if $worker.inheritAnnotations }}
+# inherit annotations from deployment
+{{- if $.Values.template.annotations }}
+{{ $.Values.template.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $worker.name ) | indent 8 }}
+{{- end }}
+{{- end }}
+
     spec:
       {{- if $.Values.image.pullSecrets }}
       imagePullSecrets:
