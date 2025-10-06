@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: mysql
+  tag: "5.7"
+  pullPolicy: IfNotPresent
+
+mysqlRootPassword: "change-me-strong-pass"
+
+service:
+  name: mysql
+  port: 3306
+  clusterIP: None
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "1"
+    memory: "2Gi"
+
+persistence:
+  enabled: true
+  storageClass: "default"   # mettre la StorageClass si nécessaire
+  accessMode: ReadWriteOnce
+  size: 20Gi
