@@ -1,0 +1,31 @@
+operator:
+  name: rabbitmq-cluster-operator          # Nom de l’operator (ServiceAccount, Deployment, RBAC…)
+  component: rabbitmq-operator              # Label: app.kubernetes.io/component
+  partOf: rabbitmq                          # Label: app.kubernetes.io/part-of
+
+  serviceAccountName: rabbitmq-cluster-operator  # Nom du ServiceAccount utilisé par le Deployment
+
+  replicas: 1                               # Nombre de réplicas du Deployment
+
+  containerName: manager                    # Nom du container dans le Pod
+
+  image:
+    repository: rabbitmqoperator/cluster-operator    # Image Docker
+    tag: 2.16.1                             # Tag de l’image
+
+  ports:
+    metrics: 9782                           # Port nommé "metrics"
+
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "500Mi"
+    requests:
+      cpu: "200m"
+      memory: "500Mi"
+
+  terminationGracePeriodSeconds: 10         # Valeur de spec.terminationGracePeriodSeconds
+
+# Si besoin (souvent présent pour adapter les RBAC dynamiquement comme ton exemple Helm) :
+# operator:
+#   watchNamespace: "*" | "namespace-name"

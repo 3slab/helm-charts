@@ -1,0 +1,11 @@
+apiVersion: v2
+name: community-operator
+description: RabbitMQ Kubernetes Community Operator
+version: 2.16.1
+type: application
+appVersion: 2.16.1
+kubeVersion: '>=1.16-0'
+keywords:
+- rabbitmq
+- message broker
+- amqp
