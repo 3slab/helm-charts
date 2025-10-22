@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "memcached.fullname" . }}
+  labels:
+    app: {{ include "memcached.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "memcached.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "memcached.name" . }}
+    spec:
+      containers:
+        - name: memcached
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 11211
+              name: memcached
+          resources: {{- toYaml .Values.resources | nindent 12 }}

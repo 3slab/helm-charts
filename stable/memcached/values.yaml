@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  repository: memcached
+  tag: "1.6.39"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 11211
+
+resources: {}
+  # Exemple :
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
