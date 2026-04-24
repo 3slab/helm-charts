@@ -1,0 +1,4 @@
+Job "{{ include "simple-job.fullname" . }}" lancé avec l'image {{ .Values.image.repository }}:{{ .Values.image.tag }}
+
+  kubectl get job {{ include "simple-job.fullname" . }} -n {{ .Release.Namespace }}
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}

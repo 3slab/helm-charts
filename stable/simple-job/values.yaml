@@ -1,0 +1,59 @@
+# ==============================================================
+#  REQUIS — à surcharger au moment du helm install
+# ==============================================================
+image:
+  repository: ""        # ex: python, my-registry.io/my-app
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+# Commande à exécuter (remplace l'ENTRYPOINT de l'image)
+# Laisser vide pour utiliser l'ENTRYPOINT par défaut de l'image
+command: []
+# Exemple : command: ["python", "script.py"]
+
+# Arguments passés à la commande (ou à l'ENTRYPOINT si command est vide)
+args: []
+# Exemple : args: ["-c", "echo hello"]
+
+# ==============================================================
+#  OPTIONNEL
+# ==============================================================
+
+# Variables d'environnement
+env: []
+# - name: ENV_VAR
+#   value: "value"
+# - name: SECRET_VAR
+#   valueFrom:
+#     secretKeyRef:
+#       name: my-secret
+#       key: my-key
+
+# Ressources
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+# Comportement du Job
+job:
+  backoffLimit: 3
+  restartPolicy: Never          # Never | OnFailure
+  ttlSecondsAfterFinished: 300  # nettoyage auto après 5 min
+  activeDeadlineSeconds: null   # timeout max (null = illimité)
+
+# Secrets pour les registries privés
+imagePullSecrets: []
+# - name: my-registry-secret
+
+# Volumes & montages
+volumes: []
+volumeMounts: []
+
+# Scheduling
+nodeSelector: {}
+tolerations: []
+affinity: {}
