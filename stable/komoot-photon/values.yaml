@@ -1,0 +1,195 @@
+# Default values for komoot-photon.
+# https://github.com/rtuszik/photon-docker
+
+replicaCount: 1
+
+image:
+  repository: rtuszik/photon-docker
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+strategy:
+  type: Recreate
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# ------------------------------------------------------------
+# Photon environment variables
+# Full documentation: https://github.com/rtuszik/photon-docker
+# ------------------------------------------------------------
+env:
+  # Index update strategy: PARALLEL | SEQUENTIAL | DISABLED
+  UPDATE_STRATEGY: "SEQUENTIAL"
+
+  # How often to check for updates (e.g. "720h", "30d")
+  UPDATE_INTERVAL: "30d"
+
+  # Region to download: planet | europe | france | de | us | ...
+  # Leave as "planet" for worldwide data (~116 GB).
+  # See README for the full list of supported regions.
+  REGION: "planet"
+
+  # Logging verbosity: DEBUG | INFO | ERROR
+  LOG_LEVEL: "INFO"
+
+  # IP address Photon listens on inside the container
+  PHOTON_LISTEN_IP: "0.0.0.0"
+
+  # Force an index update on every startup: TRUE | FALSE
+  FORCE_UPDATE: "FALSE"
+
+  # Maximum retries for failed downloads
+  DOWNLOAD_MAX_RETRIES: "3"
+
+  # Perform initial download when data directory is empty: TRUE | FALSE
+  INITIAL_DOWNLOAD: "TRUE"
+
+  # Base URL for index downloads (community mirror by default)
+  BASE_URL: "https://r2.koalasec.org/public"
+
+  # Skip MD5 checksum verification: TRUE | FALSE
+  SKIP_MD5_CHECK: "FALSE"
+
+  # Skip disk space check before downloading: TRUE | FALSE
+  SKIP_SPACE_CHECK: "FALSE"
+
+  # Custom index file URL (overrides UPDATE_STRATEGY → DISABLED)
+  # FILE_URL: "https://download1.graphhopper.com/public/experimental/photon-db-latest.tar.bz2"
+
+  # Custom MD5 file URL (used alongside FILE_URL)
+  # MD5_URL: "https://download1.graphhopper.com/public/experimental/photon-db-latest.tar.bz2.md5"
+
+  # Extra parameters passed directly to the Photon executable
+  # Example: "-languages fr,en -cors-any-origin"
+  # See https://github.com/komoot/photon#running-photon
+  # PHOTON_PARAMS: ""
+
+  # Apprise notification URLs (comma-separated)
+  # APPRISE_URLS: "pover://user@token"
+
+  # UID / GID for the photon process (match your host user to avoid permission issues)
+  PUID: "9011"
+  PGID: "9011"
+
+  # Expose Prometheus metrics at /metrics: TRUE | FALSE
+  ENABLE_METRICS: "FALSE"
+
+# ------------------------------------------------------------
+# Service
+# ------------------------------------------------------------
+service:
+  type: ClusterIP
+  port: 2322
+  targetPort: 2322
+
+# ------------------------------------------------------------
+# Ingress
+# ------------------------------------------------------------
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: photon.example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: photon-tls
+  #    hosts:
+  #      - photon.example.local
+
+# ------------------------------------------------------------
+# Resources
+# The Photon index is large; ensure sufficient memory/CPU.
+# ------------------------------------------------------------
+resources: {}
+  # limits:
+  #   cpu: 2000m
+  #   memory: 4Gi
+  # requests:
+  #   cpu: 500m
+  #   memory: 2Gi
+
+# ------------------------------------------------------------
+# Probes
+# The initial download can take hours — set generous delays.
+# ------------------------------------------------------------
+livenessProbe:
+  httpGet:
+    path: /api?q=test
+    port: http
+  initialDelaySeconds: 300
+  periodSeconds: 30
+  failureThreshold: 5
+
+readinessProbe:
+  httpGet:
+    path: /api?q=test
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 15
+  failureThreshold: 10
+
+# ------------------------------------------------------------
+# Autoscaling (disabled — Photon is stateful/single-instance)
+# ------------------------------------------------------------
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 80
+
+# ------------------------------------------------------------
+# Persistent storage for the Photon index (~90 GB for planet)
+# ------------------------------------------------------------
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 120Gi
+  # existingClaim: ""
+
+# Mount path inside the container
+  mountPath: /photon/data
+
+# Additional volumes
+volumes: []
+# - name: extra-config
+#   configMap:
+#     name: my-configmap
+
+volumeMounts: []
+# - name: extra-config
+#   mountPath: /etc/photon/extra
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
