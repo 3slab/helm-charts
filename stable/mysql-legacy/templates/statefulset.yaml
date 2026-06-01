@@ -44,7 +44,7 @@ spec:
             - "--character-set-server=utf8mb4"
             - "--collation-server=utf8mb4_0900_ai_ci"
             - "--datadir=/var/lib/mysql/data"
-            - "--innodb-buffer-pool-size=4294967296"
+            - "--innodb-buffer-pool-size=256m"
             - "--innodb-io-capacity=10000"
             - "--innodb-io-capacity-max=20000"
             - "--innodb-purge-threads=1"
@@ -58,7 +58,8 @@ spec:
             - "--tmp-table-size=16777216"
             - "--connect-timeout=10"
             - "--innodb-default-row-format=DYNAMIC"
-
+            - "--innodb-redo-log-capacity=536870912"
+            - "--lower-case-table-names=1"
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
