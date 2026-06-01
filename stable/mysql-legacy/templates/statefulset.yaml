@@ -22,7 +22,7 @@ spec:
             - -c
             - |
               mkdir -p /var/lib/mysql/data
-              chown -R 999:999 /var/lib/mysql/data
+              chown -R 999:999 /var/lib/mysql
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
@@ -40,10 +40,25 @@ spec:
             - containerPort: 3306
               name: mysql
           args:
-            - "--default-authentication-plugin=mysql_native_password"
+            - "--authentication-policy=caching_sha2_password"
             - "--character-set-server=utf8mb4"
-            - "--collation-server=utf8mb4_unicode_ci"
+            - "--collation-server=utf8mb4_0900_ai_ci"
             - "--datadir=/var/lib/mysql/data"
+            - "--innodb-buffer-pool-size=4294967296"
+            - "--innodb-io-capacity=10000"
+            - "--innodb-io-capacity-max=20000"
+            - "--innodb-purge-threads=1"
+            - "--innodb-read-io-threads=4"
+            - "--innodb-write-io-threads=4"
+            - "--max-connections=683"
+            - "--max-connect-errors=100"
+            - "--long-query-time=10"
+            - "--wait-timeout=28800"
+            - "--thread-cache-size=14"
+            - "--tmp-table-size=16777216"
+            - "--connect-timeout=10"
+            - "--innodb-default-row-format=DYNAMIC"
+
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
