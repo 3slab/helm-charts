@@ -16,8 +16,8 @@ metadata:
 {{- end }}
 {{- if $cronjob.inheritLabels }}
 # inherit labels from deployment
-{{- if .Values.labels }}
-{{ toYaml .Values.labels | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 4 }}
+{{- if $.Values.labels }}
+{{ toYaml $.Values.labels | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 4 }}
 {{- end }}
 {{- end }}
 
@@ -30,8 +30,8 @@ metadata:
 {{- end }}
 {{- if $cronjob.inheritAnnotations }}
 # inherit annotations from deployment
-{{- if .Values.annotations }}
-{{ .Values.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 4 }}
+{{- if $.Values.annotations }}
+{{ $.Values.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $cronjob.name ) | indent 4 }}
 {{- end }}
 {{- end }}
 
