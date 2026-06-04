@@ -60,8 +60,14 @@ spec:
       {{- if .Values.initContainers }}
       initContainers:
       {{- range $container := .Values.initContainers }}
-        -
-{{ toYaml $container | indent 10 }}
+      # On merge les valeurs par défaut avec celles du container, pour éviter de devoir répéter l'image et le pullPolicy à chaque initContainer
+      {{- $defaults := dict
+            "image" (printf "%s:%s" $.Values.image.repository $.Values.image.tag)
+            "imagePullPolicy" $.Values.image.pullPolicy
+      }}
+      {{- $merged := mergeOverwrite $defaults $container }}
+      -
+{{ toYaml $merged | indent 10 }}
           {{- if $.Values.env.initContainer }}
           env:
             {{- range $env := $.Values.env.initContainer }}
