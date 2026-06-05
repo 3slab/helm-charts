@@ -98,11 +98,9 @@ spec:
               resources:
 {{ toYaml . | indent 16 }}
               {{- end }}
-{{- $cronjobEnv := concat ($.Values.env.container | default list) ($cronjob.env | default list) }}
-              {{- if or $cronjobEnv $.Values.extraEnv }}
+              {{- if or $.Values.env.container $cronjob.env $.Values.extraEnv }}
               env:
-{{ include "merge-env-lists" (dict "containerEnv" $cronjobEnv "extraEnv" $.Values.extraEnv) | indent 14 }}
-              {{- end }}
+              {{- include "merge-env-lists" (dict "containerEnv" $.Values.env.container "serviceEnv" $cronjob.env "extraEnv" $.Values.extraEnv) | nindent 14 }}              {{- end }}
               {{- with $cronjob.command }}
               command:
 {{ toYaml . | indent 16 }}

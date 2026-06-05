@@ -110,36 +110,49 @@ Env var rendering and merging logic
 
 {{- define "merge-env-lists" -}}
 {{- $containerEnv := .containerEnv | default list -}}
-{{- $extraEnv := .extraEnv | default list -}}
-{{- $extraEnvMap := dict -}}
-{{- range $env := $extraEnv -}}
-{{- $_ := set $extraEnvMap $env.name $env -}}
-{{- end -}}
-{{- $result := list -}}
+{{- $serviceEnv   := .serviceEnv   | default list -}}
+{{- $extraEnv     := .extraEnv     | default list -}}
+
+{{- $envMap := dict -}}
+{{- $seen   := list -}}
+
 {{- range $env := $containerEnv -}}
-{{- if hasKey $extraEnvMap $env.name -}}
-{{- $result = append $result (get $extraEnvMap $env.name) -}}
-{{- $_ := unset $extraEnvMap $env.name -}}
-{{- else -}}
-{{- $result = append $result $env -}}
+  {{- if not (has $env.name $seen) -}}
+    {{- $seen = append $seen $env.name -}}
+  {{- end -}}
+  {{- $_ := set $envMap $env.name $env -}}
 {{- end -}}
+
+{{- range $env := $serviceEnv -}}
+  {{- if not (has $env.name $seen) -}}
+    {{- $seen = append $seen $env.name -}}
+  {{- end -}}
+  {{- $_ := set $envMap $env.name $env -}}
 {{- end -}}
-{{- range $name, $env := $extraEnvMap -}}
-{{- $result = append $result $env -}}
+
+{{- range $env := $extraEnv -}}
+  {{- if not (has $env.name $seen) -}}
+    {{- $seen = append $seen $env.name -}}
+  {{- end -}}
+  {{- $_ := set $envMap $env.name $env -}}
 {{- end -}}
+
 {{- $sanitized := list -}}
-{{- range $env := $result -}}
-{{- if $env.valueFrom -}}
-{{- $sanitized = append $sanitized (dict "name" $env.name "valueFrom" $env.valueFrom) -}}
-{{- else if $env.secretKeyRef -}}
-{{- $sanitized = append $sanitized (dict "name" $env.name "valueFrom" (dict "secretKeyRef" $env.secretKeyRef)) -}}
-{{- else -}}
-{{- $sanitized = append $sanitized (dict "name" $env.name "value" ($env.value | toString)) -}}
+{{- range $name := $seen -}}
+  {{- $env := get $envMap $name -}}
+  {{- if $env.valueFrom -}}
+    {{- $sanitized = append $sanitized (dict "name" $env.name "valueFrom" $env.valueFrom) -}}
+  {{- else if $env.secretKeyRef -}}
+    {{- $sanitized = append $sanitized (dict "name" $env.name "valueFrom" (dict "secretKeyRef" $env.secretKeyRef)) -}}
+  {{- else -}}
+    {{- $sanitized = append $sanitized (dict "name" $env.name "value" ($env.value | toString)) -}}
+  {{- end -}}
 {{- end -}}
-{{- end -}}
+
 {{- if $sanitized -}}
 {{- $sanitized | toYaml -}}
 {{- end -}}
 {{- end -}}
+
 
 

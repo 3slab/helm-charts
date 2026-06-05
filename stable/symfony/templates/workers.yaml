@@ -90,8 +90,7 @@ spec:
           {{- end }}
           {{- if or $.Values.env $.Values.extraEnv $worker.env }}
           env:
-            {{- include "merge-env-lists" (dict "containerEnv" $.Values.env.container "extraEnv" $.Values.extraEnv "workerEnv" $worker.env) | nindent 12 }}
-          {{- end }}
+          {{- include "merge-env-lists" (dict "containerEnv" $.Values.env.container "serviceEnv" $worker.env "extraEnv" $.Values.extraEnv) | nindent 12 }}          {{- end }}
           {{- with $worker.command }}
           command:
 {{ toYaml . | indent 16 }}
