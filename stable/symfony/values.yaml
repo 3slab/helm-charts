@@ -2,6 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
+revisionHistoryLimit: 3
 
 image:
   repository: nginx # override with own docker image containign symfony sources
@@ -278,6 +279,7 @@ workers: {}
 #    name: worker-1
 #    enabled: false
 #    replicaCount: 1
+#    revisionHistoryLimit: 3
 #    command:
 #      - /bin/sh
 #      - -c

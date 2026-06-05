@@ -67,3 +67,79 @@ include "common.ingress.supportsIngressClassname" .
 {{- print "true" -}}
 {{- end -}}
 {{- end -}}
+
+
+
+{{/*
+Env var rendering and merging logic
+*/}}
+
+
+{{- define "render-env-var" -}}
+- name: {{ .env.name }}
+{{- if .env.typeSecret }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .env.secretKeyRef.name }}
+      key: {{ .env.secretKeyRef.key }}
+{{- else if .env.valueFrom }}
+{{- if .env.valueFrom.secretKeyRef }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .env.valueFrom.secretKeyRef.name }}
+      key: {{ .env.valueFrom.secretKeyRef.key }}
+{{- else if .env.valueFrom.fieldRef }}
+  valueFrom:
+    fieldRef:
+      fieldPath: {{ .env.valueFrom.fieldRef.fieldPath }}
+{{- end }}
+{{- else }}
+  value: {{ .env.value | quote }}
+{{- end }}
+{{- end -}}
+
+{{- define "render-env-list" -}}
+{{- if .envList }}
+{{- range $env := .envList }}
+{{ include "render-env-var" (dict "env" $env) }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+
+
+{{- define "merge-env-lists" -}}
+{{- $containerEnv := .containerEnv | default list -}}
+{{- $extraEnv := .extraEnv | default list -}}
+{{- $extraEnvMap := dict -}}
+{{- range $env := $extraEnv -}}
+{{- $_ := set $extraEnvMap $env.name $env -}}
+{{- end -}}
+{{- $result := list -}}
+{{- range $env := $containerEnv -}}
+{{- if hasKey $extraEnvMap $env.name -}}
+{{- $result = append $result (get $extraEnvMap $env.name) -}}
+{{- $_ := unset $extraEnvMap $env.name -}}
+{{- else -}}
+{{- $result = append $result $env -}}
+{{- end -}}
+{{- end -}}
+{{- range $name, $env := $extraEnvMap -}}
+{{- $result = append $result $env -}}
+{{- end -}}
+{{- $sanitized := list -}}
+{{- range $env := $result -}}
+{{- if $env.valueFrom -}}
+{{- $sanitized = append $sanitized (dict "name" $env.name "valueFrom" $env.valueFrom) -}}
+{{- else if $env.secretKeyRef -}}
+{{- $sanitized = append $sanitized (dict "name" $env.name "valueFrom" (dict "secretKeyRef" $env.secretKeyRef)) -}}
+{{- else -}}
+{{- $sanitized = append $sanitized (dict "name" $env.name "value" ($env.value | toString)) -}}
+{{- end -}}
+{{- end -}}
+{{- if $sanitized -}}
+{{- $sanitized | toYaml -}}
+{{- end -}}
+{{- end -}}
+
+
