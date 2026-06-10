@@ -51,6 +51,7 @@ ingress:
     # - secretName: chart-example-tls
     #   hosts:
     #     - chart-example.local
+  className: ""
 
 # Zookeeper connection
 # kafkaRestZookeeperConnect: zookeeper-service:2181
