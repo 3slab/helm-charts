@@ -17,4 +17,4 @@ name: mayanedms
 sources:
   - https://gitlab.com/mayan-edms/mayan-edms
 type: application
-version: 4.6.0
+version: 4.6.1
