@@ -19,9 +19,9 @@ service:
   pathType: ImplementationSpecific
 
 ingress:
+  className: haproxy
   enabled: false
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
