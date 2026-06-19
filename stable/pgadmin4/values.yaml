@@ -86,6 +86,11 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+
+  ## pgAdmin4 Ingress class name
+  ## Must be provided if Ingress is enabled
+  className: "haproxy"
+
 # Additional config maps to be mounted inside a container
 # Can be used to map config maps for sidecar as well
 extraConfigmapMounts: []
