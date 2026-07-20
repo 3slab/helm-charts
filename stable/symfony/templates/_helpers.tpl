@@ -166,9 +166,10 @@ Env var rendering and merging logic
 {{- if .Values.datadog.apm }}
 {{- list
     (dict "name" "DD_PROFILING_ENABLED" "value" "true")
-    (dict "name" "DD_AGENT_HOST"       "value" .Values.datadog.apm.agentHost)
-    (dict "name" "DD_SERVICE"          "value" .Release.Name)
-    (dict "name" "DD_VERSION"          "value" .Values.image.tag)
+    (dict "name" "DD_LOGS_INJECTION"    "value" "true")
+    (dict "name" "DD_AGENT_HOST"        "value" .Values.datadog.apm.agentHost)
+    (dict "name" "DD_SERVICE"           "value" .Release.Name)
+    (dict "name" "DD_VERSION"           "value" .Values.image.tag)
   | toYaml
 }}
 {{- else }}
