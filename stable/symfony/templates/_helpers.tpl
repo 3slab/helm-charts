@@ -112,6 +112,7 @@ Env var rendering and merging logic
 {{- $containerEnv := .containerEnv | default list -}}
 {{- $serviceEnv   := .serviceEnv   | default list -}}
 {{- $extraEnv     := .extraEnv     | default list -}}
+{{- $datadogEnv   := .datadogEnv   | default list -}}
 
 {{- $envMap := dict -}}
 {{- $seen   := list -}}
@@ -137,6 +138,13 @@ Env var rendering and merging logic
   {{- $_ := set $envMap $env.name $env -}}
 {{- end -}}
 
+{{- range $env := $datadogEnv -}}
+  {{- if not (has $env.name $seen) -}}
+    {{- $seen = append $seen $env.name -}}
+  {{- end -}}
+  {{- $_ := set $envMap $env.name $env -}}
+{{- end -}}
+
 {{- $sanitized := list -}}
 {{- range $name := $seen -}}
   {{- $env := get $envMap $name -}}
@@ -154,5 +162,17 @@ Env var rendering and merging logic
 {{- end -}}
 {{- end -}}
 
-
+{{- define "datadog.apmEnv" -}}
+{{- if .Values.datadog.apm }}
+{{- list
+    (dict "name" "DD_PROFILING_ENABLED" "value" "true")
+    (dict "name" "DD_AGENT_HOST"       "value" .Values.datadog.apm.agentHost)
+    (dict "name" "DD_SERVICE"          "value" .Release.Name)
+    (dict "name" "DD_VERSION"          "value" .Values.image.tag)
+  | toYaml
+}}
+{{- else }}
+{{- list | toYaml }}
+{{- end }}
+{{- end }}
 

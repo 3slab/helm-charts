@@ -15,7 +15,7 @@ metadata:
 {{ toYaml .Values.job.labels | replace "<CONTAINER_NAME>" .Chart.Name | indent 4 }}
 {{- end}}
   annotations:
-    tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
+    tags.datadoghq.com/version: "{{ $.Values.image.tag }}"
     tags.datadoghq.com/service: "{{ .Release.Name }}"
     ad.datadoghq.com/tags: '{"chart-name":"{{ .Chart.Name }}"}'
 {{- if .Values.annotations }}
@@ -45,8 +45,8 @@ spec:
 {{- end}}
       annotations:
         tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
-        tags.datadoghq.com/service: "{{ .Release.Name }}"
-        ad.datadoghq.com/tags: '{"chart-name":"{{ .Chart.Name }}"}'
+        tags.datadoghq.com/service: "{{ $.Release.Name }}"
+        ad.datadoghq.com/tags: '{"chart-name":"{{ $.Chart.Name }}"}'
 {{- if .Values.annotations }}
 {{ toYaml .Values.annotations | replace "<CONTAINER_NAME>" .Chart.Name | indent 8 }}
 {{- end}}

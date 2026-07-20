@@ -23,8 +23,8 @@ metadata:
     {{- end }}
   annotations:
     tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
-    tags.datadoghq.com/service: "{{ .Release.Name }}"
-    ad.datadoghq.com/tags: '{"chart-name":"{{ .Chart.Name }}"}'
+    tags.datadoghq.com/service: "{{ $.Release.Name }}"
+    ad.datadoghq.com/tags: '{"chart-name":"{{ $.Chart.Name }}"}'
 {{- if $worker.annotations }}
 {{ $worker.annotations | toYaml | indent 6 }}
 {{- end }}
@@ -64,8 +64,8 @@ spec:
 {{- end }}
       annotations:
         tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
-        tags.datadoghq.com/service: "{{ .Release.Name }}"
-        ad.datadoghq.com/tags: '{"chart-name":"{{ .Chart.Name }}"}'
+        tags.datadoghq.com/service: "{{ $.Release.Name }}"
+        ad.datadoghq.com/tags: '{"chart-name":"{{ $.Chart.Name }}"}'
         ad.datadoghq.com/{{- $.Release.Name -}}-{{- $worker.name -}}.logs: '[{"source":"symfony-cli"}]'
 {{- if $worker.annotations }}
 {{ $worker.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $worker.name ) | indent 8 }}
@@ -94,7 +94,12 @@ spec:
           {{- end }}
           {{- if or $.Values.env $.Values.extraEnv $worker.env }}
           env:
-          {{- include "merge-env-lists" (dict "containerEnv" $.Values.env.container "serviceEnv" $worker.env "extraEnv" $.Values.extraEnv) | nindent 12 }}          {{- end }}
+          {{- include "merge-env-lists" (dict 
+          "containerEnv" $.Values.env.container 
+          "serviceEnv" $worker.env 
+          "extraEnv" $.Values.extraEnv
+          "datadogEnv"  (include "datadog.apmEnv" $ | fromYamlArray )
+          ) | nindent 12 }}          {{- end }}
           {{- with $worker.command }}
           command:
 {{ toYaml . | indent 16 }}

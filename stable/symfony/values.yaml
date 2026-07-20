@@ -324,3 +324,9 @@ workers: {}
 #    annotations: {}
 #    inheritAnnotations: false # to inherit annotations from deployment
 #    mountRootVolumes: false # Mount root volumes defined above to the worker
+
+
+datadog:
+  apm: 
+    enabled: false
+    agentHost: datadog-agent.monitoring

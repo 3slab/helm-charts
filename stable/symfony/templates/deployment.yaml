@@ -1,4 +1,5 @@
 {{- $rootValues := . -}}
+
 apiVersion: {{ template "deployment.apiVersion" . }}
 kind: Deployment
 metadata:
@@ -94,9 +95,14 @@ spec:
           args:
 {{ toYaml . | indent 10 }}
           {{- end }}
-          {{- if or .Values.env.container .Values.extraEnv }}
+          {{- if or .Values.env.container .Values.extraEnv .Values.datadog.apm }}
           env:
-{{- include "merge-env-lists" (dict "containerEnv" .Values.env.container "extraEnv" .Values.extraEnv) | nindent 12 }}
+{{- include "merge-env-lists" (dict 
+                    "containerEnv" .Values.env.container 
+                    "serviceEnv" (list) 
+                    "extraEnv" .Values.extraEnv 
+                    "datadogEnv"  (include "datadog.apmEnv" . | fromYamlArray )
+                    ) | nindent 12 }}
           {{- end }}          
           ports:
             - containerPort: {{ .Values.service.internalPort }}
