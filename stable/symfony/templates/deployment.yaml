@@ -14,6 +14,8 @@ metadata:
 {{- end }}
   annotations:
     tags.datadoghq.com/version: "{{  $.Values.image.tag }}"
+    tags.datadoghq.com/service: "{{ .Release.Name }}"
+    ad.datadoghq.com/tags: '{"chart-name":"{{ .Chart.Name }}"}'
 {{- if .Values.annotations }}
 {{ .Values.annotations | replace "<CONTAINER_NAME>" .Chart.Name | indent 4 }}
 {{- end }}
@@ -47,6 +49,8 @@ spec:
 {{- end}}
       annotations:
         tags.datadoghq.com/version: "{{ $.Values.image.tag }}"
+        tags.datadoghq.com/service: "{{ .Release.Name }}"
+        ad.datadoghq.com/tags: '{"chart-name":"{{ .Chart.Name }}"}'
         ad.datadoghq.com/{{ .Chart.Name }}.logs: '[{"source":"symfony-nginx"}]'
 {{- if .Values.annotations }}
 {{ .Values.annotations | toYaml | replace "<CONTAINER_NAME>" .Chart.Name  | indent 8 }}
