@@ -21,6 +21,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-realm: "Authentication-Required"
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName | default "haproxy" }}
 {{- if .Values.client.ingress.tls }}
   tls:
   {{- range .Values.client.ingress.tls }}
