@@ -6,3 +6,6 @@
 	path = simcube-helm-charts
 	url = https://github.com/3slab/simcube-helm-charts.git
 	branch = master
+[submodule "thingsboard-ce-k8s"]
+	path = thingsboard-ce-k8s
+	url = https://github.com/Suezenv/thingsboard-ce-k8s.git
