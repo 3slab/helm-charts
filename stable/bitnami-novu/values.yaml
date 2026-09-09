@@ -1771,6 +1771,7 @@ externalDatabase:
   username: 'novu'
   password: ''
   database: novu-db
+  schema: mongodb://
 #  existingSecret:
 #  existingSecretUrlKey
 

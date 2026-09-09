@@ -203,7 +203,9 @@ Return mongodb port
     {{/* We are using the headless service so we need to use the container port */}}
     {{- print .Values.mongodb.service.ports.mongodb -}}
 {{- else -}}
-    {{- print .Values.externalDatabase.port -}}
+    {{- if .Values.externalDatabase.port -}}
+        {{- print .Values.externalDatabase.port -}}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -237,6 +239,17 @@ Return mongodb username
     {{- print (index .Values.mongodb.auth.databases 0) -}}
 {{- else -}}
     {{- print .Values.externalDatabase.database  -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return mongodb schema
+*/}}
+{{- define "novu.mongodb.schema" -}}
+{{- if .Values.mongodb.enabled -}}
+    {{- print (index .Values.mongodb.auth.schemas 0) -}}
+{{- else -}}
+    {{- print .Values.externalDatabase.schema  -}}
 {{- end -}}
 {{- end -}}
 

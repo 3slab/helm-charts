@@ -7,9 +7,9 @@ dependencies:
   version: 13.18.5
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 2.19.0
+  version: 2.41.0
 - name: localstack
   repository: https://localstack.github.io/helm-charts
   version: 0.4.3
-digest: sha256:a3a50a1e9b8c5d7f52d79fd6ec7cb43c5bd7ce3bee09673bff3aa7528b6c477f
-generated: "2024-03-15T15:53:52.829334245+01:00"
+digest: sha256:64f9a0e8b6cf2aadf9de024c96ee64b391777f2c984a0329e389330486d8cc19
+generated: "2026-09-09T10:54:02.140649166+02:00"
