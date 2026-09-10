@@ -9,3 +9,6 @@
 [submodule "thingsboard-ce-k8s"]
 	path = thingsboard-ce-k8s
 	url = https://github.com/Suezenv/thingsboard-ce-k8s.git
+[submodule "nextcloud-helm"]
+	path = nextcloud-helm
+	url = https://github.com/3slab/nextcloud-helm
