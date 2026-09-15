@@ -29,12 +29,12 @@ metadata:
 {{ $worker.annotations | toYaml | indent 6 }}
 {{- end }}
 {{- if $worker.inheritAnnotations }}
-# inherit annotations from deployment
+    # inherit annotations from deployment (1)
 {{- if $.Values.annotations }}
 {{ $.Values.annotations | toYaml | indent 6 }}
 {{- end }}
 
-  {{- end }}
+{{- end }}
 spec:
   selector:
     matchLabels:
@@ -57,7 +57,7 @@ spec:
 {{ $worker.labels | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $worker.name ) | indent 8 }}
 {{- end }}
 {{- if $worker.inheritLabels }}
-# inherit annotations from deployment
+        # inherit annotations from deployment (2)
 {{- if $.Values.template.labels }}
 {{ $.Values.template.labels | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $worker.name ) | indent 8 }}
 {{- end }}
@@ -71,7 +71,7 @@ spec:
 {{ $worker.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $worker.name ) | indent 8 }}
 {{- end }}
 {{- if $worker.inheritAnnotations }}
-# inherit annotations from deployment
+        # inherit annotations from deployment (3)
 {{- if $.Values.template.annotations }}
 {{ $.Values.template.annotations | toYaml | replace "<CONTAINER_NAME>" ( printf "%s-%s" $.Release.Name $worker.name ) | indent 8 }}
 {{- end }}
@@ -99,7 +99,8 @@ spec:
           "serviceEnv" $worker.env 
           "extraEnv" $.Values.extraEnv
           "datadogEnv"  (include "datadog.apmEnv" $ | fromYamlArray )
-          ) | nindent 12 }}          {{- end }}
+          ) | nindent 12 }}
+          {{- end }}
           {{- with $worker.command }}
           command:
 {{ toYaml . | indent 16 }}

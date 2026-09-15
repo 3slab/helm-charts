@@ -170,6 +170,7 @@ Env var rendering and merging logic
     (dict "name" "DD_AGENT_HOST"        "value" .Values.datadog.apm.agentHost)
     (dict "name" "DD_SERVICE"           "value" .Release.Name)
     (dict "name" "DD_VERSION"           "value" (.Values.image.tag | toString ) )
+    (dict "name" "DD_ENV"               "value" (required "You must define 'datadog.apm.env' when datadog.apm.enabled is true" .Values.datadog.apm.env))
   | toYaml
 }}
 {{- else }}
