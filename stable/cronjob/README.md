@@ -54,6 +54,7 @@ The following tables lists the configurable parameters of the Cronjob chart and 
 | `nameOverride`                | Override the app name                                                    | ``                             |
 | `fullnameOverride`            | Override the fullname of the chart                                       | ``                             |
 | `schedule`                    | Schedule for the CronJob.                                                | `0 0 * * *`                    |
+| `suspend`                     | Suspend subsequent executions (running Jobs are not affected)            | `false`                        |
 | `timeZone`                    | Specify a time zone for a CronJob.                                       | `Europe/Paris"`                |
 | `successfulJobsHistoryLimit`  | Specify the number of completed Jobs to keep.                            | `nil`                          |
 | `failedJobsHistoryLimit`      | Specify the number of failed Jobs to keep.                               | `nil`                          |

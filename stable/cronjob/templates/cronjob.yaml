@@ -10,6 +10,7 @@ metadata:
    {{- end}}
 spec:
   schedule: "{{ .Values.schedule }}"
+  suspend: {{ .Values.suspend }}
   {{- if and ( semverCompare ">=1.27.0" $.Capabilities.KubeVersion.Version) .Values.timeZone }}
   timeZone: {{ .Values.timeZone }}
   {{- end }}
